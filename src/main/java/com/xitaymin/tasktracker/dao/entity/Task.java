@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.entity;
+package com.xitaymin.tasktracker.dao.entity;
 
 public class Task {
     private Long id;
