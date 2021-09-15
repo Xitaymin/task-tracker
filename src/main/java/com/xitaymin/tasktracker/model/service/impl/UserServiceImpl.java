@@ -8,8 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -38,8 +39,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(User user) {
-        return false;
+    public boolean deleteUser(Long id) {
+        User user = userDAO.findOne(id);
+        if (user == null) {
+            LOGGER.debug("User with id = {} wasn't found", id);
+            return false;
+        } else {
+            user.setDeleted(true);
+            LOGGER.debug("User with id = {} was deleted", id);
+            return true;
+        }
     }
 
     @Override
@@ -48,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return null;
+    public Collection<User> getAllUsers() {
+        return userDAO.findAll().stream().filter(e -> !e.isDeleted()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     private boolean isEmailUsed(String email) {

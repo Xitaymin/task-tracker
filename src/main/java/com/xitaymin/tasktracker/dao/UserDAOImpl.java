@@ -25,6 +25,7 @@ public class UserDAOImpl implements UserDAO {
     public User save(User user) {
         Long id = autoID.getAndIncrement();
         user.setId(id);
+        user.setDeleted(false);
         users.put(id, user);
 
         LOGGER.debug(String.format("User %s was saved", user));
@@ -37,18 +38,16 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public void delete(long id) {
-
+    public void delete(Long id) {
     }
 
     @Override
     public void deleteAll() {
-
     }
 
     @Override
-    public User findOne(long id) {
-        return null;
+    public User findOne(Long id) {
+        return users.get(id);
     }
 
     @Override

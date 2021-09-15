@@ -3,17 +3,17 @@ package com.xitaymin.tasktracker.model.service;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.UserWithTasks;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface UserService {
     void save(User user);
 
     boolean editUser(User user);
 
-    boolean deleteUser(User user);
+    boolean deleteUser(Long id);
 
 
     UserWithTasks getById(Long id);
 
-    List<User> getAllUsers();
+    Collection<User> getAllUsers();
 }

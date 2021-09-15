@@ -1,9 +1,12 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class User {
     private Long id;
     private String name;
     private String email;
+    @JsonIgnore
     private boolean deleted;
 
     public User(Long id, String name, String email, boolean deleted) {

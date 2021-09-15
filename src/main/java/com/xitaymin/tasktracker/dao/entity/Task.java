@@ -57,4 +57,16 @@ public class Task {
     public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Task{");
+        sb.append("id=").append(id);
+        sb.append(", title='").append(title).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", reporter='").append(reporter).append('\'');
+        sb.append(", assignee='").append(assignee).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
