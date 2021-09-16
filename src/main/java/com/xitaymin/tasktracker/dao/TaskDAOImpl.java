@@ -46,11 +46,11 @@ public class TaskDAOImpl implements TaskDAO {
 
     @Override
     public Task findOne(Long id) {
-        return null;
+        return tasks.get(id);
     }
 
     @Override
     public Collection<Task> findAll() {
-        return null;
+        return tasks.values();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -50,7 +51,6 @@ public class Controller {
             //todo process exception illegal argument email or id
             e.printStackTrace();
         }
-
     }
 
     @DeleteMapping("/user/delete/{id}")
@@ -81,6 +81,22 @@ public class Controller {
     @PostMapping("/task/create")
     public void createTask(@RequestBody Task task) {
         taskService.saveTask(task);
+    }
+
+    @GetMapping("/task/{id}")
+    public Task getTask(@PathVariable Long id) {
+        return taskService.getTask(id);
+    }
+
+    @GetMapping("/tasks")
+    public Collection<Task> getTasks() {
+        return taskService.getTasks();
+    }
+
+    @PostMapping("task/assign")
+    public void assignTask(@RequestParam Long user, @RequestParam Long task) {
+        LOGGER.debug("Inside assign task method in controller");
+        taskService.assignTask(user, task);
     }
 }
 
