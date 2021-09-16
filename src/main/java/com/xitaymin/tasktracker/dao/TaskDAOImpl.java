@@ -32,8 +32,8 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public Task update(Task entity) {
-        return null;
+    public Task update(Task task) {
+        return tasks.put(task.getId(), task);
     }
 
     @Override

@@ -24,26 +24,63 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean assignTask(Long userId, Long taskId) {
+    public void assignTask(Long userId, Long taskId) {
         LOGGER.debug("Task id = {}, User id = {}", taskId, userId);
         StringBuilder messageBuilder = new StringBuilder();
         Task task = taskDAO.findOne(taskId);
         if (task == null) {
-            messageBuilder.append(String.format("Not found task with id = %s"
-                    , taskId));
+            messageBuilder.append(String.format("Not found task with id = %s", taskId));
         }
         User user = userDAO.findOne(userId);
         if (user == null || user.isDeleted()) {
-            messageBuilder.append(String.format("Not found user with id = %s"
-                    , userId));
+            messageBuilder.append(String.format("Not found user with id = %s", userId));
         }
         String message = messageBuilder.toString();
         if (message.isEmpty()) {
-            task.setAssignee(userId.toString());
+            task.setAssignee(userId);
             LOGGER.debug(task.toString());
-            return true;
         } else {
             throw new IllegalArgumentException(message);
+        }
+    }
+
+    @Override
+    public void editTask(Task task) {
+        StringBuilder messageBuilder = new StringBuilder();
+        Task oldTask = taskDAO.findOne(task.getId());
+        if (oldTask != null) {
+            if (isReporterChanged(task.getReporter(), oldTask.getReporter())) {
+                messageBuilder.append(String.format("Reporter shouldn't be changed. Old value = %s\n", oldTask.getReporter()));
+            }
+            if (isAssigneeChanged(task.getAssignee(), oldTask.getAssignee())) {
+                messageBuilder.append(String.format("Assignee shouldn't be changed in this request. Use PUT tracker/task/assign. Old value = %s\n",
+                                                    oldTask.getAssignee()));
+            }
+        } else {
+            messageBuilder.append(String.format("Task with id = %s doesn't exist\n", task.getId()));
+        }
+        String message = messageBuilder.toString();
+
+        if (message.isEmpty()) {
+            taskDAO.update(task);
+        } else {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    private boolean isAssigneeChanged(Long assignee, Long oldAssignee) {
+        if (assignee != null && oldAssignee != null) {
+            return !assignee.equals(oldAssignee);
+        } else {
+            return !(assignee == null && oldAssignee == null);
+        }
+    }
+
+    private boolean isReporterChanged(Long reporter, Long oldReporter) {
+        if (reporter == null) {
+            return true;
+        } else {
+            return !reporter.equals(oldReporter);
         }
     }
 
@@ -51,11 +88,7 @@ public class TaskServiceImpl implements TaskService {
     public Task getTask(Long id) {
         Task task = taskDAO.findOne(id);
         if (task == null) {
-            throw new IllegalArgumentException(String.format("Task with id = "
-                                                                     + "%s " +
-                                                                     "doesn't" +
-                                                                     " exist" +
-                                                                     ".", id));
+            throw new IllegalArgumentException(String.format("Task with id = %s doesn't exist.", id));
         } else {
             return task;
         }
@@ -67,60 +100,37 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean saveTask(Task task) {
+    public void saveTask(Task task) {
         LOGGER.debug("Deserialized task " + task.toString());
         StringBuilder messageBuilder = new StringBuilder();
-        String message;
-        Long assigneeId = null;
-        Long reporterId = null;
-        User reporter;
-        User assignee;
+        Long assigneeId = task.getAssignee();
+        Long reporterId = task.getReporter();
         String description = task.getDescription();
         String title = task.getTitle();
 
-        try {
-            reporterId = Long.parseLong(task.getReporter());
-        } catch (NumberFormatException e) {
+        if (reporterId == null) {
             messageBuilder.append("Reporter id is required.\n");
-        }
-        if (reporterId != null) {
-            reporter = userDAO.findOne(reporterId);
+        } else {
+            User reporter = userDAO.findOne(reporterId);
             if (reporter == null || reporter.isDeleted()) {
-                messageBuilder.append(String.format("Not found reporter with " +
-                                                            "id = %s.\n",
-                                                    reporterId));
+                messageBuilder.append(String.format("Not found reporter with id = %s.\n", reporterId));
             }
         }
-        try {
-            assigneeId = Long.parseLong(task.getAssignee());
-        } catch (NumberFormatException e) {
-            task.setAssignee(null);
-        }
         if (assigneeId != null) {
-            assignee = userDAO.findOne(assigneeId);
+            User assignee = userDAO.findOne(assigneeId);
             if (assignee == null || assignee.isDeleted()) {
-                messageBuilder.append(String.format("Not found assignee with " +
-                                                            "id = %s.\n",
-                                                    assigneeId));
+                messageBuilder.append(String.format("Not found assignee with id = %s.\n", assigneeId));
             }
         }
         if (title == null || title.isEmpty()) {
-            messageBuilder.append("Title is required and shouldn't be empty" +
-                                          ".\n");
+            messageBuilder.append("Title is required and shouldn't be empty.\n");
         }
         if (description == null || description.isEmpty()) {
-            messageBuilder.append("Description is required and shouldn't be " +
-                                          "empty.\n");
+            messageBuilder.append("Description is required and shouldn't be empty.\n");
         }
-        //        if (reporterId != null && userDAO.findOne(reporterId)
-        //        .isDeleted()) {
-        //            messageBuilder.append(String.format("Not found reporter
-        //            with id = %s.\n",reporterId));
-        //        }
-        message = messageBuilder.toString();
+        String message = messageBuilder.toString();
         if (message.isEmpty()) {
             taskDAO.save(task);
-            return true;
         } else {
             throw new IllegalArgumentException(message);
         }

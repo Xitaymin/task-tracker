@@ -7,23 +7,27 @@ import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("tracker")
 public class Controller {
 
-    public static final Logger LOGGER =
-            LoggerFactory.getLogger(Controller.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
     private final UserService userService;
     private final TaskService taskService;
 
@@ -35,42 +39,22 @@ public class Controller {
     @PostMapping("/user/create")
     public void createUser(@RequestBody User user) {
         LOGGER.debug("Create user method is starting.");
-        try {
             userService.save(user);
-        } catch (Exception e) {
-            //todo process exception illegal argument email
-            e.printStackTrace();
-        }
     }
 
-    @PostMapping("/user/edit")
+    @PutMapping("/user/edit")
     public void editUser(@RequestBody User user) {
-        try {
             userService.editUser(user);
-        } catch (Exception e) {
-            //todo process exception illegal argument email or id
-            e.printStackTrace();
-        }
     }
 
     @DeleteMapping("/user/delete/{id}")
     public void deleteUser(@PathVariable Long id) {
-        try {
             userService.deleteUser(id);
-        } catch (Exception e) {
-            //todo no such user
-            e.printStackTrace();
-        }
     }
 
     @GetMapping("/user/{id}")
     public void getUserWithTasksById(@PathVariable Long id) {
-        try {
-            UserWithTasks userWithTasks = userService.getById(id);
-        } catch (Exception e) {
-            //todo wrong id
-            e.printStackTrace();
-        }
+        UserWithTasks userWithTasks = userService.getById(id);
     }
 
     @GetMapping("/users")
@@ -93,10 +77,27 @@ public class Controller {
         return taskService.getTasks();
     }
 
-    @PostMapping("task/assign")
+    @PutMapping("task/assign")
     public void assignTask(@RequestParam Long user, @RequestParam Long task) {
         LOGGER.debug("Inside assign task method in controller");
         taskService.assignTask(user, task);
+    }
+
+    @PutMapping("task/edit")
+    public void editTask(@RequestBody Task task) {
+        taskService.editTask(task);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleException(IllegalArgumentException e) {
+        LOGGER.debug("Inside exception handler.");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleException(NoSuchElementException e) {
+        LOGGER.debug("Inside exception handler.");
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 }
 

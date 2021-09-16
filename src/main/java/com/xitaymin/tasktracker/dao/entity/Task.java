@@ -4,12 +4,12 @@ public class Task {
     private Long id;
     private String title;
     private String description;
-    private String reporter;
-    private String assignee;
+    private Long reporter;
+    private Long assignee;
 
     public Task(
-            Long id, String title, String description, String reporter,
-            String assignee
+            Long id, String title, String description, Long reporter,
+            Long assignee
     ) {
         this.id = id;
         this.title = title;
@@ -42,19 +42,19 @@ public class Task {
         this.description = description;
     }
 
-    public String getReporter() {
+    public Long getReporter() {
         return reporter;
     }
 
-    public void setReporter(String reporter) {
+    public void setReporter(Long reporter) {
         this.reporter = reporter;
     }
 
-    public String getAssignee() {
+    public Long getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(String assignee) {
+    public void setAssignee(Long assignee) {
         this.assignee = assignee;
     }
 

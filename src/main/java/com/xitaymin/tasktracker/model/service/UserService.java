@@ -10,7 +10,7 @@ public interface UserService {
 
     boolean editUser(User user);
 
-    boolean deleteUser(Long id);
+    void deleteUser(Long id);
 
 
     UserWithTasks getById(Long id);
