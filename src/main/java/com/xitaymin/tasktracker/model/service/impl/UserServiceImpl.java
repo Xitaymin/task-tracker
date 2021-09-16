@@ -37,8 +37,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean editUser(User user) {
-        return false;
+    public void editUser(User user) {
+        Long id = user.getId();
+        if (id == null) {
+            throw new IllegalArgumentException("Id shouldn't be null");
+        } else {
+            User oldUser = userDAO.findOne(id);
+            if (oldUser == null || oldUser.isDeleted()) {
+                throw new NoSuchElementException(String.format("User with id = %s doesn't exist.", id));
+            } else {
+                String newEmail = user.getEmail();
+                if (newEmail != null) {
+                    if (newEmail.equals(oldUser.getEmail()) || !isEmailUsed(newEmail)) {
+                        userDAO.update(user);
+                    } else {
+                        throw new IllegalArgumentException(String.format("Email %s is already used", newEmail));
+                    }
+                } else {
+                    throw new IllegalArgumentException("Email shouldn't be null.");
+                }
+            }
+        }
     }
 
     @Override

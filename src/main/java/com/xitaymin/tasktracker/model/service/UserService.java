@@ -8,7 +8,7 @@ import java.util.Collection;
 public interface UserService {
     void save(User user);
 
-    boolean editUser(User user);
+    void editUser(User user);
 
     void deleteUser(Long id);
 

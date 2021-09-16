@@ -33,8 +33,8 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public User update(User entity) {
-        return null;
+    public User update(User user) {
+        return users.put(user.getId(), user);
     }
 
     @Override
