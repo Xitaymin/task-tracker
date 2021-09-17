@@ -49,13 +49,21 @@ public class TaskServiceImpl implements TaskService {
     public Task editTask(Task task) {
         StringBuilder messageBuilder = new StringBuilder();
         Task oldTask = taskDAO.findOne(task.getId());
+        String description = task.getDescription();
+        String title = task.getTitle();
         if (oldTask != null) {
             if (isReporterChanged(task.getReporter(), oldTask.getReporter())) {
-                messageBuilder.append(String.format("Reporter shouldn't be changed. Old value = %s\n", oldTask.getReporter()));
+                messageBuilder.append(String.format("Reporter shouldn't be changed. Old value = %s \n", oldTask.getReporter()));
             }
             if (isAssigneeChanged(task.getAssignee(), oldTask.getAssignee())) {
                 messageBuilder.append(String.format("Assignee shouldn't be changed in this request. Use PUT tracker/task/assign. Old value = %s\n",
                                                     oldTask.getAssignee()));
+            }
+            if (title == null || title.isEmpty()) {
+                messageBuilder.append("Title is required and shouldn't be empty.\n");
+            }
+            if (description == null || description.isEmpty()) {
+                messageBuilder.append("Description is required and shouldn't be empty.\n");
             }
         } else {
             messageBuilder.append(String.format("Task with id = %s doesn't exist\n", task.getId()));
@@ -90,7 +98,7 @@ public class TaskServiceImpl implements TaskService {
     public Task getTask(Long id) {
         Task task = taskDAO.findOne(id);
         if (task == null) {
-            throw new IllegalArgumentException(String.format("Task with id = %s doesn't exist.", id));
+            throw new IllegalArgumentException(String.format("Task with id = %s doesn't exist.\n", id));
         } else {
             return task;
         }

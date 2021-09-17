@@ -7,10 +7,7 @@ import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("tracker")
@@ -89,17 +85,17 @@ public class Controller {
         return taskService.editTask(task);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleException(IllegalArgumentException e) {
-        LOGGER.debug("Inside exception handler.");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleException(NoSuchElementException e) {
-        LOGGER.debug("Inside exception handler.");
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
+    //    @ExceptionHandler(IllegalArgumentException.class)
+    //    public ResponseEntity<String> handleException(IllegalArgumentException e) {
+    //        LOGGER.debug("Inside exception handler.");
+    //        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    //    }
+    //
+    //    @ExceptionHandler(NoSuchElementException.class)
+    //    public ResponseEntity<String> handleException(NoSuchElementException e) {
+    //        LOGGER.debug("Inside exception handler.");
+    //        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    //    }
 }
 
 
