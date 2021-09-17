@@ -12,7 +12,6 @@ public interface UserService {
 
     void deleteUser(Long id);
 
-
     UserTasks getById(Long id);
 
     Collection<User> getAllUsers();

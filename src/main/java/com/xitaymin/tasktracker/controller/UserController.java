@@ -4,8 +4,6 @@ import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.UserTasks;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +19,6 @@ import java.util.Collection;
 @RequestMapping("tracker/user")
 public class UserController {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
 
     public UserController(UserService userService, TaskService taskService) {
@@ -30,7 +27,6 @@ public class UserController {
 
     @PostMapping()
     public User createUser(@RequestBody User user) {
-        LOGGER.debug("Create user method is starting.");
         return userService.save(user);
     }
 

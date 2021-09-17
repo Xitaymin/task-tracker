@@ -1,8 +1,7 @@
-package com.xitaymin.tasktracker.dao;
+package com.xitaymin.tasktracker.dao.impl;
 
+import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,9 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class TaskDAOImpl implements TaskDAO {
-    public static final Logger LOGGER =
-            LoggerFactory.getLogger(TaskDAOImpl.class);
-
     private final AtomicLong autoID;
     private final Map<Long, Task> tasks;
 
@@ -28,21 +24,12 @@ public class TaskDAOImpl implements TaskDAO {
         Long id = autoID.getAndIncrement();
         task.setId(id);
         tasks.put(id, task);
-        LOGGER.debug(task.toString());
         return task;
     }
 
     @Override
     public Task update(Task task) {
         return tasks.put(task.getId(), task);
-    }
-
-    @Override
-    public void delete(Long id) {
-    }
-
-    @Override
-    public void deleteAll() {
     }
 
     @Override

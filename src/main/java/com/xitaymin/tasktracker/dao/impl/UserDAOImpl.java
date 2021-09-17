@@ -1,8 +1,7 @@
-package com.xitaymin.tasktracker.dao;
+package com.xitaymin.tasktracker.dao.impl;
 
+import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,8 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
-    public static final Logger LOGGER =
-            LoggerFactory.getLogger(UserDAOImpl.class);
     private final AtomicLong autoID;
     private final Map<Long, User> users;
 
@@ -28,21 +25,12 @@ public class UserDAOImpl implements UserDAO {
         user.setId(id);
         user.setDeleted(false);
         users.put(id, user);
-        LOGGER.debug(String.format("User %s was saved", user));
         return user;
     }
 
     @Override
     public User update(User user) {
         return users.put(user.getId(), user);
-    }
-
-    @Override
-    public void delete(Long id) {
-    }
-
-    @Override
-    public void deleteAll() {
     }
 
     @Override

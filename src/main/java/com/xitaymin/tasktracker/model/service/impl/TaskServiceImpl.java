@@ -5,16 +5,12 @@ import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.service.TaskService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    public static final Logger LOGGER =
-            LoggerFactory.getLogger(TaskServiceImpl.class);
     private final UserDAO userDAO;
     private final TaskDAO taskDAO;
 
@@ -25,7 +21,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task assignTask(Long userId, Long taskId) {
-        LOGGER.debug("Task id = {}, User id = {}", taskId, userId);
         StringBuilder messageBuilder = new StringBuilder();
         Task task = taskDAO.findOne(taskId);
         if (task == null) {
@@ -38,7 +33,6 @@ public class TaskServiceImpl implements TaskService {
         String message = messageBuilder.toString();
         if (message.isEmpty()) {
             task.setAssignee(userId);
-            LOGGER.debug(task.toString());
             return task;
         } else {
             throw new IllegalArgumentException(message);
@@ -112,7 +106,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task saveTask(Task task) {
-        LOGGER.debug("Deserialized task " + task.toString());
         StringBuilder messageBuilder = new StringBuilder();
         Long assigneeId = task.getAssignee();
         Long reporterId = task.getReporter();

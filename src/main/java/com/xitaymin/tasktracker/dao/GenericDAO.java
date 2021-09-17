@@ -7,10 +7,6 @@ public interface GenericDAO<T> {
 
     T update(final T entity);
 
-    void delete(final Long id);
-
-    void deleteAll();
-
     T findOne(final Long id);
 
     Collection<T> findAll();

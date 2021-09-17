@@ -7,10 +7,7 @@ public class Task {
     private Long reporter;
     private Long assignee;
 
-    public Task(
-            Long id, String title, String description, Long reporter,
-            Long assignee
-    ) {
+    public Task(Long id, String title, String description, Long reporter, Long assignee) {
         this.id = id;
         this.title = title;
         this.description = description;

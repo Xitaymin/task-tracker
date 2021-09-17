@@ -6,8 +6,6 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.UserTasks;
 import com.xitaymin.tasktracker.model.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,9 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-
-    public static final Logger LOGGER =
-            LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDAO userDAO;
     private final TaskDAO taskDAO;
 
@@ -68,11 +63,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = userDAO.findOne(id);
         if (user == null || user.isDeleted()) {
-            LOGGER.debug("User with id = {} wasn't found", id);
             throw new NoSuchElementException(String.format("User with id = %s wasn't found", id));
         } else {
             user.setDeleted(true);
-            LOGGER.debug("User with id = {} was deleted", id);
         }
     }
 
@@ -96,7 +89,6 @@ public class UserServiceImpl implements UserService {
     private boolean isEmailUsed(String email) {
         Collection<User> users = userDAO.findAll();
         if (users.size() == 0) {
-            LOGGER.debug("Users list is empty.");
             return false;
         } else {
             return users.stream().anyMatch(e -> e.getEmail().equals(email));
