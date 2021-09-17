@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -52,6 +53,6 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Collection<User> findAll() {
-        return users.values();
+        return new ArrayList<>(users.values());
     }
 }
