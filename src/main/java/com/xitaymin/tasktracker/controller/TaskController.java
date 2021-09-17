@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
@@ -23,7 +22,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public Task createTask(@RequestBody Task task) {
         return taskService.saveTask(task);
     }
@@ -38,13 +37,12 @@ public class TaskController {
         return taskService.getTasks();
     }
 
-    @PutMapping("/assign")
-    //todo replace on PathVariable
-    public Task assignTask(@RequestParam Long user, @RequestParam Long task) {
+    @PutMapping("/{task}/user/{user}")
+    public Task assignTask(@PathVariable Long task, @PathVariable Long user) {
         return taskService.assignTask(user, task);
     }
 
-    @PutMapping("/edit")
+    @PutMapping()
     public Task editTask(@RequestBody Task task) {
         return taskService.editTask(task);
     }

@@ -56,7 +56,8 @@ public class TaskServiceImpl implements TaskService {
                 messageBuilder.append(String.format("Reporter shouldn't be changed. Old value = %s \n", oldTask.getReporter()));
             }
             if (isAssigneeChanged(task.getAssignee(), oldTask.getAssignee())) {
-                messageBuilder.append(String.format("Assignee shouldn't be changed in this request. Use PUT tracker/task/assign. Old value = %s\n",
+                messageBuilder.append(String.format("Assignee shouldn't be changed in this request. Use PUT tracker/task/{taskId}/user/{userId}. Old value = " +
+                                                            "%s\n",
                                                     oldTask.getAssignee()));
             }
             if (title == null || title.isEmpty()) {

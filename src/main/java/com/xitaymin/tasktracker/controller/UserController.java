@@ -19,29 +19,27 @@ import java.util.Collection;
 
 @RestController
 @RequestMapping("tracker/user")
-public class Controller {
+public class UserController {
 
-    public static final Logger LOGGER = LoggerFactory.getLogger(Controller.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     private final UserService userService;
-    private final TaskService taskService;
 
-    public Controller(UserService userService, TaskService taskService) {
+    public UserController(UserService userService, TaskService taskService) {
         this.userService = userService;
-        this.taskService = taskService;
     }
 
-    @PostMapping("/create")
+    @PostMapping()
     public User createUser(@RequestBody User user) {
         LOGGER.debug("Create user method is starting.");
         return userService.save(user);
     }
 
-    @PutMapping("/edit")
+    @PutMapping()
     public User editUser(@RequestBody User user) {
         return userService.editUser(user);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
             userService.deleteUser(id);
     }
@@ -56,32 +54,6 @@ public class Controller {
         return userService.getAllUsers();
     }
 
-    //    @PostMapping("/task/create")
-    //    public Task createTask(@RequestBody Task task) {
-    //        return taskService.saveTask(task);
-    //    }
-    //
-    //    @GetMapping("/task/{id}")
-    //    public Task getTask(@PathVariable Long id) {
-    //        return taskService.getTask(id);
-    //    }
-    //
-    //    @GetMapping("/tasks")
-    //    public Collection<Task> getTasks() {
-    //        return taskService.getTasks();
-    //    }
-    //
-    //    @PutMapping("task/assign")
-    //    //todo replace on PathVariable
-    //    public Task assignTask(@RequestParam Long user, @RequestParam Long task) {
-    //        LOGGER.debug("Inside assign task method in controller");
-    //        return taskService.assignTask(user, task);
-    //    }
-    //
-    //    @PutMapping("task/edit")
-    //    public Task editTask(@RequestBody Task task) {
-    //        return taskService.editTask(task);
-    //    }
 }
 
 
