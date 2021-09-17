@@ -2,8 +2,9 @@ package com.xitaymin.tasktracker.model.service.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.dto.UserTasks;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
@@ -20,9 +22,10 @@ public class UserServiceImpl implements UserService {
     public static final Logger LOGGER =
             LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserDAO userDAO;
-    private TaskDAO taskDAO;
+    private final TaskDAO taskDAO;
 
-    public UserServiceImpl(UserDAO userDAO) {
+    public UserServiceImpl(UserDAO userDAO, TaskDAO taskDAO) {
+        this.taskDAO = taskDAO;
         this.userDAO = userDAO;
     }
 
@@ -73,15 +76,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserWithTasks getById(Long id) {
-        //todo check if user exists
+    public UserTasks getById(Long id) {
+        List<Task> tasks;
         User user = userDAO.findOne(id);
         if (user == null || user.isDeleted()) {
             throw new IllegalArgumentException(String.format("User with id = %s not found", id));
         } else {
-            String stringId = id.toString();
+            tasks = taskDAO.findAll().stream().filter(t -> t.getAssignee().equals(id)).collect(Collectors.toCollection(ArrayList::new));
         }
-        return null;
+        return new UserTasks(user, tasks);
     }
 
     @Override

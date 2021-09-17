@@ -1,15 +1,16 @@
 package com.xitaymin.tasktracker.model.dto;
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 
 import java.util.List;
 
-public class UserWithTasks {
+public class UserTasks {
     private User user;
-    private List<Long> tasksId;
+    private List<Task> tasks;
 
-    public UserWithTasks(User user, List<Long> tasksId) {
+    public UserTasks(User user, List<Task> tasks) {
         this.user = user;
-        this.tasksId = tasksId;
+        this.tasks = tasks;
     }
 
     public User getUser() {
@@ -20,12 +21,12 @@ public class UserWithTasks {
         this.user = user;
     }
 
-    public List<Long> getTasksId() {
-        return tasksId;
+    public List<Task> getTasks() {
+        return tasks;
     }
 
-    public void setTasksId(List<Long> tasksId) {
-        this.tasksId = tasksId;
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 }
 

@@ -2,7 +2,7 @@ package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.dto.UserTasks;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.slf4j.Logger;
@@ -53,8 +53,8 @@ public class Controller {
     }
 
     @GetMapping("/user/{id}")
-    public void getUserWithTasksById(@PathVariable Long id) {
-        UserWithTasks userWithTasks = userService.getById(id);
+    public UserTasks getUserWithTasksById(@PathVariable Long id) {
+        return userService.getById(id);
     }
 
     @GetMapping("/users")
