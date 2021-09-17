@@ -6,9 +6,9 @@ import com.xitaymin.tasktracker.model.dto.UserTasks;
 import java.util.Collection;
 
 public interface UserService {
-    void save(User user);
+    User save(User user);
 
-    void editUser(User user);
+    User editUser(User user);
 
     void deleteUser(Long id);
 

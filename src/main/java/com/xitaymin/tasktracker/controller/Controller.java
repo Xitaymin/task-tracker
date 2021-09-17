@@ -37,14 +37,14 @@ public class Controller {
     }
 
     @PostMapping("/user/create")
-    public void createUser(@RequestBody User user) {
+    public User createUser(@RequestBody User user) {
         LOGGER.debug("Create user method is starting.");
-            userService.save(user);
+        return userService.save(user);
     }
 
     @PutMapping("/user/edit")
-    public void editUser(@RequestBody User user) {
-            userService.editUser(user);
+    public User editUser(@RequestBody User user) {
+        return userService.editUser(user);
     }
 
     @DeleteMapping("/user/delete/{id}")
@@ -63,8 +63,8 @@ public class Controller {
     }
 
     @PostMapping("/task/create")
-    public void createTask(@RequestBody Task task) {
-        taskService.saveTask(task);
+    public Task createTask(@RequestBody Task task) {
+        return taskService.saveTask(task);
     }
 
     @GetMapping("/task/{id}")
@@ -78,14 +78,15 @@ public class Controller {
     }
 
     @PutMapping("task/assign")
-    public void assignTask(@RequestParam Long user, @RequestParam Long task) {
+    //todo replace on PathVariable
+    public Task assignTask(@RequestParam Long user, @RequestParam Long task) {
         LOGGER.debug("Inside assign task method in controller");
-        taskService.assignTask(user, task);
+        return taskService.assignTask(user, task);
     }
 
     @PutMapping("task/edit")
-    public void editTask(@RequestBody Task task) {
-        taskService.editTask(task);
+    public Task editTask(@RequestBody Task task) {
+        return taskService.editTask(task);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

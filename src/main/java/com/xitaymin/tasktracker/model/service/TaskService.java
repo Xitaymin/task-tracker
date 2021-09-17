@@ -6,13 +6,13 @@ import java.util.Collection;
 
 public interface TaskService {
 
-    void saveTask(Task task);
+    Task saveTask(Task task);
 
     Task getTask(Long id);
 
     Collection<Task> getTasks();
 
-    void assignTask(Long userId, Long taskId);
+    Task assignTask(Long userId, Long taskId);
 
-    void editTask(Task task);
+    Task editTask(Task task);
 }

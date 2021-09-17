@@ -30,17 +30,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
+    public User save(User user) {
         String email = user.getEmail();
         if (isEmailUsed(email)) {
             throw new IllegalArgumentException(String.format("Email %s is already in use.", email));
         } else {
-            userDAO.save(user);
+            return userDAO.save(user);
         }
     }
 
     @Override
-    public void editUser(User user) {
+    public User editUser(User user) {
         Long id = user.getId();
         if (id == null) {
             throw new IllegalArgumentException("Id shouldn't be null");
@@ -61,6 +61,7 @@ public class UserServiceImpl implements UserService {
                 }
             }
         }
+        return user;
     }
 
     @Override

@@ -28,7 +28,6 @@ public class UserDAOImpl implements UserDAO {
         user.setId(id);
         user.setDeleted(false);
         users.put(id, user);
-
         LOGGER.debug(String.format("User %s was saved", user));
         return user;
     }

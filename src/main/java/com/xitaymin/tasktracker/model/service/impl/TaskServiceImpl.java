@@ -24,7 +24,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void assignTask(Long userId, Long taskId) {
+    public Task assignTask(Long userId, Long taskId) {
         LOGGER.debug("Task id = {}, User id = {}", taskId, userId);
         StringBuilder messageBuilder = new StringBuilder();
         Task task = taskDAO.findOne(taskId);
@@ -39,13 +39,14 @@ public class TaskServiceImpl implements TaskService {
         if (message.isEmpty()) {
             task.setAssignee(userId);
             LOGGER.debug(task.toString());
+            return task;
         } else {
             throw new IllegalArgumentException(message);
         }
     }
 
     @Override
-    public void editTask(Task task) {
+    public Task editTask(Task task) {
         StringBuilder messageBuilder = new StringBuilder();
         Task oldTask = taskDAO.findOne(task.getId());
         if (oldTask != null) {
@@ -63,6 +64,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (message.isEmpty()) {
             taskDAO.update(task);
+            return task;
         } else {
             throw new IllegalArgumentException(message);
         }
@@ -100,7 +102,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void saveTask(Task task) {
+    public Task saveTask(Task task) {
         LOGGER.debug("Deserialized task " + task.toString());
         StringBuilder messageBuilder = new StringBuilder();
         Long assigneeId = task.getAssignee();
@@ -130,7 +132,7 @@ public class TaskServiceImpl implements TaskService {
         }
         String message = messageBuilder.toString();
         if (message.isEmpty()) {
-            taskDAO.save(task);
+            return taskDAO.save(task);
         } else {
             throw new IllegalArgumentException(message);
         }
