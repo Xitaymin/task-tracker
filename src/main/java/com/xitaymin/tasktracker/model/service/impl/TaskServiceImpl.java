@@ -29,11 +29,11 @@ public class TaskServiceImpl implements TaskService {
         StringBuilder messageBuilder = new StringBuilder();
         Task task = taskDAO.findOne(taskId);
         if (task == null) {
-            messageBuilder.append(String.format("Not found task with id = %s", taskId));
+            messageBuilder.append(String.format("Not found task with id = %s\n", taskId));
         }
         User user = userDAO.findOne(userId);
         if (user == null || user.isDeleted()) {
-            messageBuilder.append(String.format("Not found user with id = %s", userId));
+            messageBuilder.append(String.format("Not found user with id = %s\n", userId));
         }
         String message = messageBuilder.toString();
         if (message.isEmpty()) {
