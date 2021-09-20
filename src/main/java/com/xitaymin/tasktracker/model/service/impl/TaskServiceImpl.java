@@ -33,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
         String message = messageBuilder.toString();
         if (message.isEmpty()) {
             task.setAssignee(userId);
+            taskDAO.update(task);
             return task;
         } else {
             throw new IllegalArgumentException(message);
