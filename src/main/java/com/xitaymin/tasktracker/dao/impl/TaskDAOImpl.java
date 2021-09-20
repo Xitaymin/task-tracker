@@ -6,18 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class TaskDAOImpl implements TaskDAO {
-    private final AtomicLong autoID;
-    private final Map<Long, Task> tasks;
-
-    public TaskDAOImpl(AtomicLong autoID, Map<Long, Task> tasks) {
-        this.autoID = autoID;
-        this.tasks = tasks;
-    }
+    private final AtomicLong autoID = new AtomicLong(1);
+    private final Map<Long, Task> tasks = new HashMap<>();
 
     @Override
     public Task save(Task task) {

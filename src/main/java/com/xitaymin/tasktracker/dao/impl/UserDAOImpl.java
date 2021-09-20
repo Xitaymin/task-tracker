@@ -6,18 +6,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class UserDAOImpl implements UserDAO {
-    private final AtomicLong autoID;
-    private final Map<Long, User> users;
-
-    public UserDAOImpl(AtomicLong autoID, Map<Long, User> users) {
-        this.autoID = autoID;
-        this.users = users;
-    }
+    private final AtomicLong autoID = new AtomicLong(1);
+    private final Map<Long, User> users = new HashMap<>();
 
     @Override
     public User save(User user) {
