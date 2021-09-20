@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("tracker/task")
+@RequestMapping("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
