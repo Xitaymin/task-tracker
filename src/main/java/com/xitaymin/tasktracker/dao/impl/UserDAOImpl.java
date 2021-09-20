@@ -13,29 +13,37 @@ import java.util.concurrent.atomic.AtomicLong;
 @Repository
 public class UserDAOImpl implements UserDAO {
     private final AtomicLong autoID = new AtomicLong(1);
-    private final Map<Long, User> users = new HashMap<>();
+    private final Map<Long, User> usersById = new HashMap<>();
+    private final Map<String, User> usersByEmail = new HashMap<>();
+
+    @Override
+    public User findByEmail(String email) {
+        return usersByEmail.get(email);
+    }
 
     @Override
     public User save(User user) {
-        Long id = autoID.getAndIncrement();
+        long id = autoID.getAndIncrement();
         user.setId(id);
         user.setDeleted(false);
-        users.put(id, user);
+        usersById.put(id, user);
+        usersByEmail.put(user.getEmail(), user);
         return user;
     }
 
     @Override
     public User update(User user) {
-        return users.put(user.getId(), user);
+        usersByEmail.put(user.getEmail(), user);
+        return usersById.put(user.getId(), user);
     }
 
     @Override
-    public User findOne(Long id) {
-        return users.get(id);
+    public User findOne(long id) {
+        return usersById.get(id);
     }
 
     @Override
     public Collection<User> findAll() {
-        return new ArrayList<>(users.values());
+        return new ArrayList<>(usersById.values());
     }
 }

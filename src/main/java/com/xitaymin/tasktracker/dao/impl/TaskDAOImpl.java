@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -16,8 +17,19 @@ public class TaskDAOImpl implements TaskDAO {
     private final Map<Long, Task> tasks = new HashMap<>();
 
     @Override
+    public List<Task> findByAssignee(long id) {
+        List<Task> tasksByAssignee = new ArrayList<>();
+        for (Task task : tasks.values()) {
+            if (task.getAssignee() == id) {
+                tasksByAssignee.add(task);
+            }
+        }
+        return tasksByAssignee;
+    }
+
+    @Override
     public Task save(Task task) {
-        Long id = autoID.getAndIncrement();
+        long id = autoID.getAndIncrement();
         task.setId(id);
         tasks.put(id, task);
         return task;
@@ -29,7 +41,7 @@ public class TaskDAOImpl implements TaskDAO {
     }
 
     @Override
-    public Task findOne(Long id) {
+    public Task findOne(long id) {
         return tasks.get(id);
     }
 

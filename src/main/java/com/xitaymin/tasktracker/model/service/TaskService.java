@@ -8,11 +8,11 @@ public interface TaskService {
 
     Task saveTask(Task task);
 
-    Task getTask(Long id);
+    Task getTask(long id);
 
     Collection<Task> getTasks();
 
-    Task assignTask(Long userId, Long taskId);
+    Task assignTask(long userId, long taskId);
 
-    Task editTask(Task task);
+    void editTask(Task task);
 }

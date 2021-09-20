@@ -7,7 +7,7 @@ public interface GenericDAO<T> {
 
     T update(final T entity);
 
-    T findOne(final Long id);
+    T findOne(final long id);
 
     Collection<T> findAll();
 

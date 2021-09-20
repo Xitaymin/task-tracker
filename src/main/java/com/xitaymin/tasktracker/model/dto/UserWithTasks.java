@@ -4,11 +4,11 @@ import com.xitaymin.tasktracker.dao.entity.User;
 
 import java.util.List;
 
-public class UserTasks {
+public class UserWithTasks {
     private User user;
     private List<Task> tasks;
 
-    public UserTasks(User user, List<Task> tasks) {
+    public UserWithTasks(User user, List<Task> tasks) {
         this.user = user;
         this.tasks = tasks;
     }

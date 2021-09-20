@@ -1,13 +1,13 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 public class Task {
-    private Long id;
+    private long id;
     private String title;
     private String description;
-    private Long reporter;
-    private Long assignee;
+    private long reporter;
+    private long assignee;
 
-    public Task(Long id, String title, String description, Long reporter, Long assignee) {
+    public Task(long id, String title, String description, long reporter, long assignee) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -15,11 +15,11 @@ public class Task {
         this.assignee = assignee;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -39,19 +39,19 @@ public class Task {
         this.description = description;
     }
 
-    public Long getReporter() {
+    public long getReporter() {
         return reporter;
     }
 
-    public void setReporter(Long reporter) {
+    public void setReporter(long reporter) {
         this.reporter = reporter;
     }
 
-    public Long getAssignee() {
+    public long getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(Long assignee) {
+    public void setAssignee(long assignee) {
         this.assignee = assignee;
     }
 

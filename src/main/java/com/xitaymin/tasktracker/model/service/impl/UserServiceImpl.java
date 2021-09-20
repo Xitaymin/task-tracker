@@ -4,94 +4,76 @@ import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.UserTasks;
+import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.exception.InvalidRequestParameterException;
+import com.xitaymin.tasktracker.model.exception.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.UserService;
+import com.xitaymin.tasktracker.model.validation.UserValidation;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final TaskDAO taskDAO;
+    private final UserValidation userValidation;
 
-    public UserServiceImpl(UserDAO userDAO, TaskDAO taskDAO) {
-        this.taskDAO = taskDAO;
+    public UserServiceImpl(UserDAO userDAO, TaskDAO taskDAO, UserValidation userValidation) {
         this.userDAO = userDAO;
+        this.taskDAO = taskDAO;
+        this.userValidation = userValidation;
     }
 
     @Override
     public User save(User user) {
-        String email = user.getEmail();
-        if (isEmailUsed(email)) {
-            throw new IllegalArgumentException(String.format("Email %s is already in use.", email));
-        } else {
+        if (userValidation.isUserValidForSave(user)) {
             return userDAO.save(user);
-        }
-    }
-
-    @Override
-    public User editUser(User user) {
-        Long id = user.getId();
-        if (id == null) {
-            throw new IllegalArgumentException("Id shouldn't be null");
         } else {
-            User oldUser = userDAO.findOne(id);
-            if (oldUser == null || oldUser.isDeleted()) {
-                throw new NoSuchElementException(String.format("User with id = %s doesn't exist.", id));
-            } else {
-                String newEmail = user.getEmail();
-                if (newEmail != null) {
-                    if (newEmail.equals(oldUser.getEmail()) || !isEmailUsed(newEmail)) {
-                        userDAO.update(user);
-                    } else {
-                        throw new IllegalArgumentException(String.format("Email %s is already used", newEmail));
-                    }
-                } else {
-                    throw new IllegalArgumentException("Email shouldn't be null.");
-                }
-            }
+            //todo fix this
+            return null;
         }
-        return user;
+    }
+
+
+    @Override
+    public void editUser(User user) {
+        if (userValidation.isUserValidForUpdate(user)) {
+            userDAO.update(user);
+        }
+
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(long id) {
         User user = userDAO.findOne(id);
         if (user == null || user.isDeleted()) {
-            throw new NoSuchElementException(String.format("User with id = %s wasn't found", id));
+            throw new NotFoundResourceException(String.format("User with id = %s wasn't found", id));
         } else {
             user.setDeleted(true);
         }
     }
 
     @Override
-    public UserTasks getById(Long id) {
+    public UserWithTasks getById(long id) {
         List<Task> tasks;
         User user = userDAO.findOne(id);
         if (user == null || user.isDeleted()) {
-            throw new IllegalArgumentException(String.format("User with id = %s not found", id));
+            throw new InvalidRequestParameterException(String.format("User with id = %s not found", id));
         } else {
-            tasks = taskDAO.findAll().stream().filter(t -> t.getAssignee().equals(id)).collect(Collectors.toCollection(ArrayList::new));
+            tasks = taskDAO.findByAssignee(id);
         }
-        return new UserTasks(user, tasks);
+        return new UserWithTasks(user, tasks);
     }
 
     @Override
     public Collection<User> getAllUsers() {
-        return userDAO.findAll().stream().filter(e -> !e.isDeleted()).collect(Collectors.toCollection(ArrayList::new));
+        return userDAO.findAll().stream().
+                filter(e -> !e.isDeleted()).
+                collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private boolean isEmailUsed(String email) {
-        Collection<User> users = userDAO.findAll();
-        if (users.size() == 0) {
-            return false;
-        } else {
-            return users.stream().anyMatch(e -> e.getEmail().equals(email));
-        }
-    }
 }

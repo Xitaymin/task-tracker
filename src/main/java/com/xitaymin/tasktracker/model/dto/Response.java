@@ -2,20 +2,17 @@ package com.xitaymin.tasktracker.model.dto;
 
 public class Response {
 
-    private String[] messages;
+    private String message;
 
-    public Response() {
+    public Response(String message) {
+        this.message = message;
     }
 
-    public Response(String[] messages) {
-        this.messages = messages;
+    public String getMessage() {
+        return message;
     }
 
-    public String[] getMessages() {
-        return messages;
-    }
-
-    public void setMessages(String[] messages) {
-        this.messages = messages;
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

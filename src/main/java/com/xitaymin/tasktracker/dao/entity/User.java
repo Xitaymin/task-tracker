@@ -3,25 +3,25 @@ package com.xitaymin.tasktracker.dao.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class User {
-    private Long id;
+    private long id;
     private String name;
     private String email;
     @JsonIgnore
     private boolean deleted;
 
-    public User(Long id, String name, String email, boolean deleted) {
+    public User(long id, String name, String email, boolean deleted) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.deleted = deleted;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
-    public Long getId() {
-        return id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
