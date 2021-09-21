@@ -37,11 +37,6 @@ public class TaskController {
         return taskService.getTasks();
     }
 
-    @PutMapping("/{task}/user/{user}")
-    public Task assignTask(@PathVariable long task, @PathVariable long user) {
-        return taskService.assignTask(user, task);
-    }
-
     @PutMapping()
     public void editTask(@RequestBody Task task) {
         taskService.editTask(task);

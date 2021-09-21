@@ -1,10 +1,6 @@
 package com.xitaymin.tasktracker.model.service.impl;
-
 import com.xitaymin.tasktracker.dao.TaskDAO;
-import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
-import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.exception.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.exception.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.validation.TaskValidation;
@@ -14,35 +10,12 @@ import java.util.Collection;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    private final UserDAO userDAO;
     private final TaskDAO taskDAO;
     private final TaskValidation taskValidation;
 
-    public TaskServiceImpl(UserDAO userDAO, TaskDAO taskDAO, TaskValidation taskValidation) {
-        this.userDAO = userDAO;
+    public TaskServiceImpl(TaskDAO taskDAO, TaskValidation taskValidation) {
         this.taskDAO = taskDAO;
         this.taskValidation = taskValidation;
-    }
-
-    @Override
-    public Task assignTask(long userId, long taskId) {
-        StringBuilder messageBuilder = new StringBuilder();
-        Task task = taskDAO.findOne(taskId);
-        if (task == null) {
-            messageBuilder.append(String.format("Not found task with id = %s ", taskId));
-        }
-        User user = userDAO.findOne(userId);
-        if (user == null || user.isDeleted()) {
-            messageBuilder.append(String.format("Not found user with id = %s ", userId));
-        }
-        String message = messageBuilder.toString();
-        if (message.isEmpty()) {
-            task.setAssignee(userId);
-            taskDAO.update(task);
-            return task;
-        } else {
-            throw new InvalidRequestParameterException(message);
-        }
     }
 
     @Override
@@ -51,7 +24,6 @@ public class TaskServiceImpl implements TaskService {
             taskDAO.update(task);
         }
     }
-
 
     @Override
     public Task getTask(long id) {

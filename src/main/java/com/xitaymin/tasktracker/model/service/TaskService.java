@@ -12,7 +12,5 @@ public interface TaskService {
 
     Collection<Task> getTasks();
 
-    Task assignTask(long userId, long taskId);
-
     void editTask(Task task);
 }

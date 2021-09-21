@@ -1,8 +1,6 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
-import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService, TaskService taskService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -38,11 +36,6 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable long id) {
         userService.deleteUser(id);
-    }
-
-    @GetMapping("/{id}")
-    public UserWithTasks getUserWithTasksById(@PathVariable long id) {
-        return userService.getById(id);
     }
 
     @GetMapping()
