@@ -3,14 +3,19 @@ package com.xitaymin.tasktracker.model.validation.impl;
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
-import com.xitaymin.tasktracker.model.exception.InvalidRequestParameterException;
-import com.xitaymin.tasktracker.model.exception.NotFoundResourceException;
+import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
+import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validation.TaskValidation;
 import com.xitaymin.tasktracker.model.validation.UserValidation;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskValidationImpl implements TaskValidation {
+    public static final String REQUIRED_TITLE = "Title is required and shouldn't be empty.";
+    public static final String TASK_NOT_FOUND = "Task with id = %s doesn't exist.";
+    public static final String REPORTER_SHOULDNT_CHANGE = "Reporter shouldn't be changed. Old value = %s.";
+    public static final String ASSIGNEE_SHOULDNT_CHANGE = "Assignee shouldn't be changed in this request. Old value = %s.";
+    public static final String REQUIRED_DESCRIPTION = "Description is required and shouldn't be empty.";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final UserValidation userValidation;
@@ -26,21 +31,20 @@ public class TaskValidationImpl implements TaskValidation {
         Task oldTask = taskDAO.findOne(task.getId());
         if (oldTask != null) {
             if (task.getReporter() != oldTask.getReporter()) {
-                throw new InvalidRequestParameterException(String.format("Reporter shouldn't be changed. Old value = %s  ", oldTask.getReporter()));
+                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE, oldTask.getReporter()));
             }
             if (task.getAssignee() != oldTask.getAssignee()) {
-                throw new InvalidRequestParameterException(String.format("Assignee shouldn't be changed in this request. Old value = %s  ",
-                                                                         oldTask.getAssignee()));
+                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE, oldTask.getAssignee()));
             }
             if (isAbsent(task.getTitle())) {
-                throw new InvalidRequestParameterException("Title is required and shouldn't be empty. ");
+                throw new InvalidRequestParameterException(REQUIRED_TITLE);
             }
             if (isAbsent(task.getDescription())) {
-                throw new InvalidRequestParameterException("Description is required and shouldn't be empty. ");
+                throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
             }
             return true;
         } else {
-            throw new NotFoundResourceException(String.format("Task with id = %s doesn't exist ", task.getId()));
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, task.getId()));
         }
     }
 
@@ -56,10 +60,10 @@ public class TaskValidationImpl implements TaskValidation {
             throw new NotFoundResourceException(String.format("Not found assignee with id = %s. ", assigneeId));
         }
         if (isAbsent(task.getTitle())) {
-            throw new InvalidRequestParameterException("Title is required and shouldn't be empty. ");
+            throw new InvalidRequestParameterException(REQUIRED_TITLE);
         }
         if (isAbsent(task.getDescription())) {
-            throw new InvalidRequestParameterException("Description is required and shouldn't be empty. ");
+            throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
         }
         return true;
     }

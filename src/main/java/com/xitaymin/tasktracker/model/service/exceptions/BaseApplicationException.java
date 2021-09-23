@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.exception;
+package com.xitaymin.tasktracker.model.service.exceptions;
 
 public class BaseApplicationException extends RuntimeException {
     public BaseApplicationException(String message) {

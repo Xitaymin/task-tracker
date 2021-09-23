@@ -1,9 +1,9 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.model.dto.Response;
-import com.xitaymin.tasktracker.model.exception.BaseApplicationException;
-import com.xitaymin.tasktracker.model.exception.InvalidRequestParameterException;
-import com.xitaymin.tasktracker.model.exception.NotFoundResourceException;
+import com.xitaymin.tasktracker.model.service.exceptions.BaseApplicationException;
+import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
+import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

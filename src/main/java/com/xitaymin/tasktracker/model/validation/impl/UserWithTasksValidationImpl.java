@@ -2,7 +2,7 @@ package com.xitaymin.tasktracker.model.validation.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
-import com.xitaymin.tasktracker.model.exception.NotFoundResourceException;
+import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validation.UserValidation;
 import com.xitaymin.tasktracker.model.validation.UserWithTasksValidation;
 import org.springframework.stereotype.Service;
