@@ -1,10 +1,10 @@
 package com.xitaymin.tasktracker.model.dto;
 
-public class Response {
+public class ResponseError {
 
     private String message;
 
-    public Response(String message) {
+    public ResponseError(String message) {
         this.message = message;
     }
 

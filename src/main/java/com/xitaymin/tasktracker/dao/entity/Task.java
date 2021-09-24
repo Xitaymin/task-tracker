@@ -5,9 +5,9 @@ public class Task {
     private String title;
     private String description;
     private long reporter;
-    private long assignee;
+    private Long assignee;
 
-    public Task(long id, String title, String description, long reporter, long assignee) {
+    public Task(long id, String title, String description, long reporter, Long assignee) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -47,11 +47,11 @@ public class Task {
         this.reporter = reporter;
     }
 
-    public long getAssignee() {
+    public Long getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(long assignee) {
+    public void setAssignee(Long assignee) {
         this.assignee = assignee;
     }
 

@@ -4,7 +4,7 @@ import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validation.TaskValidation;
+import com.xitaymin.tasktracker.model.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -12,18 +12,17 @@ import java.util.Collection;
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskDAO taskDAO;
-    private final TaskValidation taskValidation;
+    private final TaskValidator taskValidator;
 
-    public TaskServiceImpl(TaskDAO taskDAO, TaskValidation taskValidation) {
+    public TaskServiceImpl(TaskDAO taskDAO, TaskValidator taskValidator) {
         this.taskDAO = taskDAO;
-        this.taskValidation = taskValidation;
+        this.taskValidator = taskValidator;
     }
 
     @Override
     public void editTask(Task task) {
-        if (taskValidation.isTaskValidForUpdate(task)) {
-            taskDAO.update(task);
-        }
+        taskValidator.validateForUpdate(task);
+        taskDAO.update(task);
     }
 
     @Override
@@ -43,12 +42,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task saveTask(Task task) {
-        if (taskValidation.isTaskValidForSave(task)) {
-            return taskDAO.save(task);
-        }
-        //todo make up something better
-        else {
-            return null;
-        }
+        taskValidator.validateForSave(task);
+        return taskDAO.save(task);
     }
 }

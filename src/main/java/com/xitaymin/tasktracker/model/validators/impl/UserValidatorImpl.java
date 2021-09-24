@@ -1,27 +1,25 @@
-package com.xitaymin.tasktracker.model.validation.impl;
+package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validation.UserValidation;
+import com.xitaymin.tasktracker.model.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserValidationImpl implements UserValidation {
-
+public class UserValidatorImpl implements UserValidator {
+    public static final String EMAIL_IN_USE = "Email %s is already in use.";
     private final UserDAO userDAO;
 
-    public UserValidationImpl(UserDAO userDAO) {
+    public UserValidatorImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
     @Override
-    public boolean isUserValidForSave(User user) {
-        if (userDAO.findByEmail(user.getEmail()) == null) {
-            return true;
-        } else {
-            throw new InvalidRequestParameterException(String.format("Email %s is already in use.", user.getEmail()));
+    public void validateForSave(User user) {
+        if (userDAO.findByEmail(user.getEmail()) != null) {
+            throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, user.getEmail()));
         }
     }
 

@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.validation.impl;
+package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
@@ -8,30 +8,38 @@ import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceExcepti
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImplTest.NOT_EMPTY_STRING;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class UserValidationImplTest {
+class UserValidatorImplTest {
 
     private final UserDAO userDAO = mock(UserDAOImpl.class);
     private final User user = mock(User.class);
     private final User oldUser = mock(User.class);
-    private final UserValidationImpl userValidation = new UserValidationImpl(userDAO);
+    public static final String NOT_NULL_EMAIL = "example@gmail.com";
 
     private final long id = 1;
-    private final String notNullEmail = "example@gmail.com";
+    private final UserValidatorImpl userValidation = new UserValidatorImpl(userDAO);
     private final String anotherExistingEmail = "another@gmail.com";
     private final String absentEmail = null;
+    private User validUser;
+
+    public void setValidUser() {
+        validUser = new User(1, NOT_EMPTY_STRING, NOT_NULL_EMAIL, false);
+    }
 
     @Test
     void testIfValidationSuccessfulForExistingUserWithNewUniqueEmail() {
         when(user.getId()).thenReturn(id);
         when(userDAO.findOne(id)).thenReturn(oldUser);
-        when(user.getEmail()).thenReturn(notNullEmail);
-        when(userDAO.findByEmail(notNullEmail)).thenReturn(null);
+        when(user.getEmail()).thenReturn(NOT_NULL_EMAIL);
+        when(userDAO.findByEmail(NOT_NULL_EMAIL)).thenReturn(null);
 
-        UserValidationImpl userValidation = new UserValidationImpl(userDAO);
+        UserValidatorImpl userValidation = new UserValidatorImpl(userDAO);
 
         Assertions.assertTrue(userValidation.isUserValidForUpdate(user));
     }
@@ -41,7 +49,7 @@ class UserValidationImplTest {
         when(user.getId()).thenReturn(id);
         when(user.isDeleted()).thenReturn(true);
         when(userDAO.findOne(id)).thenReturn(null, user);
-        when(user.getEmail()).thenReturn(notNullEmail);
+        when(user.getEmail()).thenReturn(NOT_NULL_EMAIL);
 
         Assertions.assertThrows(NotFoundResourceException.class, () -> userValidation.isUserValidForUpdate(user));
         Assertions.assertThrows(NotFoundResourceException.class, () -> userValidation.isUserValidForUpdate(user));
@@ -53,13 +61,21 @@ class UserValidationImplTest {
         when(user.getId()).thenReturn(id);
         when(userDAO.findOne(id)).thenReturn(oldUser);
         when(userDAO.findByEmail(anyString())).thenReturn(mock(User.class));
-        when(user.getEmail()).thenReturn(absentEmail, notNullEmail);
+        when(user.getEmail()).thenReturn(absentEmail, NOT_NULL_EMAIL);
         when(oldUser.getEmail()).thenReturn(anotherExistingEmail);
-        //todo
         Assertions.assertThrows(InvalidRequestParameterException.class, () -> userValidation.isUserValidForUpdate(user));
         Assertions.assertThrows(InvalidRequestParameterException.class, () -> userValidation.isUserValidForUpdate(user));
-        //        Assertions.assertThrows(InvalidRequestParameterException.class,()->{userValidation.isUserValidForUpdate(user);});
 
     }
+
+    @Test
+    public void testIsUnavailable() {
+        setValidUser();
+        assertFalse(userValidation.isUnavailable(validUser));
+        assertTrue(userValidation.isUnavailable(null));
+        validUser.setDeleted(true);
+        assertTrue(userValidation.isUnavailable(validUser));
+    }
+
 
 }

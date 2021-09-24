@@ -1,10 +1,10 @@
-package com.xitaymin.tasktracker.model.validation;
+package com.xitaymin.tasktracker.model.validators;
 
 import com.xitaymin.tasktracker.dao.entity.User;
 
-public interface UserValidation {
+public interface UserValidator {
 
-    boolean isUserValidForSave(User user);
+    void validateForSave(User user);
 
     boolean isUserValidForUpdate(User user);
 

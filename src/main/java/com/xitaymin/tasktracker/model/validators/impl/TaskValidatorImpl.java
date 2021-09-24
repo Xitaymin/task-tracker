@@ -1,75 +1,92 @@
-package com.xitaymin.tasktracker.model.validation.impl;
+package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validation.TaskValidation;
-import com.xitaymin.tasktracker.model.validation.UserValidation;
+import com.xitaymin.tasktracker.model.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TaskValidationImpl implements TaskValidation {
+public class TaskValidatorImpl implements TaskValidator {
     public static final String REQUIRED_TITLE = "Title is required and shouldn't be empty.";
     public static final String TASK_NOT_FOUND = "Task with id = %s doesn't exist.";
     public static final String REPORTER_SHOULDNT_CHANGE = "Reporter shouldn't be changed. Old value = %s.";
     public static final String ASSIGNEE_SHOULDNT_CHANGE = "Assignee shouldn't be changed in this request. Old value = %s.";
     public static final String REQUIRED_DESCRIPTION = "Description is required and shouldn't be empty.";
+    public static final String REPORTER_NOT_FOUND = "Not found reporter with id = %s.";
+    public static final String ASSIGNEE_NOT_FOUND = "Not found assignee with id = %s.";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
-    private final UserValidation userValidation;
 
-    public TaskValidationImpl(TaskDAO taskDAO, UserDAO userDAO, UserValidation userValidation) {
+    public TaskValidatorImpl(TaskDAO taskDAO, UserDAO userDAO) {
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
-        this.userValidation = userValidation;
     }
 
     @Override
-    public boolean isTaskValidForUpdate(Task task) {
+    public void validateForUpdate(Task task) {
         Task oldTask = taskDAO.findOne(task.getId());
         if (oldTask != null) {
             if (task.getReporter() != oldTask.getReporter()) {
                 throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE, oldTask.getReporter()));
             }
-            if (task.getAssignee() != oldTask.getAssignee()) {
+            if (!isAssigneeValidForUpdate(task.getAssignee(), oldTask.getAssignee())) {
                 throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE, oldTask.getAssignee()));
             }
-            if (isAbsent(task.getTitle())) {
+
+            if (isTextFieldAbsent(task.getTitle())) {
                 throw new InvalidRequestParameterException(REQUIRED_TITLE);
             }
-            if (isAbsent(task.getDescription())) {
+            if (isTextFieldAbsent(task.getDescription())) {
                 throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
             }
-            return true;
         } else {
             throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, task.getId()));
         }
     }
 
     @Override
-    public boolean isTaskValidForSave(Task task) {
-        long assigneeId = task.getAssignee();
+    public void validateForSave(Task task) {
+        Long assigneeId = task.getAssignee();
         long reporterId = task.getReporter();
 
-        if (userValidation.isUnavailable(userDAO.findOne(reporterId))) {
-            throw new NotFoundResourceException(String.format("Not found reporter with id = %s. ", reporterId));
+        if (isUserUnavailable(userDAO.findOne(reporterId))) {
+            throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
-        if (userValidation.isUnavailable(userDAO.findOne(assigneeId))) {
-            throw new NotFoundResourceException(String.format("Not found assignee with id = %s. ", assigneeId));
+        if (assigneeId != null) {
+            if (isUserUnavailable(userDAO.findOne(assigneeId))) {
+                throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assigneeId));
+            }
         }
-        if (isAbsent(task.getTitle())) {
+        if (isTextFieldAbsent(task.getTitle())) {
             throw new InvalidRequestParameterException(REQUIRED_TITLE);
         }
-        if (isAbsent(task.getDescription())) {
+        if (isTextFieldAbsent(task.getDescription())) {
             throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
         }
-        return true;
     }
 
-    private boolean isAbsent(String text) {
+    private boolean isTextFieldAbsent(String text) {
         return (text == null || text.isEmpty());
     }
 
+    private boolean isUserUnavailable(User user) {
+        return (user == null || user.isDeleted());
+    }
+
+
+    private boolean isAssigneeValidForUpdate(Long assignee, Long oldAssignee) {
+        if (oldAssignee == null && assignee == null) {
+            return true;
+        } else if ((oldAssignee == null) ^ (assignee == null)) {
+            return false;
+        } else {
+            return assignee.equals(oldAssignee);
+        }
+    }
+
 }
+

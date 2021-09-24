@@ -7,29 +7,29 @@ import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.UserWithTasks;
 import com.xitaymin.tasktracker.model.service.UserWithTasksService;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
-import com.xitaymin.tasktracker.model.validation.UserValidation;
-import com.xitaymin.tasktracker.model.validation.UserWithTasksValidation;
+import com.xitaymin.tasktracker.model.validators.UserValidator;
+import com.xitaymin.tasktracker.model.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserWithTasksServiceImpl implements UserWithTasksService {
-    private final UserWithTasksValidation userWithTasksValidation;
+    private final UserWithTasksValidator userWithTasksValidator;
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
-    private final UserValidation userValidation;
+    private final UserValidator userValidator;
 
-    public UserWithTasksServiceImpl(UserWithTasksValidation userWithTasksValidation, TaskDAO taskDAO, UserDAO userDAO, UserValidation userValidation) {
-        this.userWithTasksValidation = userWithTasksValidation;
+    public UserWithTasksServiceImpl(UserWithTasksValidator userWithTasksValidator, TaskDAO taskDAO, UserDAO userDAO, UserValidator userValidator) {
+        this.userWithTasksValidator = userWithTasksValidator;
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
-        this.userValidation = userValidation;
+        this.userValidator = userValidator;
     }
 
     @Override
     public void assignTask(long userId, long taskId) {
-        if (userWithTasksValidation.areUserAndTaskValidToAssign(userId, taskId)) {
+        if (userWithTasksValidator.areUserAndTaskValidToAssign(userId, taskId)) {
             Task task = taskDAO.findOne(taskId);
             task.setAssignee(userId);
             taskDAO.update(task);
@@ -40,7 +40,7 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
     public UserWithTasks getById(long id) {
         List<Task> tasks;
         User user = userDAO.findOne(id);
-        if (userValidation.isUnavailable(user)) {
+        if (userValidator.isUnavailable(user)) {
             throw new InvalidRequestParameterException(String.format("User with id = %s not found", id));
         } else {
             tasks = taskDAO.findByAssignee(id);
