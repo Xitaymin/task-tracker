@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -23,7 +24,7 @@ public class TaskController {
     }
 
     @PostMapping()
-    public Task createTask(@RequestBody Task task) {
+    public Task createTask(@Valid @RequestBody Task task) {
         return taskService.saveTask(task);
     }
 
@@ -38,7 +39,7 @@ public class TaskController {
     }
 
     @PutMapping()
-    public void editTask(@RequestBody Task task) {
+    public void editTask(@Valid @RequestBody Task task) {
         taskService.editTask(task);
     }
 }

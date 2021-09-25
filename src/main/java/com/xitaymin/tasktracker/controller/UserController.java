@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
@@ -24,12 +25,12 @@ public class UserController {
     }
 
     @PostMapping()
-    public User createUser(@RequestBody User user) {
+    public User createUser(@Valid @RequestBody User user) {
         return userService.save(user);
     }
 
     @PutMapping()
-    public void editUser(@RequestBody User user) {
+    public void editUser(@Valid @RequestBody User user) {
         userService.editUser(user);
     }
 

@@ -7,6 +7,9 @@ import com.xitaymin.tasktracker.model.validators.UserValidator;
 import com.xitaymin.tasktracker.model.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
+import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+
 @Service
 public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
     private final UserValidator userValidator;
@@ -23,10 +26,10 @@ public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
     public boolean areUserAndTaskValidToAssign(long userId, long taskId) {
 
         if (taskDAO.findOne(taskId) == null) {
-            throw new NotFoundResourceException(String.format("Not found task with id = %s ", taskId));
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, taskId));
         }
         if (userValidator.isUnavailable(userDAO.findOne(userId))) {
-            throw new NotFoundResourceException(String.format("Not found user with id = %s ", userId));
+            throw new NotFoundResourceException(String.format(USER_NOT_FOUND, userId));
         }
         return true;
     }

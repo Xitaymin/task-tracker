@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserValidatorImpl implements UserValidator {
     public static final String EMAIL_IN_USE = "Email %s is already in use.";
+    public static final String USER_NOT_FOUND = "User with id = %s doesn't exist.";
+    public static final String EMAIL_REQUIRED = "Email shouldn't be null.";
     private final UserDAO userDAO;
 
     public UserValidatorImpl(UserDAO userDAO) {
@@ -24,16 +26,15 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     @Override
-    public boolean isUserValidForUpdate(User user) {
+    public void validateForUpdate(User user) {
         long id = user.getId();
         User oldUser = userDAO.findOne(id);
         String email = user.getEmail();
         if (isUnavailable(oldUser)) {
-            throw new NotFoundResourceException(String.format("User with id = %s doesn't exist.", id));
+            throw new NotFoundResourceException(String.format(USER_NOT_FOUND, id));
         } else if (!isEmailValidForUpdate(email, oldUser)) {
-            throw new InvalidRequestParameterException(String.format("Email %s is already used", email));
+            throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, email));
         }
-        return true;
     }
 
     @Override
@@ -42,10 +43,10 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     private boolean isEmailValidForUpdate(String email, User oldUser) {
-        if (email != null) {
+        if (email != null && !email.isBlank()) {
             return (userDAO.findByEmail(email) == null || email.equals(oldUser.getEmail()));
         } else {
-            throw new InvalidRequestParameterException("Email shouldn't be null.");
+            throw new InvalidRequestParameterException(EMAIL_REQUIRED);
         }
     }
 }

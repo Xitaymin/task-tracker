@@ -30,10 +30,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void editUser(User user) {
-        if (userValidator.isUserValidForUpdate(user)) {
-            userDAO.update(user);
-        }
-
+        userValidator.validateForUpdate(user);
+        userDAO.update(user);
     }
 
     @Override

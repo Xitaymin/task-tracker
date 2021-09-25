@@ -70,7 +70,7 @@ public class TaskValidatorImpl implements TaskValidator {
     }
 
     private boolean isTextFieldAbsent(String text) {
-        return (text == null || text.isEmpty());
+        return (text == null || text.isBlank());
     }
 
     private boolean isUserUnavailable(User user) {

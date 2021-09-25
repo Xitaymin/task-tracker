@@ -2,9 +2,16 @@ package com.xitaymin.tasktracker.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class User {
     private long id;
+    @NotBlank
     private String name;
+    @NotNull
+    @Email
     private String email;
     @JsonIgnore
     private boolean deleted;

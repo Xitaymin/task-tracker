@@ -12,15 +12,22 @@ import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceExcepti
 import com.xitaymin.tasktracker.model.validators.TaskValidator;
 import com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 
+import java.util.stream.Stream;
+
 import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.ASSIGNEE_SHOULDNT_CHANGE;
 import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.REPORTER_NOT_FOUND;
 import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.REQUIRED_DESCRIPTION;
 import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.REQUIRED_TITLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalMatchers.gt;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -33,6 +40,12 @@ class TaskServiceImplTest {
     UserDAO userDAO = mock(UserDAOImpl.class);
     TaskValidator taskValidator = new TaskValidatorImpl(taskDAO, userDAO);
     TaskService taskService = new TaskServiceImpl(taskDAO, taskValidator);
+
+    private static Stream<Arguments> provideTasksWithChangedAssignee() {
+        return Stream.of(
+                Arguments.of(new Task(5, "Title", "Description", 1L, null), new Task(5, "Title", "Description", 1L, 2L)),
+                Arguments.of(new Task(5, "Title", "Description", 1L, 2L), new Task(5, "Title", "Description", 1L, 3L)));
+    }
 
 
     @Test
@@ -64,7 +77,7 @@ class TaskServiceImplTest {
         when(userDAO.findOne(2L)).thenReturn(new User(2L, "Name", "Email", true));
         Throwable throwable = assertThrows(NotFoundResourceException.class, () -> taskService.saveTask(task));
         assertThat(throwable).hasMessage(String.format(ASSIGNEE_NOT_FOUND, task.getAssignee()));
-        verify(taskDAO, never()).save(task);
+        verify(taskDAO, never()).save(any());
     }
 
     @Test
@@ -73,7 +86,7 @@ class TaskServiceImplTest {
         when(userDAO.findOne(anyLong())).thenReturn(mock(User.class));
         Throwable throwable = assertThrows(InvalidRequestParameterException.class, () -> taskService.saveTask(task));
         assertThat(throwable).hasMessage(REQUIRED_TITLE);
-        verify(taskDAO, never()).save(task);
+        verify(taskDAO, never()).save(any());
     }
 
     @Test
@@ -82,7 +95,16 @@ class TaskServiceImplTest {
         when(userDAO.findOne(anyLong())).thenReturn(mock(User.class));
         Throwable throwable = assertThrows(InvalidRequestParameterException.class, () -> taskService.saveTask(task));
         assertThat(throwable).hasMessage(REQUIRED_DESCRIPTION);
-        verify(taskDAO, never()).save(task);
+        verify(taskDAO, never()).save(any());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTasksWithChangedAssignee")
+    void ifFailToUpdateTaskWithInvalidAssignee(Task task, Task oldTask) {
+        when(taskDAO.findOne(task.getId())).thenReturn(oldTask);
+        Throwable throwable = assertThrows(InvalidRequestParameterException.class, () -> taskService.editTask(task));
+        assertThat(throwable).hasMessage(ASSIGNEE_SHOULDNT_CHANGE, oldTask.getAssignee());
+        verify(taskDAO, never()).update(any());
     }
 
 

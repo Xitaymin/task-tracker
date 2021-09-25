@@ -6,7 +6,7 @@ public interface UserValidator {
 
     void validateForSave(User user);
 
-    boolean isUserValidForUpdate(User user);
+    void validateForUpdate(User user);
 
     boolean isUnavailable(User user);
 }

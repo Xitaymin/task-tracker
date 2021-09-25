@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 
+import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
+
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskDAO taskDAO;
@@ -29,7 +31,7 @@ public class TaskServiceImpl implements TaskService {
     public Task getTask(long id) {
         Task task = taskDAO.findOne(id);
         if (task == null) {
-            throw new NotFoundResourceException(String.format("Task with id = %s doesn't exist. ", id));
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, id));
         } else {
             return task;
         }

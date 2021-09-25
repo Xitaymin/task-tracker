@@ -1,8 +1,12 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import javax.validation.constraints.NotBlank;
+
 public class Task {
     private long id;
+    @NotBlank
     private String title;
+    @NotBlank
     private String description;
     private long reporter;
     private Long assignee;

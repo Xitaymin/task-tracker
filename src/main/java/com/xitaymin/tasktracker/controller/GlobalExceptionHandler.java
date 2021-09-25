@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -40,9 +41,13 @@ public class GlobalExceptionHandler {
         return new ResponseError(e.getMessage());
     }
 
+    @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseError handleException(Exception e, WebRequest request) {
-        log.error("Not business exception caught. {} {}", e.getMessage(), request, e);
+        //        if(e instanceof MethodArgumentNotValidException){
+        //            throw e;
+        //        }
+        log.error("Other exception caught. {} {}", e.getMessage(), request, e);
         return new ResponseError(e.getMessage());
     }
 }
