@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
@@ -38,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(long id) {
         User user = userDAO.findOne(id);
         if (userValidator.isUnavailable(user)) {
-            throw new NotFoundResourceException(String.format("User with id = %s wasn't found", id));
+            throw new NotFoundResourceException(String.format(USER_NOT_FOUND, id));
         } else {
             user.setDeleted(true);
         }

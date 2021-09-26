@@ -16,6 +16,9 @@ public class User {
     @JsonIgnore
     private boolean deleted;
 
+    public User() {
+    }
+
     public User(long id, String name, String email, boolean deleted) {
         this.id = id;
         this.name = name;

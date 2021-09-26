@@ -6,6 +6,7 @@ import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameter
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(BAD_REQUEST)
-    @ExceptionHandler(InvalidRequestParameterException.class)
+    @ExceptionHandler({InvalidRequestParameterException.class, MethodArgumentNotValidException.class})
     public ResponseError handleException(InvalidRequestParameterException e, WebRequest request) {
         log.info("Validation failed. {} {}", e.getMessage(), request, e);
         return new ResponseError(e.getMessage());
@@ -44,9 +45,9 @@ public class GlobalExceptionHandler {
     @ResponseStatus(INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ResponseError handleException(Exception e, WebRequest request) {
-        //        if(e instanceof MethodArgumentNotValidException){
-        //            throw e;
-        //        }
+        //                if(e instanceof MethodArgumentNotValidException){
+        //                    throw e;
+        //                }
         log.error("Other exception caught. {} {}", e.getMessage(), request, e);
         return new ResponseError(e.getMessage());
     }
