@@ -7,6 +7,7 @@ import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameter
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.UserValidator;
 import com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,19 +24,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UserServiceImplTest {
-    UserDAO userDAO = mock(UserDAOImpl.class);
-    UserValidator userValidator = new UserValidatorImpl(userDAO);
-    UserServiceImpl userService = new UserServiceImpl(userDAO, userValidator);
+    private final UserDAO userDAO = mock(UserDAOImpl.class);
+    private final UserValidator userValidator = new UserValidatorImpl(userDAO);
+    private final UserServiceImpl userService = new UserServiceImpl(userDAO, userValidator);
 
     private static Stream<Arguments> provideUserWithInvalidEmails() {
         return Stream.of(
                 Arguments.of(new User(100, "Name", null, false)),
                 Arguments.of(new User(100, "Name", "", false)),
                 Arguments.of(new User(100, "Name", " ", false)));
+    }
+
+    @AfterEach
+    void tearDown() {
+        reset(userDAO);
     }
 
     @Test

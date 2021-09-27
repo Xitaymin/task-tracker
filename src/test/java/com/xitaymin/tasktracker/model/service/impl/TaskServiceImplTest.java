@@ -11,6 +11,7 @@ import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameter
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.TaskValidator;
 import com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,15 +32,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class TaskServiceImplTest {
 
-    TaskDAO taskDAO = mock(TaskDAOImpl.class);
-    UserDAO userDAO = mock(UserDAOImpl.class);
-    TaskValidator taskValidator = new TaskValidatorImpl(taskDAO, userDAO);
-    TaskService taskService = new TaskServiceImpl(taskDAO, taskValidator);
+    private final TaskDAO taskDAO = mock(TaskDAOImpl.class);
+    private final UserDAO userDAO = mock(UserDAOImpl.class);
+    private final TaskValidator taskValidator = new TaskValidatorImpl(taskDAO, userDAO);
+    private final TaskService taskService = new TaskServiceImpl(taskDAO, taskValidator);
 
     private static Stream<Arguments> provideTasksWithChangedAssignee() {
         return Stream.of(
@@ -47,6 +49,11 @@ class TaskServiceImplTest {
                 Arguments.of(new Task(5, "Title", "Description", 1L, 2L), new Task(5, "Title", "Description", 1L, 3L)));
     }
 
+
+    @AfterEach
+    void tearDown() {
+        reset(userDAO, taskDAO);
+    }
 
     @Test
     void ifPassToSaveValidUser() {
