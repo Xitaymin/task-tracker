@@ -6,17 +6,21 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static com.xitaymin.tasktracker.controller.UserController.USERS;
 import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserTestSuite extends TaskTrackerSpringContextTestSuite {
 
-    public static final String USERS = "/users";
+
+    private final User firstRequestUser = new User(0, "User Name", "admin@gmail.com", false);
+    private final User updatedUser = new User(1, "New name", "admin@gmail.com", false);
 
     @Test
     public void notFound() throws Exception {
@@ -33,16 +37,15 @@ public class UserTestSuite extends TaskTrackerSpringContextTestSuite {
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
 
-        User request = new User(0, "User Name", "admin@gmail.com", false);
-        MvcResult result = mockMvc.perform(post(USERS).content(asJson(request))
+        MvcResult result = mockMvc.perform(post(USERS).content(asJson(firstRequestUser))
                                                    .contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
         User response = fromResponse(result, User.class);
 
         Assertions.assertThat(response.getId()).isNotNull();
-        Assertions.assertThat(response.getName()).isEqualTo(request.getName());
-        Assertions.assertThat(response.getEmail()).isEqualTo(request.getEmail());
+        Assertions.assertThat(response.getName()).isEqualTo(firstRequestUser.getName());
+        Assertions.assertThat(response.getEmail()).isEqualTo(firstRequestUser.getEmail());
 
         MvcResult resultAfterSave = mockMvc.perform(get(USERS).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -51,9 +54,9 @@ public class UserTestSuite extends TaskTrackerSpringContextTestSuite {
         User[] allAfterSave = fromResponse(resultAfterSave, User[].class);
         Assertions.assertThat(allAfterSave).hasSize(1);
         User theOne = allAfterSave[0];
-        Assertions.assertThat(theOne.getId()).isNotNull();
-        Assertions.assertThat(theOne.getName()).isEqualTo(request.getName());
-        Assertions.assertThat(theOne.getEmail()).isEqualTo(request.getEmail());
+        Assertions.assertThat(theOne.getId()).isEqualTo(1);
+        Assertions.assertThat(theOne.getName()).isEqualTo(firstRequestUser.getName());
+        Assertions.assertThat(theOne.getEmail()).isEqualTo(firstRequestUser.getEmail());
         Assertions.assertThat(theOne.isDeleted()).isFalse();
     }
 
@@ -71,5 +74,31 @@ public class UserTestSuite extends TaskTrackerSpringContextTestSuite {
         mockMvc.perform(get(USERS).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[]"));
+    }
+
+    @Test
+    public void updateUser() throws Exception {
+        createUser();
+        mockMvc.perform(put(USERS).content(asJson(updatedUser)).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+                .andExpect(status().isOk());
+        MvcResult resultAfterUpdate = mockMvc.perform(get(USERS).accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        User[] allAfterSave = fromResponse(resultAfterUpdate, User[].class);
+        Assertions.assertThat(allAfterSave).hasSize(1);
+        User theOne = allAfterSave[0];
+        //todo make it cleaner
+        Assertions.assertThat(theOne.getId()).isEqualTo(1);
+        Assertions.assertThat(theOne.getName()).isEqualTo(updatedUser.getName());
+        Assertions.assertThat(theOne.getEmail()).isEqualTo(updatedUser.getEmail());
+        Assertions.assertThat(theOne.isDeleted()).isFalse();
+
+    }
+
+    //todo
+    @Test
+    public void getAllUsers() {
+
     }
 }

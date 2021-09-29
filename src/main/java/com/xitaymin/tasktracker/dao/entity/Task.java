@@ -11,6 +11,9 @@ public class Task {
     private long reporter;
     private Long assignee;
 
+    public Task() {
+    }
+
     public Task(long id, String title, String description, long reporter, Long assignee) {
         this.id = id;
         this.title = title;

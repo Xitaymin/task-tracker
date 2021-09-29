@@ -14,10 +14,11 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping(TaskController.TASKS)
 public class TaskController {
 
     private final TaskService taskService;
+    public static final String TASKS = "/tasks";
 
     public TaskController(TaskService taskService) {
         this.taskService = taskService;

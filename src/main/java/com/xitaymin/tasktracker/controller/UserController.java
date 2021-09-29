@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collection;
 
-@RestController
-@RequestMapping("/users")
-public class UserController {
+import static com.xitaymin.tasktracker.controller.UserController.USERS;
 
+@RestController
+@RequestMapping(USERS)
+public class UserController {
+    public static final String USERS = "/users";
     private final UserService userService;
 
     public UserController(UserService userService) {

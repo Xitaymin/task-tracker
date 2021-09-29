@@ -8,6 +8,9 @@ public class UserWithTasks {
     private User user;
     private List<Task> tasks;
 
+    public UserWithTasks() {
+    }
+
     public UserWithTasks(User user, List<Task> tasks) {
         this.user = user;
         this.tasks = tasks;
