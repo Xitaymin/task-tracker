@@ -1,8 +1,8 @@
-package com.xitaymin.tasktracker.model.service.impl;
+package com.xitaymin.tasktracker;
 
-import com.xitaymin.tasktracker.TaskTrackerSpringContextTestSuite;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.http.MediaType;
@@ -22,47 +22,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TaskTestSuite extends TaskTrackerSpringContextTestSuite {
 
-    @Test
-    public void createTask() throws Exception {
-        //todo fix it
-        mockMvc.perform(post(USERS).content(asJson(new User(0, "User Name", "admin@gmail.com", false)))
-                                .contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
+    @BeforeEach
+    public void setUp() throws Exception {
+        mockMvc.perform(post(USERS).content(asJson(new User(0, "User Name", "admin@gmail.com", false))).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
+    }
 
+    @Test
+    public void createTask() throws Exception {
         Task taskFromRequest = new Task(0, "Title", "Description", 1, null);
         mockMvc.perform(get(TASKS).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().json("[]"));
-        MvcResult result =
-                mockMvc.perform(post(TASKS).content(asJson(taskFromRequest)).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andReturn();
+        MvcResult result = mockMvc.perform(post(TASKS).content(asJson(taskFromRequest))
+                                                   .contentType(MediaType.APPLICATION_JSON)
+                                                   .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
 
         Task taskFromResponse = fromResponse(result, Task.class);
         assertEquals(taskFromResponse.getId(), 1);
         assertTrue(new ReflectionEquals(taskFromRequest, "id").matches(taskFromResponse));
 
-        MvcResult resultAfterSave =
-                mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        MvcResult resultAfterSave = mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
         Task[] allSavedTasks = fromResponse(resultAfterSave, Task[].class);
         assertThat(allSavedTasks.length == 1);
-        Task firstSavedTask = allSavedTasks[0];
+        Task taskAfterSave = allSavedTasks[0];
 
-        assertThat(firstSavedTask).usingRecursiveComparison().isEqualTo(taskFromResponse);
+        assertThat(taskAfterSave).usingRecursiveComparison().isEqualTo(taskFromResponse);
     }
 
     @Test
     public void editTask() throws Exception {
         createTask();
-        Task taskBeforeUpdate = new Task(1, "Updated title", "Updated description", 1, null);
-        mockMvc.perform(put(TASKS).content(asJson(taskBeforeUpdate)).accept(APPLICATION_JSON).contentType(APPLICATION_JSON)).andExpect(status().isOk());
-
-        MvcResult resultAfterSave =
-                mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        Task taskFromRequest = new Task(1, "Updated title", "Updated description", 1, null);
+        mockMvc.perform(put(TASKS).content(asJson(taskFromRequest)).accept(APPLICATION_JSON).contentType(APPLICATION_JSON)).andExpect(status().isOk());
+        MvcResult resultAfterSave = mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
         Task[] allSavedTasks = fromResponse(resultAfterSave, Task[].class);
         assertThat(allSavedTasks.length == 1);
-        Task updatedTask = allSavedTasks[0];
+        Task taskAfterUpdate = allSavedTasks[0];
 
-        assertThat(updatedTask).usingRecursiveComparison().isEqualTo(taskBeforeUpdate);
+        assertThat(taskAfterUpdate).usingRecursiveComparison().isEqualTo(taskFromRequest);
     }
 
 }

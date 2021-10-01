@@ -18,7 +18,6 @@ import java.util.List;
 @ContextConfiguration(classes = {TaskTrackerApplication.class})
 @SpringBootTest
 @AutoConfigureMockMvc
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD) // do not use it
 public abstract class TaskTrackerSpringContextTestSuite {
 
     @Autowired

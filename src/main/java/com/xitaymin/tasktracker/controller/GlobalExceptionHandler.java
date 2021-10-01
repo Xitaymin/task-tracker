@@ -30,7 +30,7 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler({InvalidRequestParameterException.class, MethodArgumentNotValidException.class})
-    public ResponseError handleException(InvalidRequestParameterException e, WebRequest request) {
+    public ResponseError handleException(Throwable e, WebRequest request) {
         log.info("Validation failed. {} {}", e.getMessage(), request, e);
         return new ResponseError(e.getMessage());
     }

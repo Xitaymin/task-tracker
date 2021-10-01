@@ -21,7 +21,8 @@ public class TaskDAOImpl implements TaskDAO, Resetable {
     public List<Task> findByAssignee(long id) {
         List<Task> tasksByAssignee = new ArrayList<>();
         for (Task task : tasks.values()) {
-            if (task.getAssignee() == id) {
+            Long assignee = task.getAssignee();
+            if (assignee != null && assignee == id) {
                 tasksByAssignee.add(task);
             }
         }
