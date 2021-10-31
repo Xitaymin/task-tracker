@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 public class User {
     private long id;
@@ -15,15 +18,22 @@ public class User {
     private String email;
     @JsonIgnore
     private boolean deleted;
+    private Set<String> roles;
+    private Team team;
+    private List<Task> tasks;
 
     public User() {
     }
 
-    public User(long id, String name, String email, boolean deleted) {
+    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted, Set<String> roles,
+                Team team, List<Task> tasks) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.deleted = deleted;
+        this.roles = roles;
+        this.team = team;
+        this.tasks = tasks;
     }
 
     public long getId() {
@@ -58,14 +68,41 @@ public class User {
         this.deleted = deleted;
     }
 
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
     @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", deleted=").append(deleted);
-        sb.append('}');
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return deleted == user.deleted && name.equals(user.name) && email.equals(user.email) && Objects.equals(roles,
+                user.roles) && Objects.equals(team, user.team) && Objects.equals(tasks, user.tasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, email, deleted, roles, team, tasks);
     }
 }
