@@ -2,14 +2,15 @@ package com.xitaymin.tasktracker.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
+@Entity
 public class User {
+    @Id
     private long id;
     @NotBlank
     private String name;
@@ -18,23 +19,31 @@ public class User {
     private String email;
     @JsonIgnore
     private boolean deleted;
-    private Set<String> roles;
-    private Team team;
-    private List<Task> tasks;
+
+//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//    private Set<String> roles;
+//    private Team team;
+//    private List<Task> tasks;
 
     public User() {
     }
 
-    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted, Set<String> roles,
-                Team team, List<Task> tasks) {
+    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.deleted = deleted;
-        this.roles = roles;
-        this.team = team;
-        this.tasks = tasks;
     }
+
+//    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted, Set<String> roles, Team team, List<Task> tasks) {
+//        this.id = id;
+//        this.name = name;
+//        this.email = email;
+//        this.deleted = deleted;
+//        this.roles = roles;
+//        this.team = team;
+//        this.tasks = tasks;
+//    }
 
     public long getId() {
         return id;
@@ -68,41 +77,41 @@ public class User {
         this.deleted = deleted;
     }
 
-    public Set<String> getRoles() {
-        return roles;
-    }
+//    public Set<String> getRoles() {
+//        return roles;
+//    }
+//
+//    public void setRoles(Set<String> roles) {
+//        this.roles = roles;
+//    }
+//
+//    public Team getTeam() {
+//        return team;
+//    }
+//
+//    public void setTeam(Team team) {
+//        this.team = team;
+//    }
+//
+//    public List<Task> getTasks() {
+//        return tasks;
+//    }
+//
+//    public void setTasks(List<Task> tasks) {
+//        this.tasks = tasks;
+//    }
 
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return deleted == user.deleted && name.equals(user.name) && email.equals(user.email) && Objects.equals(roles,
-                user.roles) && Objects.equals(team, user.team) && Objects.equals(tasks, user.tasks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, email, deleted, roles, team, tasks);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        User user = (User) o;
+//        return deleted == user.deleted && name.equals(user.name) && email.equals(user.email) && Objects.equals(roles,
+//                user.roles) && Objects.equals(team, user.team) && Objects.equals(tasks, user.tasks);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(name, email, deleted, roles, team, tasks);
+//    }
 }
