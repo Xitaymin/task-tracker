@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "root" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password
+      - APP_DB_USER=task_tracker_user
+      - APP_DB_PASS=JA6k9Zw
+      - APP_DB_NAME=task_tracker
+    volumes:
+      - ./docker/db-init:/docker-entrypoint-initdb.d/
+    ports:
+      - 5432:5432
