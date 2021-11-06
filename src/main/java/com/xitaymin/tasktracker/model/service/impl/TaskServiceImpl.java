@@ -7,6 +7,7 @@ import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceExcepti
 import com.xitaymin.tasktracker.model.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 
 import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
@@ -21,7 +22,10 @@ public class TaskServiceImpl implements TaskService {
         this.taskValidator = taskValidator;
     }
 
+    //todo remove model package
+
     @Override
+    @Transactional
     public void editTask(Task task) {
         taskValidator.validateForUpdate(task);
         taskDAO.update(task);
@@ -43,6 +47,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public Task saveTask(Task task) {
         taskValidator.validateForSave(task);
         return taskDAO.save(task);

@@ -3,12 +3,8 @@ package com.xitaymin.tasktracker.dao.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -20,15 +16,15 @@ import javax.validation.constraints.NotNull;
                @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
                @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")})
 
-public class User {
+public class User extends Item {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";
-    @Id
-    //todo generation types description and allocation size
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-    @SequenceGenerator(name = "users_seq", sequenceName = "SEQ_USER", allocationSize = 10)
-    private long id;
+    //    @Id
+//    //todo generation types description and allocation size
+//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
+//    @SequenceGenerator(name = "users_seq", sequenceName = "SEQ_USER", allocationSize = 10)
+//    private long id;
     @NotBlank
     private String name;
     @NotNull
@@ -62,13 +58,13 @@ public class User {
 //        this.tasks = tasks;
 //    }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
+//    public long getId() {
+//        return id;
+//    }
+//
+//    public void setId(long id) {
+//        this.id = id;
+//    }
 
     public String getName() {
         return name;
