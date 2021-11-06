@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -14,7 +16,14 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
+@NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u"),
+               @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
+               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")})
+
 public class User {
+    public static final String FIND_ALL = "User.getAll";
+    public static final String DELETE = "User.delete";
+    public static final String FIND_BY_EMAIL = "User.findByEmail";
     @Id
     //todo generation types description and allocation size
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")

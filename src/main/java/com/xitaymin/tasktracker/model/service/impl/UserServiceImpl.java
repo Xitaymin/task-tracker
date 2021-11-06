@@ -7,6 +7,7 @@ import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceExcepti
 import com.xitaymin.tasktracker.model.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User save(User user) {
         userValidator.validateForSave(user);
         return userDAO.save(user);
@@ -37,12 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(long id) {
         User user = userDAO.findOne(id);
         if (userValidator.isUnavailable(user)) {
             throw new NotFoundResourceException(String.format(USER_NOT_FOUND, id));
         } else {
             user.setDeleted(true);
+            userDAO.update(user);
         }
     }
 

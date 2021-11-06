@@ -35,7 +35,7 @@ public class JpaConfiguration {
         Properties properties = new Properties();
         properties.setProperty(AvailableSettings.DRIVER, "org.postgresql.Driver");
         // Generate schema using java classes, don't use in prod!
-        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "validate");
+        properties.setProperty(AvailableSettings.HBM2DDL_AUTO, "create-drop");
 
         // show formatted sql with postgres dialect
         properties.setProperty("hibernate.physical_naming_strategy",
