@@ -1,29 +1,44 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import java.util.List;
-import java.util.Objects;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Project {
+//Создание проекта.
+//Редактировать можно только имя
+//Удалять проект нельзя.
+//Добавить/удалить команду в проект.
+//Назначить productOwner, он должен иметь роль MANAGER
 
-    private long id;
+@Entity
+@Table(name = "projects")
+public class Project extends Item {
+
     private String name;
-    private List<Team> teams;
+    @ManyToOne
+    private User productOwner;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
+    private Set<Task> tasks;
+//    private List<Team> teams;
 
     public Project() {
     }
 
-    public Project(long id, String name, List<Team> teams) {
+    //    public Project(long id, String name, List<Team> teams) {
+//        this.id = id;
+//        this.name = name;
+//        this.teams = teams;
+//    }
+    public Project(long id, String name) {
         this.id = id;
         this.name = name;
-        this.teams = teams;
-    }
+        this.tasks = new HashSet<>();
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+//        this.teams = teams;
     }
 
     public String getName() {
@@ -34,25 +49,25 @@ public class Project {
         this.name = name;
     }
 
-    public List<Team> getTeams() {
-        return teams;
-    }
+//    public List<Team> getTeams() {
+//        return teams;
+//    }
 
-    public void setTeams(List<Team> teams) {
-        this.teams = teams;
-    }
+//    public void setTeams(List<Team> teams) {
+//        this.teams = teams;
+//    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Project project = (Project) o;
-        return name.equals(project.name) && teams.equals(project.teams);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, teams);
-    }
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Project project = (Project) o;
+//        return name.equals(project.name) && teams.equals(project.teams);
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(name, teams);
+//    }
 
 }

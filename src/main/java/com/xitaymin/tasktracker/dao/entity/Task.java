@@ -1,6 +1,9 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -21,19 +24,23 @@ public class Task extends Item {
     private String description;
     private long reporter;
     private Long assignee;
-//    private Project project;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 //    private TaskType type;
 //    private List<Task> childTasks;
 
     public Task() {
     }
 
-    public Task(long id, @NotBlank String title, @NotBlank String description, long reporter, Long assignee) {
+    public Task(long id, @NotBlank String title, @NotBlank String description, long reporter, Long assignee,
+                Project project) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.reporter = reporter;
         this.assignee = assignee;
+        this.project = project;
     }
 
 //    public Task(long id, @NotBlank String title, @NotBlank String description, long reporter, Long assignee,
@@ -88,13 +95,13 @@ public class Task extends Item {
         this.assignee = assignee;
     }
 
-//    public Project getProject() {
-//        return project;
-//    }
-//
-//    public void setProject(Project project) {
-//        this.project = project;
-//    }
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 //
 //    public TaskType getType() {
 //        return type;

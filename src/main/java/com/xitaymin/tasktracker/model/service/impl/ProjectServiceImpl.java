@@ -1,0 +1,30 @@
+package com.xitaymin.tasktracker.model.service.impl;
+
+import com.xitaymin.tasktracker.dao.ProjectDao;
+import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.model.dto.CreateProjectTO;
+import com.xitaymin.tasktracker.model.dto.EditProjectTO;
+import com.xitaymin.tasktracker.model.service.ProjectService;
+import com.xitaymin.tasktracker.model.validators.ProjectValidator;
+import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
+
+@Service
+public class ProjectServiceImpl implements ProjectService {
+
+    private ProjectValidator projectValidator;
+    private ProjectDao projectDao;
+
+    @Override
+    public Project saveProject(@Valid CreateProjectTO createProjectTO) {
+        Project project = createProjectTO.convertToEntity();
+        return projectDao.save(project);
+    }
+
+    @Override
+    public void editProject(@Valid EditProjectTO editProjectTO) {
+
+//        projectDao.update(project);
+    }
+}
