@@ -8,6 +8,7 @@ import com.xitaymin.tasktracker.model.service.ProjectService;
 import com.xitaymin.tasktracker.model.validators.ProjectValidator;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 @Service
@@ -27,9 +28,11 @@ public class ProjectServiceImpl implements ProjectService {
         return projectDao.save(project);
     }
 
+    @Transactional
     @Override
     public void editProject(@Valid EditProjectTO editProjectTO) {
-
-//        projectDao.update(project);
+        Project project = projectValidator.validateForUpdate(editProjectTO);
+        project.setName(editProjectTO.getName());
+        projectDao.update(project);
     }
 }

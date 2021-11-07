@@ -22,6 +22,11 @@ public class ProjectDaoImpl implements ProjectDao {
 
     @Override
     public void update(Project project) {
+        entityManager.merge(project);
+    }
 
+    @Override
+    public Project findById(long id) {
+        return entityManager.find(Project.class, id);
     }
 }

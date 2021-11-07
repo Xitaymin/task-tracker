@@ -19,7 +19,15 @@ public class EditProjectTO {
         this.name = name;
     }
 
-//    public Project convertToEntity(){
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    //    public Project convertToEntity(){
 //        Project project = new Project();
 //        project.setId(id);
 //        project.setName(name);

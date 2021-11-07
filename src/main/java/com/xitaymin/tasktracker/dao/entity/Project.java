@@ -8,9 +8,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
-//Создание проекта.
 //Редактировать можно только имя
-//Удалять проект нельзя.
 //Добавить/удалить команду в проект.
 //Назначить productOwner, он должен иметь роль MANAGER
 
