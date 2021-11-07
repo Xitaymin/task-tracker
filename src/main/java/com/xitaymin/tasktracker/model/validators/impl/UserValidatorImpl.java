@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
+import com.xitaymin.tasktracker.model.dto.CreateUserTO;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.UserValidator;
@@ -19,7 +20,7 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     @Override
-    public void validateForSave(User user) {
+    public void validateForSave(CreateUserTO user) {
         if (userDAO.findByEmail(user.getEmail()) != null) {
             throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, user.getEmail()));
         }

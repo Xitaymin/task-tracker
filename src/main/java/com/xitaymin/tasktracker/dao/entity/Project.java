@@ -8,7 +8,6 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
-//Редактировать можно только имя
 //Добавить/удалить команду в проект.
 //Назначить productOwner, он должен иметь роль MANAGER
 

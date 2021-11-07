@@ -2,13 +2,20 @@ package com.xitaymin.tasktracker.dao.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -20,11 +27,6 @@ public class User extends PersistentObject {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";
-    //    @Id
-//    //todo generation types description and allocation size
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq")
-//    @SequenceGenerator(name = "users_seq", sequenceName = "SEQ_USER", allocationSize = 10)
-//    private long id;
     @NotBlank
     private String name;
     @NotNull
@@ -33,6 +35,12 @@ public class User extends PersistentObject {
     @JsonIgnore
     private boolean deleted;
 
+    @ElementCollection(targetClass = Role.class)
+    @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Role> roles;
+    //todo find way to use EnumSet
 //    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 //    private Set<String> roles;
 //    private Team team;

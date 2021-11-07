@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.model.service.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
+import com.xitaymin.tasktracker.model.dto.CreateUserTO;
 import com.xitaymin.tasktracker.model.service.UserService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.UserValidator;
@@ -13,6 +14,13 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+
+//CU для пользователя.
+//Добавление/удаление ролей. При удалении роли убедиться, что не нарушаются инварианты других сущностей.
+//Редактирование пользователя. Редактировать можно всё кроме ID. Редактирование не затрагивает список команд
+//Удаление пользователя. При удалении пользователя, он фактически остается, но помечается как deleted=true. Все операции с участием юзера в других сущностях доступны только для deleted=false.
+//Получение пользователя по ID вместе с его тасками и командами.
+//Получение всех пользователей.
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,8 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User save(User user) {
-        userValidator.validateForSave(user);
+    public User save(CreateUserTO createUserTO) {
+        userValidator.validateForSave(createUserTO);
+        User user = createUserTO.convertToEntity();
         return userDAO.save(user);
     }
 

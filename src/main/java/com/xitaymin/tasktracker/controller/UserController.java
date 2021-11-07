@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.User;
+import com.xitaymin.tasktracker.model.dto.CreateUserTO;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping()
-    public User createUser(@Valid @RequestBody User user) {
-        return userService.save(user);
+    public User createUser(@Valid @RequestBody CreateUserTO createUserTO) {
+        return userService.save(createUserTO);
     }
 
     @PutMapping()
