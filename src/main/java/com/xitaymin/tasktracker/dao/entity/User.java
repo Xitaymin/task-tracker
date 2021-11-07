@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
                @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
                @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")})
 
-public class User extends Item {
+public class User extends PersistentObject {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";

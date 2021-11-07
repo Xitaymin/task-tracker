@@ -13,8 +13,13 @@ import javax.validation.Valid;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    private ProjectValidator projectValidator;
-    private ProjectDao projectDao;
+    private final ProjectValidator projectValidator;
+    private final ProjectDao projectDao;
+
+    public ProjectServiceImpl(ProjectValidator projectValidator, ProjectDao projectDao) {
+        this.projectValidator = projectValidator;
+        this.projectDao = projectDao;
+    }
 
     @Override
     public Project saveProject(@Valid CreateProjectTO createProjectTO) {

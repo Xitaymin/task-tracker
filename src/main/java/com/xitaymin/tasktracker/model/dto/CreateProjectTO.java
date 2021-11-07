@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xitaymin.tasktracker.dao.entity.Project;
 
 import javax.validation.constraints.NotBlank;
@@ -9,8 +10,11 @@ public class CreateProjectTO {
     @NotBlank
     private final String name;
 
+//    public CreateProjectTO() {
+//    }
+
     @JsonCreator
-    public CreateProjectTO(@NotBlank String name) {
+    public CreateProjectTO(@JsonProperty("name") @NotBlank String name) {
         this.name = name;
     }
 

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @NamedQueries({@NamedQuery(name = Task.FIND_ALL, query = "SELECT t FROM Task t"),
                @NamedQuery(name = Task.FIND_BY_ASSIGNEE, query = "SELECT t FROM Task t WHERE t.assignee=:assignee")})
 
-public class Task extends Item {
+public class Task extends PersistentObject {
     public static final String FIND_ALL = "Task.findAll";
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
     //    private long id;

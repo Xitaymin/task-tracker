@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projects")
-public class Project extends Item {
+public class Project extends PersistentObject {
 
     private String name;
     @ManyToOne

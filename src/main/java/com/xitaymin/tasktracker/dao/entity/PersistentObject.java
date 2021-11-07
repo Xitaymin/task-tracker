@@ -1,13 +1,13 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 
-@Entity
-public abstract class Item {
+@MappedSuperclass
+public abstract class PersistentObject {
     @Id
     //todo generation types description and allocation size
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
