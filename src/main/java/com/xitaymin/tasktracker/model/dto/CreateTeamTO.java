@@ -1,32 +1,28 @@
 package com.xitaymin.tasktracker.model.dto;
 
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.xitaymin.tasktracker.dao.entity.Team;
+
+import javax.validation.constraints.NotNull;
 
 public class CreateTeamTO {
 
-    private String name;
-    private Set<Integer> members;
+    @NotNull
+    private final String name;
 
-    public CreateTeamTO(String name, Set<Integer> members) {
+    @JsonCreator
+    public CreateTeamTO(@JsonProperty("name") @NotNull String name) {
         this.name = name;
-        this.members = members;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Team convertToEntity() {
+        Team team = new Team();
+        team.setName(name);
+        return team;
     }
-
-    public Set<Integer> getMembers() {
-        return members;
-    }
-
-    public void setMembers(Set<Integer> members) {
-        this.members = members;
-    }
-
-    //    private List<Project> projects;
 }
