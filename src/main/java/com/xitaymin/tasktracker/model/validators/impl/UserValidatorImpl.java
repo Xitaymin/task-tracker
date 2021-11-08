@@ -3,6 +3,7 @@ package com.xitaymin.tasktracker.model.validators.impl;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.CreateUserTO;
+import com.xitaymin.tasktracker.model.dto.EditUserTO;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.UserValidator;
@@ -24,10 +25,11 @@ public class UserValidatorImpl implements UserValidator {
         if (userDAO.findByEmail(user.getEmail()) != null) {
             throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, user.getEmail()));
         }
+        //todo role validation
     }
 
     @Override
-    public void validateForUpdate(User user) {
+    public User validateForUpdate(EditUserTO user) {
         long id = user.getId();
         User oldUser = userDAO.findOne(id);
         String email = user.getEmail();
@@ -36,6 +38,7 @@ public class UserValidatorImpl implements UserValidator {
         } else if (!isEmailValidForUpdate(email, oldUser)) {
             throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, email));
         }
+        return oldUser;
     }
 
     @Override

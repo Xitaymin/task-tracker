@@ -1,7 +1,5 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -27,24 +25,14 @@ public class User extends PersistentObject {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";
-    @NotBlank
     private String name;
-    @NotNull
-    @Email
     private String email;
-    @JsonIgnore
     private boolean deleted;
-
     @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-    //todo find way to use EnumSet
-//    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-//    private Set<String> roles;
-//    private Team team;
-//    private List<Task> tasks;
 
     public User() {
     }
@@ -55,6 +43,19 @@ public class User extends PersistentObject {
         this.email = email;
         this.deleted = deleted;
     }
+//todo find way to use EnumSet
+
+//    todo UserViewTO
+//    private Team team;
+//    private List<Task> tasks;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
 //    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted, Set<String> roles, Team team, List<Task> tasks) {
 //        this.id = id;
@@ -64,14 +65,6 @@ public class User extends PersistentObject {
 //        this.roles = roles;
 //        this.team = team;
 //        this.tasks = tasks;
-//    }
-
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
 //    }
 
     public String getName() {
@@ -98,13 +91,7 @@ public class User extends PersistentObject {
         this.deleted = deleted;
     }
 
-//    public Set<String> getRoles() {
-//        return roles;
-//    }
-//
-//    public void setRoles(Set<String> roles) {
-//        this.roles = roles;
-//    }
+
 //
 //    public Team getTeam() {
 //        return team;
