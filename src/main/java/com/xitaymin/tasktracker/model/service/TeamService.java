@@ -15,4 +15,7 @@ public interface TeamService {
 
     Collection<Team> getAllTeams();
 
+    void deleteTeam(long id);
+
+    void addMember(long team, long user);
 }

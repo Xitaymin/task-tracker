@@ -3,8 +3,10 @@ package com.xitaymin.tasktracker.dao.entity;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import java.util.List;
 
-//CRUD для команды.
+//D для команды.
 //Удалить команду можно только если у неё нет проектов и участников
 //Добавление пользователя в команду, пользователь может быть только в одной команде.
 // Максимальный размер команды определен в пропертях. Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
@@ -19,8 +21,8 @@ public class Team extends PersistentObject {
 
     public static final String FIND_ALL = "Team.findAll";
     private String name;
-//    @OneToMany
-//    private List<User> members;
+    @OneToMany(mappedBy = "team")
+    private List<User> members;
 
 //    private List<Project> projects;
 
@@ -43,13 +45,13 @@ public class Team extends PersistentObject {
         this.name = name;
     }
 
-//    public List<User> getMembers() {
-//        return members;
-//    }
-//
-//    public void setMembers(List<User> members) {
-//        this.members = members;
-//    }
+    public List<User> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<User> members) {
+        this.members = members;
+    }
 //
 //    public List<Project> getProjects() {
 //        return projects;

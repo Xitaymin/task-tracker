@@ -5,8 +5,10 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -45,8 +47,10 @@ public class User extends PersistentObject {
     }
 //todo find way to use EnumSet
 
-//    todo UserViewTO
-//    private Team team;
+    //    todo UserViewTO
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 //    private List<Task> tasks;
 
     public Set<Role> getRoles() {
@@ -91,15 +95,13 @@ public class User extends PersistentObject {
         this.deleted = deleted;
     }
 
+    public Team getTeam() {
+        return team;
+    }
 
-//
-//    public Team getTeam() {
-//        return team;
-//    }
-//
-//    public void setTeam(Team team) {
-//        this.team = team;
-//    }
+    public void setTeam(Team team) {
+        this.team = team;
+    }
 //
 //    public List<Task> getTasks() {
 //        return tasks;

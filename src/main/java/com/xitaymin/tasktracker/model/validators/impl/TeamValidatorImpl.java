@@ -1,13 +1,18 @@
 package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.TeamDao;
+import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.Team;
+import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.CreateTeamTO;
 import com.xitaymin.tasktracker.model.dto.EditTeamTO;
+import com.xitaymin.tasktracker.model.service.exceptions.BaseApplicationException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.TeamValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Set;
 
 //Удалить команду можно только если у неё нет проектов и участников
 //Добавление пользователя в команду, пользователь может быть только в одной команде.
@@ -16,13 +21,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class TeamValidatorImpl implements TeamValidator {
     public static final String TOO_MANY_MEMBERS =
-            "Number of team's members which is %d can't be greater than max members number which is %d.";
+            "Number of team's members can't be greater than max members number which is %d.";
+    public static final String INVALID_ROLE = "Users with roles MANAGER or ADMIN can't be added to the team.";
     private final TeamDao teamDao;
-    public final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
+    public static final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
+    public static final String USER_HAS_ANOTHER_TEAM = "User with id = %d already consists in another team.";
 
     public TeamValidatorImpl(TeamDao teamDao) {
         this.teamDao = teamDao;
     }
+
+    @Value("${task-tracker.max.team.members.count}")
+    private int maxMembersNumber;
 
     @Override
     public void validateForSave(CreateTeamTO createTeamTO,
@@ -48,5 +58,24 @@ public class TeamValidatorImpl implements TeamValidator {
             throw new NotFoundResourceException(String.format(TEAM_NOT_FOUND, editTeamTO.getId()));
         }
         return team;
+    }
+
+    //Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
+    @Override
+    public void validateForAddMember(Team team, User user) {
+        if (team.getMembers().size() == maxMembersNumber) {
+            throw new BaseApplicationException(String.format(TOO_MANY_MEMBERS, maxMembersNumber));
+        } else if (user.getTeam() != null) {
+            throw new BaseApplicationException(String.format(USER_HAS_ANOTHER_TEAM, user.getId()));
+        } else if (isUserRoleInvalid(user)) {
+            throw new BaseApplicationException(INVALID_ROLE);
+        }
+
+        //todo check if the team already has lead
+    }
+
+    private boolean isUserRoleInvalid(User user) {
+        Set<Role> roles = user.getRoles();
+        return (roles.contains(Role.ADMIN)) || (roles.contains(Role.MANAGER));
     }
 }
