@@ -16,12 +16,12 @@ public class TeamValidatorImpl implements TeamValidator {
     @Override
     public void validateForSave(CreateTeamTO createTeamTO,
                                 @Value("${task-tracker.max.team.members.count}") int maxMembersNumber) {
-        int membersNumber = createTeamTO.getMembers().size();
-        if (membersNumber > maxMembersNumber) {
-            throw new TeamMembersNumberExceedException(String.format(TOO_MANY_MEMBERS,
-                    membersNumber,
-                    maxMembersNumber));
-        }
+//        int membersNumber = createTeamTO.getMembers().size();
+//        if (membersNumber > maxMembersNumber) {
+//            throw new TeamMembersNumberExceedException(String.format(TOO_MANY_MEMBERS,
+//                    membersNumber,
+//                    maxMembersNumber));
+//        }
 
     }
 
