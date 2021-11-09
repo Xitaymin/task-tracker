@@ -3,34 +3,26 @@ package com.xitaymin.tasktracker.model.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-public class EditProjectTO {
+public class EditTeamTO {
     @Positive
     private final long id;
-    @NotBlank
+    @NotNull
     private final String name;
 
     @JsonCreator
-    public EditProjectTO(@JsonProperty("id") @Positive long id, @JsonProperty("name") @NotBlank String name) {
+    public EditTeamTO(@JsonProperty("id") @Positive long id, @JsonProperty("name") @NotNull String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    //    public Project convertToEntity(){
-//        Project project = new Project();
-//        project.setId(id);
-//        project.setName(name);
-//        return project;
-//    }
+    public long getId() {
+        return id;
+    }
 }
