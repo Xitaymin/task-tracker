@@ -1,18 +1,23 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
-//Команда (Team)
 //CRUD для команды.
-//Редактировать можно только имя.
 //Удалить команду можно только если у неё нет проектов и участников
 //Добавление пользователя в команду, пользователь может быть только в одной команде.
 // Максимальный размер команды определен в пропертях. Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
 //Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
 
 @Entity
+@NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id")
+//               @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
+//               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")
+})
 public class Team extends PersistentObject {
 
+    public static final String FIND_ALL = "Team.findAll";
     private String name;
 //    @OneToMany
 //    private List<User> members;
