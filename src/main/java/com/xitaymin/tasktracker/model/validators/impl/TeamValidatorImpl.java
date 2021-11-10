@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+
 //Удалить команду можно только если у неё нет проектов и участников
 //Добавление пользователя в команду, пользователь может быть только в одной команде.
 // Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
@@ -23,16 +25,15 @@ public class TeamValidatorImpl implements TeamValidator {
     public static final String TOO_MANY_MEMBERS =
             "Number of team's members can't be greater than max members number which is %d.";
     public static final String INVALID_ROLE = "Users with roles MANAGER or ADMIN can't be added to the team.";
-    private final TeamDao teamDao;
     public static final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
     public static final String USER_HAS_ANOTHER_TEAM = "User with id = %d already consists in another team.";
+    private final TeamDao teamDao;
+    @Value("${task-tracker.max.team.members.count}")
+    private int maxMembersNumber;
 
     public TeamValidatorImpl(TeamDao teamDao) {
         this.teamDao = teamDao;
     }
-
-    @Value("${task-tracker.max.team.members.count}")
-    private int maxMembersNumber;
 
     @Override
     public void validateForSave(CreateTeamTO createTeamTO,
@@ -65,6 +66,8 @@ public class TeamValidatorImpl implements TeamValidator {
     public void validateForAddMember(Team team, User user) {
         if (team.getMembers().size() == maxMembersNumber) {
             throw new BaseApplicationException(String.format(TOO_MANY_MEMBERS, maxMembersNumber));
+        } else if (user.isDeleted()) {
+            throw new NotFoundResourceException(String.format(USER_NOT_FOUND, user.getId()));
         } else if (user.getTeam() != null) {
             throw new BaseApplicationException(String.format(USER_HAS_ANOTHER_TEAM, user.getId()));
         } else if (isUserRoleInvalid(user)) {

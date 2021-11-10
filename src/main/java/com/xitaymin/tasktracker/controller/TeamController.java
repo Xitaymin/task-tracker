@@ -54,7 +54,7 @@ public class TeamController {
         teamService.deleteTeam(id);
     }
 
-    @PutMapping("/{team}/member{user}")
+    @PutMapping("/{team}/member/{user}")
     public void addMember(@PathVariable @Positive long team, @PathVariable @Positive long user) {
         teamService.addMember(team, user);
     }

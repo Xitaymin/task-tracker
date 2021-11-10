@@ -36,6 +36,7 @@ public class User extends PersistentObject {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    //todo don't show emails on view
     public User() {
     }
 

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
@@ -74,7 +75,9 @@ public class TeamServiceImpl implements TeamService {
                 optionalUser.orElseThrow(() -> new NotFoundResourceException(String.format(USER_NOT_FOUND, userId)));
 
         teamValidator.validateForAddMember(team, user);
-        team.getMembers().add(user);
+        List<User> members = team.getMembers();
+        members.add(user);
+        team.setMembers(members);
         teamDao.update(team);
     }
 }
