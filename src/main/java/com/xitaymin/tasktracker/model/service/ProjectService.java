@@ -1,8 +1,8 @@
 package com.xitaymin.tasktracker.model.service;
 
 import com.xitaymin.tasktracker.dao.entity.Project;
-import com.xitaymin.tasktracker.model.dto.CreateProjectTO;
-import com.xitaymin.tasktracker.model.dto.EditProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.CreateProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;

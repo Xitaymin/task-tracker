@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.dto;
+package com.xitaymin.tasktracker.model.dto.project;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

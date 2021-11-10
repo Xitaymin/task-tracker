@@ -2,7 +2,7 @@ package com.xitaymin.tasktracker.model.validators.impl;
 
 import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.entity.Project;
-import com.xitaymin.tasktracker.model.dto.EditProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.ProjectValidator;
 import org.springframework.stereotype.Service;

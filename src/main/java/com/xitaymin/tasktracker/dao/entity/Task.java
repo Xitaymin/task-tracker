@@ -17,17 +17,14 @@ import javax.validation.constraints.NotBlank;
 public class Task extends PersistentObject {
     public static final String FIND_ALL = "Task.findAll";
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
-    //    private long id;
-    @NotBlank
     private String title;
-    @NotBlank
     private String description;
     private long reporter;
     private Long assignee;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
-//    private TaskType type;
+    private TaskType type;
 //    private List<Task> childTasks;
 
     public Task() {
@@ -55,13 +52,6 @@ public class Task extends PersistentObject {
 //        this.childTasks = childTasks;
 //    }
 
-//    public long getId() {
-//        return id;
-//    }
-//
-//    public void setId(long id) {
-//        this.id = id;
-//    }
 
     public String getTitle() {
         return title;
@@ -102,14 +92,14 @@ public class Task extends PersistentObject {
     public void setProject(Project project) {
         this.project = project;
     }
-//
-//    public TaskType getType() {
-//        return type;
-//    }
-//
-//    public void setType(TaskType type) {
-//        this.type = type;
-//    }
+
+    public TaskType getType() {
+        return type;
+    }
+
+    public void setType(TaskType type) {
+        this.type = type;
+    }
 //
 //    public List<Task> getChildTasks() {
 //        return childTasks;

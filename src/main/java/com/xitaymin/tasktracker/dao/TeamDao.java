@@ -12,4 +12,6 @@ public interface TeamDao {
     void update(Team team);
 
     Collection<Team> findAll();
+
+    Collection<Team> findAllWithMembers();
 }

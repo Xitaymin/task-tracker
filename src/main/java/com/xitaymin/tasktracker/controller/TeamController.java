@@ -1,8 +1,9 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Team;
-import com.xitaymin.tasktracker.model.dto.CreateTeamTO;
-import com.xitaymin.tasktracker.model.dto.EditTeamTO;
+import com.xitaymin.tasktracker.model.dto.TeamViewTO;
+import com.xitaymin.tasktracker.model.dto.team.CreateTeamTO;
+import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
 import com.xitaymin.tasktracker.model.service.TeamService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,12 +41,12 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public Team getTeam(@PathVariable @Positive long id) {
+    public TeamViewTO getTeam(@PathVariable @Positive long id) {
         return teamService.getTeam(id);
     }
 
     @GetMapping()
-    public Collection<Team> getAllTeams() {
+    public Collection<TeamViewTO> getAllTeams() {
         return teamService.getAllTeams();
     }
 
@@ -58,6 +59,4 @@ public class TeamController {
     public void addMember(@PathVariable @Positive long team, @PathVariable @Positive long user) {
         teamService.addMember(team, user);
     }
-
-
 }

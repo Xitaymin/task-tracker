@@ -1,6 +1,10 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 //D для команды.
@@ -10,13 +14,16 @@ import java.util.List;
 //Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
 
 @Entity
-@NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id")
-//               @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
+@NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id"),
+               @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t" + ".members WHERE t.id=:id"),
+               @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t" + ".members")
 //               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")
 })
 public class Team extends PersistentObject {
 
     public static final String FIND_ALL = "Team.findAll";
+    public static final String FIND_ALL_WITH_MEMBERS = "Team.findAllWithMembers";
+    public static final String FIND_TEAM_WITH_MEMBERS_BY_ID = "Team.findTeamWithMembersById";
     private String name;
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> members;

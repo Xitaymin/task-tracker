@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.dto;
+package com.xitaymin.tasktracker.model.dto.user;
 
 public class UserTO {
     private final long id;

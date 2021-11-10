@@ -1,8 +1,8 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Project;
-import com.xitaymin.tasktracker.model.dto.CreateProjectTO;
-import com.xitaymin.tasktracker.model.dto.EditProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.CreateProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.ProjectService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;

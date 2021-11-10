@@ -2,14 +2,18 @@ package com.xitaymin.tasktracker.model.service.impl;
 
 import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.entity.Project;
-import com.xitaymin.tasktracker.model.dto.CreateProjectTO;
-import com.xitaymin.tasktracker.model.dto.EditProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.CreateProjectTO;
+import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.ProjectService;
 import com.xitaymin.tasktracker.model.validators.ProjectValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+
+
+//Добавить/удалить команду в проект.
+//Назначить productOwner, он должен иметь роль MANAGER
 
 @Service
 public class ProjectServiceImpl implements ProjectService {

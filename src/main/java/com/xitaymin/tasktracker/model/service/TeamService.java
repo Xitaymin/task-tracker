@@ -1,8 +1,9 @@
 package com.xitaymin.tasktracker.model.service;
 
 import com.xitaymin.tasktracker.dao.entity.Team;
-import com.xitaymin.tasktracker.model.dto.CreateTeamTO;
-import com.xitaymin.tasktracker.model.dto.EditTeamTO;
+import com.xitaymin.tasktracker.model.dto.TeamViewTO;
+import com.xitaymin.tasktracker.model.dto.team.CreateTeamTO;
+import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
 
 import java.util.Collection;
 
@@ -11,9 +12,9 @@ public interface TeamService {
 
     void editTeam(EditTeamTO editTeamTO);
 
-    Team getTeam(long id);
+    TeamViewTO getTeam(long id);
 
-    Collection<Team> getAllTeams();
+    Collection<TeamViewTO> getAllTeams();
 
     void deleteTeam(long id);
 

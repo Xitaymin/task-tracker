@@ -4,8 +4,10 @@ import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.CreateTeamTO;
-import com.xitaymin.tasktracker.model.dto.EditTeamTO;
+import com.xitaymin.tasktracker.model.dto.TeamViewTO;
+import com.xitaymin.tasktracker.model.dto.team.CreateTeamTO;
+import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
+import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
 import com.xitaymin.tasktracker.model.service.TeamService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.validators.TeamValidator;
@@ -13,8 +15,9 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
@@ -47,14 +50,22 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team getTeam(long id) {
-        Optional<Team> team = Optional.ofNullable(teamDao.findById(id));
-        return team.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, id)));
+    public TeamViewTO getTeam(long id) {
+        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findById(id));
+        Team team = optionalTeam.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, id)));
+        return convertToTO(team);
     }
 
     @Override
-    public Collection<Team> getAllTeams() {
-        return teamDao.findAll();
+    public Collection<TeamViewTO> getAllTeams() {
+//        return teamDao.findAll();
+        Collection<Team> teams = teamDao.findAllWithMembers();
+
+        Collection<TeamViewTO> teamViewTOS = new HashSet<>();
+        for (Team team : teams) {
+            teamViewTOS.add(convertToTO(team));
+        }
+        return teamViewTOS;
     }
 
     @Transactional
@@ -75,7 +86,17 @@ public class TeamServiceImpl implements TeamService {
                 optionalUser.orElseThrow(() -> new NotFoundResourceException(String.format(USER_NOT_FOUND, userId)));
 
         teamValidator.validateForAddMember(team, user);
+        user.setTeam(team);
         team.getMembers().add(user);
         teamDao.update(team);
+    }
+
+    private TeamViewTO convertToTO(Team team) {
+        Set<EditUserTO> userTOSet = new HashSet<>();
+        for (User user : team.getMembers()) {
+            EditUserTO userTO = new EditUserTO(user.getId(), user.getName(), user.getEmail());
+            userTOSet.add(userTO);
+        }
+        return new TeamViewTO(team.getName(), userTOSet);
     }
 }
