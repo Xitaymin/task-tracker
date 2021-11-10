@@ -1,9 +1,6 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 //D для команды.
@@ -21,7 +18,7 @@ public class Team extends PersistentObject {
 
     public static final String FIND_ALL = "Team.findAll";
     private String name;
-    @OneToMany(mappedBy = "team")
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> members;
 
 //    private List<Project> projects;

@@ -75,9 +75,7 @@ public class TeamServiceImpl implements TeamService {
                 optionalUser.orElseThrow(() -> new NotFoundResourceException(String.format(USER_NOT_FOUND, userId)));
 
         teamValidator.validateForAddMember(team, user);
-        List<User> members = team.getMembers();
-        members.add(user);
-        team.setMembers(members);
+        team.getMembers().add(user);
         teamDao.update(team);
     }
 }
