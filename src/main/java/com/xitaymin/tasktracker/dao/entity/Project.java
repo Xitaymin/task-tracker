@@ -9,8 +9,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projects")
+@NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS, query = "SELECT p FROM Project p INNER JOIN p.teams team where p.id=:id")})
 public class Project extends PersistentObject {
 
+    public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
     private String name;
     @ManyToOne
     private User productOwner;
@@ -41,18 +43,6 @@ public class Project extends PersistentObject {
     public Project() {
     }
 
-    //    public Project(long id, String name, List<Team> teams) {
-//        this.id = id;
-//        this.name = name;
-//        this.teams = teams;
-//    }
-//    public Project(long id, String name) {
-//        this.id = id;
-//        this.name = name;
-//
-////        this.teams = teams;
-//    }
-
     public String getName() {
         return name;
     }
@@ -60,19 +50,5 @@ public class Project extends PersistentObject {
     public void setName(String name) {
         this.name = name;
     }
-
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Project project = (Project) o;
-//        return name.equals(project.name) && teams.equals(project.teams);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, teams);
-//    }
 
 }

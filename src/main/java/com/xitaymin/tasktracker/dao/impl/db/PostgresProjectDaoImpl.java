@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Repository
-public class ProjectDaoImpl implements ProjectDao {
+public class PostgresProjectDaoImpl implements ProjectDao {
     @PersistenceContext
     EntityManager entityManager;
 
@@ -33,6 +33,6 @@ public class ProjectDaoImpl implements ProjectDao {
     //todo implement
     @Override
     public Project findByIdWithTeams(long projectId) {
-        return null;
+        return entityManager.createNamedQuery(Project.FIND_BY_ID_WITH_TEAMS,Project.class).getSingleResult();
     }
 }
