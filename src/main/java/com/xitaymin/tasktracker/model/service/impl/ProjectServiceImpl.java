@@ -5,7 +5,7 @@ import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.model.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.ProjectService;
-import com.xitaymin.tasktracker.model.validators.ProjectValidator;
+import com.xitaymin.tasktracker.model.service.validators.ProjectValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

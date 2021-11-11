@@ -1,11 +1,8 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 //D для команды.
 //Удалить команду можно только если у неё нет проектов и участников
@@ -28,7 +25,8 @@ public class Team extends PersistentObject {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private List<User> members;
 
-//    private List<Project> projects;
+    @ManyToMany(mappedBy = "teams")
+    private Set<Project> projects;
 
     public Team() {
     }

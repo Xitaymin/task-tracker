@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.validators;
+package com.xitaymin.tasktracker.model.service.validators;
 
 public interface UserWithTasksValidator {
 

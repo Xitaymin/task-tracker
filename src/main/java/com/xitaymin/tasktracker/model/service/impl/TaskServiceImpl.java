@@ -1,16 +1,20 @@
 package com.xitaymin.tasktracker.model.service.impl;
 
+import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.TaskDAO;
+import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.TaskValidator;
+import com.xitaymin.tasktracker.model.service.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.Optional;
 
-import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 
 //Создание задачи.
 //Задача может быть создана только в рамках существующего проекта
@@ -26,8 +30,10 @@ import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.T
 //Каждый из типов тасок может содержать дочерние задачи только следующего уровня.
 @Service
 public class TaskServiceImpl implements TaskService {
+
     private final TaskDAO taskDAO;
     private final TaskValidator taskValidator;
+
 
     public TaskServiceImpl(TaskDAO taskDAO, TaskValidator taskValidator) {
         this.taskDAO = taskDAO;
@@ -60,8 +66,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task saveTask(Task task) {
-        taskValidator.validateForSave(task);
+    public Task saveTask(CreateTaskTO taskTO) {
+        taskValidator.validateForSave(taskTO);
+//        Optional<Project> optionalProject = Optional.ofNullable(projectDao.findById(taskTO.getProjectId()));
+//        Project project = optionalProject
+//                .orElseThrow(() -> new NotFoundResourceException(String.format(PROJECT_DOESNT_EXIST, taskTO.getProjectId())));
+        Task task = taskTO.convertToEntity();
+//        task.setProject(project);
         return taskDAO.save(task);
     }
 }

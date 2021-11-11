@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.validators;
+package com.xitaymin.tasktracker.model.service.validators;
 
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;

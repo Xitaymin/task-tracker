@@ -1,10 +1,6 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,9 +14,29 @@ public class Project extends PersistentObject {
     private String name;
     @ManyToOne
     private User productOwner;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "project")
-    private Set<Task> tasks;
-//    private List<Team> teams;
+
+    @ManyToMany
+    @JoinTable(
+            name="project_team",
+            joinColumns=@JoinColumn(name="project_id", referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="team_id", referencedColumnName="id"))
+    private Set<Team> teams;
+
+    public User getProductOwner() {
+        return productOwner;
+    }
+
+    public void setProductOwner(User productOwner) {
+        this.productOwner = productOwner;
+    }
+
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
+    }
 
     public Project() {
     }
@@ -30,13 +46,12 @@ public class Project extends PersistentObject {
 //        this.name = name;
 //        this.teams = teams;
 //    }
-    public Project(long id, String name) {
-        this.id = id;
-        this.name = name;
-        this.tasks = new HashSet<>();
-
-//        this.teams = teams;
-    }
+//    public Project(long id, String name) {
+//        this.id = id;
+//        this.name = name;
+//
+////        this.teams = teams;
+//    }
 
     public String getName() {
         return name;
@@ -46,13 +61,6 @@ public class Project extends PersistentObject {
         this.name = name;
     }
 
-//    public List<Team> getTeams() {
-//        return teams;
-//    }
-
-//    public void setTeams(List<Team> teams) {
-//        this.teams = teams;
-//    }
 
 //    @Override
 //    public boolean equals(Object o) {

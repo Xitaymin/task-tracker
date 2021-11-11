@@ -7,7 +7,7 @@ import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static com.xitaymin.tasktracker.controller.UserController.USERS;
-import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;

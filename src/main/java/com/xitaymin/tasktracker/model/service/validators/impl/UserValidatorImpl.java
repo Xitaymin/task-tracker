@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.validators.impl;
+package com.xitaymin.tasktracker.model.service.validators.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
@@ -6,7 +6,7 @@ import com.xitaymin.tasktracker.model.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.UserValidator;
+import com.xitaymin.tasktracker.model.service.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
 @Service

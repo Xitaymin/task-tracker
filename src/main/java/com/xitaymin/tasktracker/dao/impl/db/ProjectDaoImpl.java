@@ -29,4 +29,10 @@ public class ProjectDaoImpl implements ProjectDao {
     public Project findById(long id) {
         return entityManager.find(Project.class, id);
     }
+
+    //todo implement
+    @Override
+    public Project findByIdWithTeams(long projectId) {
+        return null;
+    }
 }

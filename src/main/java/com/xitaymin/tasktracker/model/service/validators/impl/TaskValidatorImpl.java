@@ -1,13 +1,18 @@
-package com.xitaymin.tasktracker.model.validators.impl;
+package com.xitaymin.tasktracker.model.service.validators.impl;
 
+import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
+import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.TaskValidator;
+import com.xitaymin.tasktracker.model.service.validators.TaskValidator;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class TaskValidatorImpl implements TaskValidator {
@@ -18,12 +23,16 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String REQUIRED_DESCRIPTION = "Description is required and shouldn't be empty.";
     public static final String REPORTER_NOT_FOUND = "Not found reporter with id = %s.";
     public static final String ASSIGNEE_NOT_FOUND = "Not found assignee with id = %s.";
+    public static final String PROJECT_DOESNT_EXIST = "Project with id = %d doesn't exist.";
+    public static final String ASSIGNEE_NOT_IN_TEAM = "Assignee with id = %d should consist in team related to the project with id = %d";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
+    private final ProjectDao projectDao;
 
-    public TaskValidatorImpl(TaskDAO taskDAO, UserDAO userDAO) {
+    public TaskValidatorImpl(TaskDAO taskDAO, UserDAO userDAO, ProjectDao projectDao) {
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
+        this.projectDao = projectDao;
     }
 
     @Override
@@ -49,24 +58,37 @@ public class TaskValidatorImpl implements TaskValidator {
     }
 
     @Override
-    public void validateForSave(Task task) {
-        Long assigneeId = task.getAssignee();
-        long reporterId = task.getReporter();
+    public void validateForSave(CreateTaskTO taskTO) {
+        Long assigneeId = taskTO.getAssignee();
+        long reporterId = taskTO.getReporter();
+
+        Optional<Project> optionalProject = Optional.ofNullable(projectDao.findByIdWithTeams(taskTO.getProjectId()));
+        Project project = optionalProject
+                .orElseThrow(() -> new NotFoundResourceException(String.format(PROJECT_DOESNT_EXIST, taskTO.getProjectId())));
+
 
         if (isUserUnavailable(userDAO.findOne(reporterId))) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
         if (assigneeId != null) {
-            if (isUserUnavailable(userDAO.findOne(assigneeId))) {
+            User assignee = userDAO.findOne(assigneeId);
+            if (isUserUnavailable(assignee)) {
                 throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assigneeId));
             }
+            boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
+            if(!isAssigneeInTeam){throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,assigneeId,project.getId()));}
+
+
         }
-        if (isTextFieldAbsent(task.getTitle())) {
+
+        //not necessary
+        if (isTextFieldAbsent(taskTO.getTitle())) {
             throw new InvalidRequestParameterException(REQUIRED_TITLE);
         }
-        if (isTextFieldAbsent(task.getDescription())) {
+        if (isTextFieldAbsent(taskTO.getDescription())) {
             throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
         }
+
     }
 
     private boolean isTextFieldAbsent(String text) {

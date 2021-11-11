@@ -10,7 +10,7 @@ import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
 import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
 import com.xitaymin.tasktracker.model.service.TeamService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.TeamValidator;
+import com.xitaymin.tasktracker.model.service.validators.TeamValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 @Service
 public class TeamServiceImpl implements TeamService {

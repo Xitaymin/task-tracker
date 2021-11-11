@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.model.validators.impl;
+package com.xitaymin.tasktracker.model.service.validators.impl;
 
 import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.entity.Role;
@@ -8,13 +8,13 @@ import com.xitaymin.tasktracker.model.dto.team.CreateTeamTO;
 import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
 import com.xitaymin.tasktracker.model.service.exceptions.BaseApplicationException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.TeamValidator;
+import com.xitaymin.tasktracker.model.service.validators.TeamValidator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 //Удалить команду можно только если у неё нет проектов и участников
 //Добавление пользователя в команду, пользователь может быть только в одной команде.

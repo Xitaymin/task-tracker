@@ -9,4 +9,6 @@ public interface ProjectDao {
     void update(Project project);
 
     Project findById(long id);
+
+    Project findByIdWithTeams(long projectId);
 }

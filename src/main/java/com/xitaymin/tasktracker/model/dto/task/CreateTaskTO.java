@@ -19,7 +19,7 @@ public class CreateTaskTO {
     private final long reporter;
     private final Long assignee;
     @Positive
-    private final long project_id;
+    private final long projectId;
     @NotNull
     private final TaskType type;
 
@@ -27,12 +27,12 @@ public class CreateTaskTO {
     public CreateTaskTO(@JsonProperty("title") @NotBlank String title,
                         @JsonProperty("description") @NotBlank String description,
                         @JsonProperty("reporter") @Positive long reporter, @JsonProperty("assignee") Long assignee,
-                        @JsonProperty("project") @Positive long project_id, @JsonProperty("type") TaskType type) {
+                        @JsonProperty("project") @Positive long projectId, @JsonProperty("type") TaskType type) {
         this.title = title;
         this.description = description;
         this.reporter = reporter;
         this.assignee = assignee;
-        this.project_id = project_id;
+        this.projectId = projectId;
         this.type = type;
     }
 
@@ -54,8 +54,8 @@ public class CreateTaskTO {
         return assignee;
     }
 
-    public long getProject_id() {
-        return project_id;
+    public long getProjectId() {
+        return projectId;
     }
 
     public TaskType getType() {

@@ -7,8 +7,8 @@ import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.UserWithTasks;
 import com.xitaymin.tasktracker.model.service.UserWithTasksService;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
-import com.xitaymin.tasktracker.model.validators.UserValidator;
-import com.xitaymin.tasktracker.model.validators.UserWithTasksValidator;
+import com.xitaymin.tasktracker.model.service.validators.UserValidator;
+import com.xitaymin.tasktracker.model.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

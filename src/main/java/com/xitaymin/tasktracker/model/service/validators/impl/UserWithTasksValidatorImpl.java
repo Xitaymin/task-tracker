@@ -1,14 +1,14 @@
-package com.xitaymin.tasktracker.model.validators.impl;
+package com.xitaymin.tasktracker.model.service.validators.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
-import com.xitaymin.tasktracker.model.validators.UserValidator;
-import com.xitaymin.tasktracker.model.validators.UserWithTasksValidator;
+import com.xitaymin.tasktracker.model.service.validators.UserValidator;
+import com.xitaymin.tasktracker.model.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
-import static com.xitaymin.tasktracker.model.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
-import static com.xitaymin.tasktracker.model.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 @Service
 public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
