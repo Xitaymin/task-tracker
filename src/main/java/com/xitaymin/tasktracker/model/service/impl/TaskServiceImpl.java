@@ -1,10 +1,10 @@
 package com.xitaymin.tasktracker.model.service.impl;
 
-import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.model.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.validators.TaskValidator;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
-import java.util.Optional;
 
 import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 
@@ -66,13 +65,24 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task saveTask(CreateTaskTO taskTO) {
-        taskValidator.validateForSave(taskTO);
+    public TaskViewTO saveTask(CreateTaskTO taskTO) {
+        Project project = taskValidator.validateForSave(taskTO);
 //        Optional<Project> optionalProject = Optional.ofNullable(projectDao.findById(taskTO.getProjectId()));
 //        Project project = optionalProject
 //                .orElseThrow(() -> new NotFoundResourceException(String.format(PROJECT_DOESNT_EXIST, taskTO.getProjectId())));
         Task task = taskTO.convertToEntity();
-//        task.setProject(project);
-        return taskDAO.save(task);
+        task.setProject(project);
+        Task savedTask = taskDAO.save(task);
+        return convertToTO(savedTask);
+    }
+
+    private TaskViewTO convertToTO(Task savedTask) {
+        return new TaskViewTO(savedTask.getId(),
+                savedTask.getTitle(),
+                savedTask.getDescription(),
+                savedTask.getReporter(),
+                savedTask.getAssignee(),
+                savedTask.getProject().getId(),
+                savedTask.getType());
     }
 }

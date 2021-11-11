@@ -58,14 +58,14 @@ public class TaskValidatorImpl implements TaskValidator {
     }
 
     @Override
-    public void validateForSave(CreateTaskTO taskTO) {
+    public Project validateForSave(CreateTaskTO taskTO) {
         Long assigneeId = taskTO.getAssignee();
         long reporterId = taskTO.getReporter();
 
         Optional<Project> optionalProject = Optional.ofNullable(projectDao.findByIdWithTeams(taskTO.getProjectId()));
-        Project project = optionalProject
-                .orElseThrow(() -> new NotFoundResourceException(String.format(PROJECT_DOESNT_EXIST, taskTO.getProjectId())));
-
+        Project project = optionalProject.orElseThrow(() -> new NotFoundResourceException(String.format(
+                PROJECT_DOESNT_EXIST,
+                taskTO.getProjectId())));
 
         if (isUserUnavailable(userDAO.findOne(reporterId))) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
@@ -77,8 +77,6 @@ public class TaskValidatorImpl implements TaskValidator {
             }
             boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
             if(!isAssigneeInTeam){throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,assigneeId,project.getId()));}
-
-
         }
 
         //not necessary
@@ -88,6 +86,9 @@ public class TaskValidatorImpl implements TaskValidator {
         if (isTextFieldAbsent(taskTO.getDescription())) {
             throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
         }
+
+        return project;
+
 
     }
 

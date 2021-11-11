@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.model.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.model.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +27,7 @@ public class TaskController {
     }
 
     @PostMapping()
-    public Task createTask(@Valid @RequestBody CreateTaskTO taskTO) {
+    public TaskViewTO createTask(@Valid @RequestBody CreateTaskTO taskTO) {
         return taskService.saveTask(taskTO);
     }
 

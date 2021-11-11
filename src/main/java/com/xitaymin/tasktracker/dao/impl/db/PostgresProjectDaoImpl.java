@@ -33,6 +33,8 @@ public class PostgresProjectDaoImpl implements ProjectDao {
     //todo implement
     @Override
     public Project findByIdWithTeams(long projectId) {
-        return entityManager.createNamedQuery(Project.FIND_BY_ID_WITH_TEAMS,Project.class).getSingleResult();
+        return entityManager.createNamedQuery(Project.FIND_BY_ID_WITH_TEAMS, Project.class)
+                .setParameter("id", projectId)
+                .getSingleResult();
     }
 }

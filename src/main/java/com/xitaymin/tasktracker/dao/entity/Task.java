@@ -40,19 +40,6 @@ public class Task extends PersistentObject {
         this.project = project;
     }
 
-//    public Task(long id, @NotBlank String title, @NotBlank String description, long reporter, Long assignee,
-//                Project project, TaskType type, List<Task> childTasks) {
-//        this.id = id;
-//        this.title = title;
-//        this.description = description;
-//        this.reporter = reporter;
-//        this.assignee = assignee;
-//        this.project = project;
-//        this.type = type;
-//        this.childTasks = childTasks;
-//    }
-
-
     public String getTitle() {
         return title;
     }
@@ -109,20 +96,5 @@ public class Task extends PersistentObject {
 //        this.childTasks = childTasks;
 //    }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Task task = (Task) o;
-//        return reporter == task.reporter && title.equals(task.title) && description.equals(task.description) && Objects.equals(
-//                assignee,
-//                task.assignee) && Objects.equals(project, task.project) && type == task.type && Objects.equals(
-//                childTasks,
-//                task.childTasks);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(title, description, reporter, assignee, project, type, childTasks);
-//    }
+
 }
