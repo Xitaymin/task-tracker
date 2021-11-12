@@ -73,8 +73,6 @@ public class CreateTaskTO {
         Task task = new Task();
         task.setTitle(title);
         task.setDescription(description);
-        task.setReporter(reporter);
-        task.setAssignee(assignee);
         task.setType(type);
         return task;
     }

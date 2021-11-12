@@ -80,6 +80,7 @@ public class TaskValidatorImpl implements TaskValidator {
         if (isUserUnavailable(userDAO.findOne(reporterId))) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
+
         if (assigneeId != null) {
             User assignee = userDAO.findOne(assigneeId);
             if (isUserUnavailable(assignee)) {
@@ -131,7 +132,7 @@ public class TaskValidatorImpl implements TaskValidator {
         return (text == null || text.isBlank());
     }
 
-    private boolean isUserUnavailable(User user) {
+    public boolean isUserUnavailable(User user) {
         return (user == null || user.isDeleted());
     }
 

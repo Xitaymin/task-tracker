@@ -51,6 +51,22 @@ public class Task extends PersistentObject {
         this.description = description;
     }
 
+    public User getReporter() {
+        return reporter;
+    }
+
+    public void setReporter(User reporter) {
+        this.reporter = reporter;
+    }
+
+    public User getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
     public Project getProject() {
         return project;
     }
