@@ -20,13 +20,19 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String REQUIRED_TITLE = "Title is required and shouldn't be empty.";
     public static final String TASK_NOT_FOUND = "Task with id = %s doesn't exist.";
     public static final String REPORTER_SHOULDNT_CHANGE = "Reporter shouldn't be changed. Old value = %s.";
-    public static final String ASSIGNEE_SHOULDNT_CHANGE = "Assignee shouldn't be changed in this request. Old value = %s.";
+    public static final String ASSIGNEE_SHOULDNT_CHANGE =
+            "Assignee shouldn't be changed in this request. Old value = %s.";
     public static final String REQUIRED_DESCRIPTION = "Description is required and shouldn't be empty.";
     public static final String REPORTER_NOT_FOUND = "Not found reporter with id = %s.";
     public static final String ASSIGNEE_NOT_FOUND = "Not found assignee with id = %s.";
     public static final String PROJECT_DOESNT_EXIST = "Project with id = %d doesn't exist.";
-    public static final String ASSIGNEE_NOT_IN_TEAM = "Assignee with id = %d should consist in team related to the project with id = %d";
+    public static final String ASSIGNEE_NOT_IN_TEAM =
+            "Assignee with id = %d should consist in team related to the project with id = %d";
     public static final String NO_NEED_PARENT_FOR_EPIC = "Task with type EPIC don't need parent.";
+    public static final String NOT_FOUND_PARENT_TASK = "Parent task with id = %d doesn't exist.";
+    public static final String SUBTASK_WITHOUT_PARENT = "Task with type SUBTASK can't be created without parent;";
+    private static final String INCOMPATIBLE_PARENT_TYPE =
+            "Task with type %s can't have parent with type %s. Types hierarchies are: EPIC -> STORY -> ISSUE -> " + "SUBTASK and EPIC -> BUG. Every of the task type can have only next level type parent.";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final ProjectDao projectDao;
@@ -42,10 +48,12 @@ public class TaskValidatorImpl implements TaskValidator {
         Task oldTask = taskDAO.findOne(task.getId());
         if (oldTask != null) {
             if (task.getReporter() != oldTask.getReporter()) {
-                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE, oldTask.getReporter()));
+                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE,
+                        oldTask.getReporter()));
             }
             if (!isAssigneeValidForUpdate(task.getAssignee(), oldTask.getAssignee())) {
-                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE, oldTask.getAssignee()));
+                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE,
+                        oldTask.getAssignee()));
             }
 
             if (isTextFieldAbsent(task.getTitle())) {
@@ -78,9 +86,13 @@ public class TaskValidatorImpl implements TaskValidator {
                 throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assigneeId));
             }
             boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
-            if(!isAssigneeInTeam){throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,assigneeId,project.getId()));}
+            if (!isAssigneeInTeam) {
+                throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,
+                        assigneeId,
+                        project.getId()));
+            }
         }
-        validateTaskType(taskTO.getType(),taskTO.getParentId());
+        validateTaskType(taskTO.getType(), taskTO.getParentId());
 
         //not necessary
         if (isTextFieldAbsent(taskTO.getTitle())) {
@@ -95,19 +107,22 @@ public class TaskValidatorImpl implements TaskValidator {
 
     }
 
-    private void validateTaskType(TaskType type, Long parentId) {
-        if(type.equals(TaskType.EPIC)){
-            if(parentId!=null){throw new InvalidRequestParameterException(NO_NEED_PARENT_FOR_EPIC);
+    private void validateTaskType(TaskType childType, Long parentId) {
+        if (parentId == null) {
+            if (childType.equals(TaskType.SUBTASK)) {
+                throw new InvalidRequestParameterException(SUBTASK_WITHOUT_PARENT);
             }
-        }
-        else if(type.equals(TaskType.BUG)){
-            if(parentId!=null){
+        } else {
+            Optional<Task> optionalTask = Optional.ofNullable(taskDAO.findOne(parentId));
+            Task parentTask = optionalTask.orElseThrow(() -> new InvalidRequestParameterException(String.format(
+                    NOT_FOUND_PARENT_TASK,
+                    parentId)));
+            TaskType parentType = parentTask.getType();
 
-                //todo implement
-                Task task = taskDAO.findOne(parentId);
-                if(!task.getType().equals(TaskType.EPIC)){
-                    throw new InvalidRequestParameterException("");
-                }
+            if ((childType.getHierarchyLevel() - parentType.getHierarchyLevel() != 1) || (!parentType.isChildable())) {
+                throw new InvalidRequestParameterException(String.format(INCOMPATIBLE_PARENT_TYPE,
+                        childType.name(),
+                        parentType.name()));
             }
         }
     }

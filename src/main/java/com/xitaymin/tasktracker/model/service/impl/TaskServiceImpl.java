@@ -66,6 +66,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     @Transactional
     public TaskViewTO saveTask(CreateTaskTO taskTO) {
+        //todo fix return type of validateForSave
         Project project = taskValidator.validateForSave(taskTO);
 //        Optional<Project> optionalProject = Optional.ofNullable(projectDao.findById(taskTO.getProjectId()));
 //        Project project = optionalProject
