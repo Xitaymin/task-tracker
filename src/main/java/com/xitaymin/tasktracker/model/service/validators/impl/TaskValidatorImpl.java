@@ -5,6 +5,7 @@ import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
@@ -25,6 +26,7 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String ASSIGNEE_NOT_FOUND = "Not found assignee with id = %s.";
     public static final String PROJECT_DOESNT_EXIST = "Project with id = %d doesn't exist.";
     public static final String ASSIGNEE_NOT_IN_TEAM = "Assignee with id = %d should consist in team related to the project with id = %d";
+    public static final String NO_NEED_PARENT_FOR_EPIC = "Task with type EPIC don't need parent.";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final ProjectDao projectDao;
@@ -78,6 +80,7 @@ public class TaskValidatorImpl implements TaskValidator {
             boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
             if(!isAssigneeInTeam){throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,assigneeId,project.getId()));}
         }
+        validateTaskType(taskTO.getType(),taskTO.getParentId());
 
         //not necessary
         if (isTextFieldAbsent(taskTO.getTitle())) {
@@ -90,6 +93,23 @@ public class TaskValidatorImpl implements TaskValidator {
         return project;
 
 
+    }
+
+    private void validateTaskType(TaskType type, Long parentId) {
+        if(type.equals(TaskType.EPIC)){
+            if(parentId!=null){throw new InvalidRequestParameterException(NO_NEED_PARENT_FOR_EPIC);
+            }
+        }
+        else if(type.equals(TaskType.BUG)){
+            if(parentId!=null){
+
+                //todo implement
+                Task task = taskDAO.findOne(parentId);
+                if(!task.getType().equals(TaskType.EPIC)){
+                    throw new InvalidRequestParameterException("");
+                }
+            }
+        }
     }
 
     private boolean isTextFieldAbsent(String text) {

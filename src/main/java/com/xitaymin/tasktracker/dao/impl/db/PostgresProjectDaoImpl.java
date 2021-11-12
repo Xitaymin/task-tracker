@@ -30,7 +30,6 @@ public class PostgresProjectDaoImpl implements ProjectDao {
         return entityManager.find(Project.class, id);
     }
 
-    //todo implement
     @Override
     public Project findByIdWithTeams(long projectId) {
         return entityManager.createNamedQuery(Project.FIND_BY_ID_WITH_TEAMS, Project.class)

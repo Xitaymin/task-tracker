@@ -22,18 +22,21 @@ public class CreateTaskTO {
     private final long projectId;
     @NotNull
     private final TaskType type;
+    private final Long parentId;
 
     @JsonCreator
     public CreateTaskTO(@JsonProperty("title") @NotBlank String title,
                         @JsonProperty("description") @NotBlank String description,
                         @JsonProperty("reporter") @Positive long reporter, @JsonProperty("assignee") Long assignee,
-                        @JsonProperty("project") @Positive long projectId, @JsonProperty("type") TaskType type) {
+                        @JsonProperty("project") @Positive long projectId, @JsonProperty("type") TaskType type,
+                        @JsonProperty("parentId") Long parentId) {
         this.title = title;
         this.description = description;
         this.reporter = reporter;
         this.assignee = assignee;
         this.projectId = projectId;
         this.type = type;
+        this.parentId = parentId;
     }
 
     //todo found out how to reduce duplication in dto
@@ -60,6 +63,10 @@ public class CreateTaskTO {
 
     public TaskType getType() {
         return type;
+    }
+
+    public Long getParentId() {
+        return parentId;
     }
 
     public Task convertToEntity() {
