@@ -1,5 +1,6 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -11,10 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -35,24 +34,28 @@ public class User extends PersistentObject {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.MERGE)
+    private Set<Task> tasks;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     //todo don't show emails on view
     public User() {
     }
 
-    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.deleted = deleted;
-    }
 //todo find way to use EnumSet
 
     //    todo UserViewTO
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
-//    private List<Task> tasks;
+
+
+    public Set<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
+    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -61,16 +64,6 @@ public class User extends PersistentObject {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
-//    public User(long id, @NotBlank String name, @NotNull @Email String email, boolean deleted, Set<String> roles, Team team, List<Task> tasks) {
-//        this.id = id;
-//        this.name = name;
-//        this.email = email;
-//        this.deleted = deleted;
-//        this.roles = roles;
-//        this.team = team;
-//        this.tasks = tasks;
-//    }
 
     public String getName() {
         return name;
@@ -103,26 +96,5 @@ public class User extends PersistentObject {
     public void setTeam(Team team) {
         this.team = team;
     }
-//
-//    public List<Task> getTasks() {
-//        return tasks;
-//    }
-//
-//    public void setTasks(List<Task> tasks) {
-//        this.tasks = tasks;
-//    }
 
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        User user = (User) o;
-//        return deleted == user.deleted && name.equals(user.name) && email.equals(user.email) && Objects.equals(roles,
-//                user.roles) && Objects.equals(team, user.team) && Objects.equals(tasks, user.tasks);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(name, email, deleted, roles, team, tasks);
-//    }
 }

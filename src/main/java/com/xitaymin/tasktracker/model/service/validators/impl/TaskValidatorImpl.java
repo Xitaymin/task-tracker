@@ -31,7 +31,7 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String NO_NEED_PARENT_FOR_EPIC = "Task with type EPIC don't need parent.";
     public static final String NOT_FOUND_PARENT_TASK = "Parent task with id = %d doesn't exist.";
     public static final String SUBTASK_WITHOUT_PARENT = "Task with type SUBTASK can't be created without parent;";
-    private static final String INCOMPATIBLE_PARENT_TYPE =
+    public static final String INCOMPATIBLE_PARENT_TYPE =
             "Task with type %s can't have parent with type %s. Types hierarchies are: EPIC -> STORY -> ISSUE -> " + "SUBTASK and EPIC -> BUG. Every of the task type can have only next level type parent.";
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
@@ -45,26 +45,26 @@ public class TaskValidatorImpl implements TaskValidator {
 
     @Override
     public void validateForUpdate(Task task) {
-        Task oldTask = taskDAO.findOne(task.getId());
-        if (oldTask != null) {
-            if (task.getReporter() != oldTask.getReporter()) {
-                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE,
-                        oldTask.getReporter()));
-            }
-            if (!isAssigneeValidForUpdate(task.getAssignee(), oldTask.getAssignee())) {
-                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE,
-                        oldTask.getAssignee()));
-            }
-
-            if (isTextFieldAbsent(task.getTitle())) {
-                throw new InvalidRequestParameterException(REQUIRED_TITLE);
-            }
-            if (isTextFieldAbsent(task.getDescription())) {
-                throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
-            }
-        } else {
-            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, task.getId()));
-        }
+//        Task oldTask = taskDAO.findOne(task.getId());
+//        if (oldTask != null) {
+//            if (task.getReporter() != oldTask.getReporter()) {
+//                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE,
+//                        oldTask.getReporter()));
+//            }
+//            if (!isAssigneeValidForUpdate(task.getAssignee(), oldTask.getAssignee())) {
+//                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE,
+//                        oldTask.getAssignee()));
+//            }
+//
+//            if (isTextFieldAbsent(task.getTitle())) {
+//                throw new InvalidRequestParameterException(REQUIRED_TITLE);
+//            }
+//            if (isTextFieldAbsent(task.getDescription())) {
+//                throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
+//            }
+//        } else {
+//            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, task.getId()));
+//        }
     }
 
     @Override

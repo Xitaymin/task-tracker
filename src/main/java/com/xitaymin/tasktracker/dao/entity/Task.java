@@ -7,7 +7,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "tasks")
@@ -19,25 +18,21 @@ public class Task extends PersistentObject {
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
     private String title;
     private String description;
-    private long reporter;
-    private Long assignee;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "reporter_id")
+    private User reporter;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "assignee_id")
+    private User assignee;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
     private TaskType type;
+
 //    private List<Task> childTasks;
 
     public Task() {
-    }
-
-    public Task(long id, @NotBlank String title, @NotBlank String description, long reporter, Long assignee,
-                Project project) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.reporter = reporter;
-        this.assignee = assignee;
-        this.project = project;
     }
 
     public String getTitle() {
@@ -56,22 +51,6 @@ public class Task extends PersistentObject {
         this.description = description;
     }
 
-    public long getReporter() {
-        return reporter;
-    }
-
-    public void setReporter(long reporter) {
-        this.reporter = reporter;
-    }
-
-    public Long getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(Long assignee) {
-        this.assignee = assignee;
-    }
-
     public Project getProject() {
         return project;
     }
@@ -87,14 +66,5 @@ public class Task extends PersistentObject {
     public void setType(TaskType type) {
         this.type = type;
     }
-//
-//    public List<Task> getChildTasks() {
-//        return childTasks;
-//    }
-//
-//    public void setChildTasks(List<Task> childTasks) {
-//        this.childTasks = childTasks;
-//    }
-
 
 }
