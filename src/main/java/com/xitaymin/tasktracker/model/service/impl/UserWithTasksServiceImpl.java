@@ -8,12 +8,15 @@ import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.user.UserWithTasksAndTeamsTO;
 import com.xitaymin.tasktracker.model.service.UserWithTasksService;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
+import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.validators.UserValidator;
 import com.xitaymin.tasktracker.model.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 
 @Service
 public class UserWithTasksServiceImpl implements UserWithTasksService {
@@ -32,12 +35,17 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
 
     @Override
     public void assignTask(long userId, long taskId) {
-        if (userWithTasksValidator.areUserAndTaskValidToAssign(userId, taskId)) {
-            Task task = taskDAO.findOne(taskId);
-//            task.setAssignee(userId);
-            taskDAO.update(task);
+        Task task = taskDAO.findFullTask(taskId);
+        if (task == null) {
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, taskId));
         }
+        User assignee = userDAO.findOne(taskId);
+        userWithTasksValidator.validateToAssign(assignee, task);
+        task.setAssignee(assignee);
+        assignee.getTasks().add(task);
+        userDAO.update(assignee);
     }
+
 
     @Override
     public UserWithTasksAndTeamsTO getById(long id) {

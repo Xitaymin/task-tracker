@@ -2,11 +2,17 @@ package com.xitaymin.tasktracker.model.service.validators.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.Task;
+import com.xitaymin.tasktracker.dao.entity.User;
+import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.validators.UserValidator;
 import com.xitaymin.tasktracker.model.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
+import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
+import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_IN_TEAM;
 import static com.xitaymin.tasktracker.model.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
@@ -23,7 +29,7 @@ public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
     }
 
     @Override
-    public boolean areUserAndTaskValidToAssign(long userId, long taskId) {
+    public boolean isAssigneeValid(long userId, long taskId) {
 
         if (taskDAO.findOne(taskId) == null) {
             throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, taskId));
@@ -32,5 +38,19 @@ public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
             throw new NotFoundResourceException(String.format(USER_NOT_FOUND, userId));
         }
         return true;
+    }
+
+    @Override
+    public void validateToAssign(User assignee, Task task) {
+        if (userValidator.isUnavailable(assignee)) {
+            throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assignee.getId()));
+        }
+        Project project = task.getProject();
+        boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
+        if (!isAssigneeInTeam) {
+            throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,
+                    assignee.getId(),
+                    project.getId()));
+        }
     }
 }

@@ -42,8 +42,16 @@ public class PostgresTaskDaoImpl implements TaskDAO {
         return entityManager.find(Task.class, id);
     }
 
+    //todo catch no result exception
     @Override
     public Collection<Task> findAll() {
         return entityManager.createNamedQuery(Task.FIND_ALL, Task.class).getResultList();
+    }
+
+    @Override
+    public Task findFullTask(long taskId) {
+        return entityManager.createNamedQuery(Task.FIND_FULL_TASK_BY_ID, Task.class)
+                .setParameter("id", taskId)
+                .getSingleResult();
     }
 }

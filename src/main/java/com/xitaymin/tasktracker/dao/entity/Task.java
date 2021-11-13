@@ -14,11 +14,13 @@ import java.util.List;
 @Entity
 @Table(name = "tasks")
 @NamedQueries({@NamedQuery(name = Task.FIND_ALL, query = "SELECT t FROM Task t"),
-               @NamedQuery(name = Task.FIND_BY_ASSIGNEE, query = "SELECT t FROM Task t WHERE t.assignee=:assignee")})
+               @NamedQuery(name = Task.FIND_BY_ASSIGNEE, query = "SELECT t FROM Task t WHERE t.assignee=:assignee"),
+               @NamedQuery(name = Task.FIND_FULL_TASK_BY_ID, query = "SELECT t FROM Task t LEFT JOIN FETCH t.project WHERE t.id=:id")})
 
 public class Task extends PersistentObject {
     public static final String FIND_ALL = "Task.findAll";
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
+    public static final String FIND_FULL_TASK_BY_ID = "Task.findByIdWithAll";
 
     private String title;
     private String description;

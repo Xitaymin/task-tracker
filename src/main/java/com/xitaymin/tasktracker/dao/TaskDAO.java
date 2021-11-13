@@ -7,4 +7,6 @@ import java.util.List;
 public interface TaskDAO extends GenericDAO<Task> {
 
     List<Task> findByAssignee(long id);
+
+    Task findFullTask(long taskId);
 }
