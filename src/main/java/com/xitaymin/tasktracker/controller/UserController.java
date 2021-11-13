@@ -1,9 +1,9 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.model.dto.user.CreateUserTO;
-import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
-import com.xitaymin.tasktracker.model.dto.user.UserViewTO;
-import com.xitaymin.tasktracker.model.service.UserService;
+import com.xitaymin.tasktracker.dto.user.CreateUserTO;
+import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.UserViewTO;
+import com.xitaymin.tasktracker.service.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,9 +1,9 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Task;
-import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
-import com.xitaymin.tasktracker.model.dto.task.TaskViewTO;
-import com.xitaymin.tasktracker.model.service.TaskService;
+import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.TaskViewTO;
+import com.xitaymin.tasktracker.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;

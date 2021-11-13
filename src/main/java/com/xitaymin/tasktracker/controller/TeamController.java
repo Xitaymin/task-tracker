@@ -1,10 +1,10 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Team;
-import com.xitaymin.tasktracker.model.dto.TeamViewTO;
-import com.xitaymin.tasktracker.model.dto.team.CreateTeamTO;
-import com.xitaymin.tasktracker.model.dto.team.EditTeamTO;
-import com.xitaymin.tasktracker.model.service.TeamService;
+import com.xitaymin.tasktracker.dto.TeamViewTO;
+import com.xitaymin.tasktracker.dto.team.CreateTeamTO;
+import com.xitaymin.tasktracker.dto.team.EditTeamTO;
+import com.xitaymin.tasktracker.service.TeamService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

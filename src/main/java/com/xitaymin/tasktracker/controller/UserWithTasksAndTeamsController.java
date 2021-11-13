@@ -1,7 +1,7 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.model.dto.user.UserWithTasksAndTeamsTO;
-import com.xitaymin.tasktracker.model.service.UserWithTasksService;
+import com.xitaymin.tasktracker.dto.user.UserWithTasksAndTeamsTO;
+import com.xitaymin.tasktracker.service.UserWithTasksService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
