@@ -32,10 +32,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User save(CreateUserTO createUserTO) {
+    public UserViewTO save(CreateUserTO createUserTO) {
         userValidator.validateForSave(createUserTO);
         User user = createUserTO.convertToEntity();
-        return userDAO.save(user);
+        User savedUser = userDAO.save(user);
+        return convertToTO(savedUser);
     }
 
     @Transactional

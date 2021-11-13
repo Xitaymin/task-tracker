@@ -16,16 +16,20 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Set;
 
+//todo difference beetween left join and left join fetch
 @Entity
 @Table(name = "users")
 @NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u"),
                @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
-               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")})
+               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
+               @NamedQuery(name = User.FIND_BY_ID_WITH_ALL, query = "SELECT u FROM User u LEFT JOIN FETCH u.tasks  LEFT JOIN FETCH u.team WHERE u.id=:id")})
 
 public class User extends PersistentObject {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";
+    public static final String FIND_BY_ID_WITH_ALL = "User.findByIdWithTasksAndTeams";
+
     private String name;
     private String email;
     private boolean deleted;

@@ -1,10 +1,10 @@
 package com.xitaymin.tasktracker.model.service;
 
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.dto.user.UserWithTasksAndTeamsTO;
 
 public interface UserWithTasksService {
     void assignTask(long userId, long taskId);
 
-    UserWithTasks getById(long id);
+    UserWithTasksAndTeamsTO getById(long id);
 
 }

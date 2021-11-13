@@ -10,9 +10,6 @@ public class CreateProjectTO {
     @NotBlank
     private final String name;
 
-//    public CreateProjectTO() {
-//    }
-
     @JsonCreator
     public CreateProjectTO(@JsonProperty("name") @NotBlank String name) {
         this.name = name;

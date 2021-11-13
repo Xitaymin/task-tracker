@@ -1,6 +1,5 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
 import com.xitaymin.tasktracker.model.dto.user.UserViewTO;
@@ -30,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping()
-    public User createUser(@Valid @RequestBody CreateUserTO createUserTO) {
+    public UserViewTO createUser(@Valid @RequestBody CreateUserTO createUserTO) {
         return userService.save(createUserTO);
     }
 

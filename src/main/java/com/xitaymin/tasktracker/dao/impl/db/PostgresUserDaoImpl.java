@@ -60,4 +60,16 @@ public class PostgresUserDaoImpl implements UserDAO {
         return entityManager.createNamedQuery(User.FIND_ALL, User.class).getResultList();
     }
 
+    @Override
+    public User findByIdWithTasksAndTeams(long id) {
+        User user = null;
+        try {
+            user = entityManager.createNamedQuery(User.FIND_BY_ID_WITH_ALL, User.class)
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 }

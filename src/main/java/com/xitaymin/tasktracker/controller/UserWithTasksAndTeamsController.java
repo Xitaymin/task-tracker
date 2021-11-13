@@ -1,6 +1,6 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.dto.user.UserWithTasksAndTeamsTO;
 import com.xitaymin.tasktracker.model.service.UserWithTasksService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserWithTasksController {
+public class UserWithTasksAndTeamsController {
 
     private final UserWithTasksService userWithTasksService;
 
-    public UserWithTasksController(UserWithTasksService userWithTasksService) {
+    public UserWithTasksAndTeamsController(UserWithTasksService userWithTasksService) {
         this.userWithTasksService = userWithTasksService;
     }
 
@@ -22,7 +22,7 @@ public class UserWithTasksController {
     }
 
     @GetMapping("users/{id}")
-    public UserWithTasks getUserWithTasksById(@PathVariable long id) {
+    public UserWithTasksAndTeamsTO getUserWithTasksById(@PathVariable long id) {
         return userWithTasksService.getById(id);
     }
 }

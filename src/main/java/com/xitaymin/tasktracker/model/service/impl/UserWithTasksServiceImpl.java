@@ -2,16 +2,18 @@ package com.xitaymin.tasktracker.model.service.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.PersistentObject;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.model.dto.UserWithTasks;
+import com.xitaymin.tasktracker.model.dto.user.UserWithTasksAndTeamsTO;
 import com.xitaymin.tasktracker.model.service.UserWithTasksService;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.validators.UserValidator;
 import com.xitaymin.tasktracker.model.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserWithTasksServiceImpl implements UserWithTasksService {
@@ -20,7 +22,8 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
     private final UserDAO userDAO;
     private final UserValidator userValidator;
 
-    public UserWithTasksServiceImpl(UserWithTasksValidator userWithTasksValidator, TaskDAO taskDAO, UserDAO userDAO, UserValidator userValidator) {
+    public UserWithTasksServiceImpl(UserWithTasksValidator userWithTasksValidator, TaskDAO taskDAO, UserDAO userDAO,
+                                    UserValidator userValidator) {
         this.userWithTasksValidator = userWithTasksValidator;
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
@@ -37,14 +40,25 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
     }
 
     @Override
-    public UserWithTasks getById(long id) {
-        List<Task> tasks;
-        User user = userDAO.findOne(id);
+    public UserWithTasksAndTeamsTO getById(long id) {
+        UserWithTasksAndTeamsTO userTO;
+        User user = userDAO.findByIdWithTasksAndTeams(id);
         if (userValidator.isUnavailable(user)) {
             throw new InvalidRequestParameterException(String.format("User with id = %s not found", id));
         } else {
-            tasks = taskDAO.findByAssignee(id);
+            userTO = toTO(user);
         }
-        return new UserWithTasks(user, tasks);
+        return userTO;
+    }
+
+    private UserWithTasksAndTeamsTO toTO(User user) {
+        Set<Long> tasksId = user.getTasks().stream().map(PersistentObject::getId).collect(Collectors.toSet());
+        return new UserWithTasksAndTeamsTO(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.isDeleted(),
+                user.getRoles(),
+                tasksId,
+                user.getTeam().getId());
     }
 }
