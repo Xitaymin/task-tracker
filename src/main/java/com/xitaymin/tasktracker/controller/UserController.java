@@ -3,6 +3,7 @@ package com.xitaymin.tasktracker.controller;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.model.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.model.service.UserService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public Collection<User> getAllUsers() {
+    public Collection<UserViewTO> getAllUsers() {
         return userService.getAllUsers();
     }
 

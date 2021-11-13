@@ -4,15 +4,15 @@ import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.model.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.model.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.model.service.UserService;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 import static com.xitaymin.tasktracker.model.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
@@ -41,6 +41,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void editUser(EditUserTO editUserTO) {
+        //todo fixIt
         User user = userValidator.validateForUpdate(editUserTO);
         user.setName(editUserTO.getName());
         user.setEmail(editUserTO.getEmail());
@@ -61,10 +62,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<User> getAllUsers() {
-        return userDAO.findAll().stream().
-                filter(e -> !e.isDeleted()).
-                collect(Collectors.toCollection(ArrayList::new));
+    public Collection<UserViewTO> getAllUsers() {
+        Collection<UserViewTO> viewTOS = new HashSet<>();
+        for (User user : userDAO.findAll()) {
+            viewTOS.add(convertToTO(user));
+        }
+        return viewTOS;
+    }
+
+    private UserViewTO convertToTO(User user) {
+        return new UserViewTO(user.getId(), user.getName(), user.getEmail(), user.isDeleted(), user.getRoles());
     }
 
 }

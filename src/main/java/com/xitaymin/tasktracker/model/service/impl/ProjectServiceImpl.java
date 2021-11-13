@@ -56,6 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new NotFoundResourceException(String.format(PROJECT_NOT_FOUND, projectId));
         }
 
+
         Team team = teamDao.findById(teamId);
         if (team == null) {
             throw new NotFoundResourceException(String.format(TEAM_NOT_FOUND, teamId));

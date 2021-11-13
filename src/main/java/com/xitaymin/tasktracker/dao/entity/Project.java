@@ -17,7 +17,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projects")
-@NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS, query = "SELECT p FROM Project p JOIN FETCH p.teams " + "WHERE p.id=:id")})
+@NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.teams" + " " + "WHERE p.id=:id")})
 public class Project extends PersistentObject {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
