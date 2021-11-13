@@ -1,12 +1,15 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "tasks")
@@ -16,6 +19,7 @@ import javax.persistence.Table;
 public class Task extends PersistentObject {
     public static final String FIND_ALL = "Task.findAll";
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
+
     private String title;
     private String description;
     @ManyToOne(optional = false)
@@ -24,15 +28,27 @@ public class Task extends PersistentObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id")
     private User assignee;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
     private TaskType type;
-
-//    private List<Task> childTasks;
+    //todo check cascade type, join column name, list or set
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_id")
+    private List<Task> childTasks;
 
     public Task() {
+    }
+
+    public Task(String title, String description, User reporter, User assignee, Project project, TaskType type,
+                List<Task> childTasks) {
+        this.title = title;
+        this.description = description;
+        this.reporter = reporter;
+        this.assignee = assignee;
+        this.project = project;
+        this.type = type;
+        this.childTasks = childTasks;
     }
 
     public String getTitle() {

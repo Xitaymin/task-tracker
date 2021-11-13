@@ -8,6 +8,7 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.model.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.model.dto.task.TaskBuilder;
 import com.xitaymin.tasktracker.model.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.model.service.validators.TaskValidator;
@@ -33,11 +34,13 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String SUBTASK_WITHOUT_PARENT = "Task with type SUBTASK can't be created without parent;";
     public static final String INCOMPATIBLE_PARENT_TYPE =
             "Task with type %s can't have parent with type %s. Types hierarchies are: EPIC -> STORY -> ISSUE -> " + "SUBTASK and EPIC -> BUG. Every of the task type can have only next level type parent.";
+    private final TaskBuilder taskBuilder;
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final ProjectDao projectDao;
 
     public TaskValidatorImpl(TaskDAO taskDAO, UserDAO userDAO, ProjectDao projectDao) {
+        this.taskBuilder = TaskBuilder.aTask();
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
         this.projectDao = projectDao;
@@ -68,7 +71,10 @@ public class TaskValidatorImpl implements TaskValidator {
     }
 
     @Override
-    public Project validateForSave(CreateTaskTO taskTO) {
+    public Task getTaskValidForSave(CreateTaskTO taskTO) {
+        taskBuilder.withTitle(taskTO.getTitle());
+        taskBuilder.withDescription(taskTO.getDescription());
+
         Long assigneeId = taskTO.getAssignee();
         long reporterId = taskTO.getReporter();
 
@@ -76,13 +82,17 @@ public class TaskValidatorImpl implements TaskValidator {
         Project project = optionalProject.orElseThrow(() -> new NotFoundResourceException(String.format(
                 PROJECT_DOESNT_EXIST,
                 taskTO.getProjectId())));
+        taskBuilder.withProject(project);
 
-        if (isUserUnavailable(userDAO.findOne(reporterId))) {
+        User reporter = userDAO.findOne(reporterId);
+        if (isUserUnavailable(reporter)) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
+        taskBuilder.withReporter(reporter);
 
+        User assignee = null;
         if (assigneeId != null) {
-            User assignee = userDAO.findOne(assigneeId);
+            assignee = userDAO.findOne(assigneeId);
             if (isUserUnavailable(assignee)) {
                 throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assigneeId));
             }
@@ -93,17 +103,21 @@ public class TaskValidatorImpl implements TaskValidator {
                         project.getId()));
             }
         }
-        validateTaskType(taskTO.getType(), taskTO.getParentId());
+        taskBuilder.withAssignee(assignee);
 
-        //not necessary
-        if (isTextFieldAbsent(taskTO.getTitle())) {
-            throw new InvalidRequestParameterException(REQUIRED_TITLE);
-        }
-        if (isTextFieldAbsent(taskTO.getDescription())) {
-            throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
-        }
+        TaskType type = taskTO.getType();
+        validateTaskType(type, taskTO.getParentId());
+        taskBuilder.withType(type);
 
-        return project;
+//        //not necessary
+//        if (isTextFieldAbsent(taskTO.getTitle())) {
+//            throw new InvalidRequestParameterException(REQUIRED_TITLE);
+//        }
+//        if (isTextFieldAbsent(taskTO.getDescription())) {
+//            throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
+//        }
+
+        return taskBuilder.build();
 
 
     }
@@ -128,9 +142,9 @@ public class TaskValidatorImpl implements TaskValidator {
         }
     }
 
-    private boolean isTextFieldAbsent(String text) {
-        return (text == null || text.isBlank());
-    }
+//    private boolean isTextFieldAbsent(String text) {
+//        return (text == null || text.isBlank());
+//    }
 
     public boolean isUserUnavailable(User user) {
         return (user == null || user.isDeleted());
