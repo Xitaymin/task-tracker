@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.dao.impl.db;
+package com.xitaymin.tasktracker.dao.impl;
 
 import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.entity.Project;
