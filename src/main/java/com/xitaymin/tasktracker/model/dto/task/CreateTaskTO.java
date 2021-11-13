@@ -29,7 +29,7 @@ public class CreateTaskTO {
                         @JsonProperty("description") @NotBlank String description,
                         @JsonProperty("reporter") @Positive long reporter, @JsonProperty("assignee") Long assignee,
                         @JsonProperty("project") @Positive long projectId, @JsonProperty("type") TaskType type,
-                        @JsonProperty("parentId") Long parentId) {
+                        @JsonProperty("parent") Long parentId) {
         this.title = title;
         this.description = description;
         this.reporter = reporter;
