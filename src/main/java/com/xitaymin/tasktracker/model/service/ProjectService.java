@@ -12,4 +12,6 @@ public interface ProjectService {
     Project saveProject(@Valid CreateProjectTO project);
 
     void editProject(@Valid EditProjectTO project);
+
+    void addTeam(long project, long team);
 }

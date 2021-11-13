@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.model.service.validators.impl;
 
 import com.xitaymin.tasktracker.dao.ProjectDao;
+import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.exceptions.NotFoundResourceException;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 public class ProjectValidatorImpl implements ProjectValidator {
     public static final String PROJECT_NOT_FOUND = "Project with id = %d doesn't exist.";
     private final ProjectDao projectDao;
+    private final TeamDao teamDao;
 
-    public ProjectValidatorImpl(ProjectDao projectDao) {
+    public ProjectValidatorImpl(ProjectDao projectDao, TeamDao teamDao) {
         this.projectDao = projectDao;
+        this.teamDao = teamDao;
     }
 
     //todo fix it
@@ -25,4 +28,5 @@ public class ProjectValidatorImpl implements ProjectValidator {
         }
         return project;
     }
+
 }

@@ -31,7 +31,7 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
     public void assignTask(long userId, long taskId) {
         if (userWithTasksValidator.areUserAndTaskValidToAssign(userId, taskId)) {
             Task task = taskDAO.findOne(taskId);
-            task.setAssignee(userId);
+//            task.setAssignee(userId);
             taskDAO.update(task);
         }
     }

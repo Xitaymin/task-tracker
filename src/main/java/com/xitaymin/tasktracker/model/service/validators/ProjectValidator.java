@@ -5,4 +5,5 @@ import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 
 public interface ProjectValidator {
     Project validateForUpdate(EditProjectTO editProjectTO);
+
 }

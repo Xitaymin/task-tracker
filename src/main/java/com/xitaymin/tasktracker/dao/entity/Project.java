@@ -1,5 +1,6 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -20,15 +21,14 @@ import java.util.Set;
 public class Project extends PersistentObject {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
+
     private String name;
     @ManyToOne
     private User productOwner;
 
-    @ManyToMany
-    @JoinTable(
-            name="project_team",
-            joinColumns=@JoinColumn(name="project_id", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="team_id", referencedColumnName="id"))
+    //todo check it
+    @ManyToMany(cascade = {CascadeType.MERGE})
+    @JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
     private Set<Team> teams;
 
     public User getProductOwner() {
@@ -48,6 +48,12 @@ public class Project extends PersistentObject {
     }
 
     public Project() {
+    }
+
+    public Project(String name, User productOwner, Set<Team> teams) {
+        this.name = name;
+        this.productOwner = productOwner;
+        this.teams = teams;
     }
 
     public String getName() {

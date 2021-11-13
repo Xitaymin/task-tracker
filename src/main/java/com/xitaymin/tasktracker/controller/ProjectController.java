@@ -4,6 +4,7 @@ import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.model.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.model.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.model.service.ProjectService;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @RestController
 @RequestMapping(ProjectController.PROJECTS)
@@ -31,5 +33,10 @@ public class ProjectController {
     @PutMapping
     public void editProject(@Valid @RequestBody EditProjectTO project) {
         projectService.editProject(project);
+    }
+
+    @PutMapping("/{project}/team/{team}")
+    public void addTeam(@PathVariable @Positive long project, @PathVariable @Positive long team) {
+        projectService.addTeam(project, team);
     }
 }
