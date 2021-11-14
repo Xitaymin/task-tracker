@@ -1,11 +1,14 @@
 package com.xitaymin.tasktracker.service.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.UserRoleTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
+import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.UserValidator;
 import com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl;
@@ -21,6 +24,8 @@ import java.util.HashSet;
 
 @Service
 public class UserServiceImpl implements UserService {
+    public static final String INVALID_ROLE_FOR_TEAM =
+            "Role %s can't be set for user with id = %d because it consist in team.";
     private final UserDAO userDAO;
     private final UserValidator userValidator;
 
@@ -69,6 +74,37 @@ public class UserServiceImpl implements UserService {
         }
         return viewTOS;
     }
+
+    @Transactional
+    @Override
+    public void addRole(UserRoleTO roleTO) {
+        User user = userDAO.findOne(roleTO.getId());
+        if (user == null) {
+            throw new NotFoundResourceException(String.format(UserValidatorImpl.USER_NOT_FOUND, roleTO.getId()));
+        }
+        Role role = roleTO.getRole();
+        boolean inTeam = user.getTeam() != null;
+        if ((role.equals(Role.ADMIN) || role.equals(Role.MANAGER) && inTeam)) {
+            throw new InvalidRequestParameterException(String.format(INVALID_ROLE_FOR_TEAM, role, user.getId()));
+        }
+        //todo add check for second lead in team
+        user.getRoles().add(roleTO.getRole());
+    }
+
+    @Transactional
+    @Override
+    public void deleteRole(UserRoleTO roleTO) {
+        User user = userDAO.findOne(roleTO.getId());
+        if (user == null) {
+            throw new NotFoundResourceException(String.format(UserValidatorImpl.USER_NOT_FOUND, roleTO.getId()));
+        }
+//        if (user.getRoles().contains(roleTO.getRole())) {
+//
+//        }
+        //todo implement
+
+    }
+
 
     private UserViewTO convertToTO(User user) {
         return new UserViewTO(user.getId(), user.getName(), user.getEmail(), user.isDeleted(), user.getRoles());

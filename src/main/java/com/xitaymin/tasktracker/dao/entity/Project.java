@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -21,7 +22,7 @@ import java.util.Set;
 public class Project extends PersistentObject {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
-
+    @Column(nullable = false)
     private String name;
     @ManyToOne
     private User productOwner;

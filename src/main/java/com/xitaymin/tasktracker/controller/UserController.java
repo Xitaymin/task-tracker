@@ -51,7 +51,12 @@ public class UserController {
 
     @PutMapping
     public void addRole(@Valid UserRoleTO roleTO) {
+        userService.addRole(roleTO);
+    }
 
+    @DeleteMapping
+    public void removeRole(@Valid UserRoleTO roleTO) {
+        userService.deleteRole(roleTO);
     }
 
 }

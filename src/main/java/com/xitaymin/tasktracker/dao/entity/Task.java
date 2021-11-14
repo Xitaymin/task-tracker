@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -22,7 +23,9 @@ public class Task extends PersistentObject {
     public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
     public static final String FIND_FULL_TASK_BY_ID = "Task.findByIdWithAll";
 
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String description;
     @ManyToOne(optional = false)
     @JoinColumn(name = "reporter_id")
@@ -30,6 +33,7 @@ public class Task extends PersistentObject {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id")
     private User assignee;
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;

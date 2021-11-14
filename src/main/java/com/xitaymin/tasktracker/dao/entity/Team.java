@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
@@ -27,6 +28,7 @@ public class Team extends PersistentObject {
     public static final String FIND_ALL_WITH_MEMBERS = "Team.findAllWithMembers";
     public static final String FIND_TEAM_WITH_MEMBERS_BY_ID = "Team.findTeamWithMembersById";
 
+    @Column(nullable = false)
     private String name;
     @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> members;
