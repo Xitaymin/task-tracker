@@ -1,7 +1,7 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.EditTaskTO;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.service.TaskService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +42,7 @@ public class TaskController {
     }
 
     @PutMapping()
-    public void editTask(@Valid @RequestBody Task task) {
-        taskService.editTask(task);
+    public void editTask(@Valid @RequestBody EditTaskTO taskTO) {
+        taskService.editTask(taskTO);
     }
 }

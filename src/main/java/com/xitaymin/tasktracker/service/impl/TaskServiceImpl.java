@@ -6,16 +6,19 @@ import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.EditTaskTO;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.service.TaskService;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.TaskValidator;
-import com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashSet;
+
+import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 
 //Создание задачи.
 //Задача может быть создана только в рамках существующего проекта
@@ -47,8 +50,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void editTask(Task task) {
-        taskValidator.validateForUpdate(task);
+    public void editTask(@Valid EditTaskTO taskTO) {
+        Task task = taskDAO.findOne(taskTO.getId());
+        if (task == null) {
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, taskTO.getId()));
+        }
+        task.setTitle(taskTO.getTitle());
+        task.setDescription(taskTO.getDescription());
         taskDAO.update(task);
     }
 
@@ -56,7 +64,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskViewTO getTask(long id) {
         Task task = taskDAO.findOne(id);
         if (task == null) {
-            throw new NotFoundResourceException(String.format(TaskValidatorImpl.TASK_NOT_FOUND, id));
+            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, id));
         } else {
             return convertToTO(task);
         }

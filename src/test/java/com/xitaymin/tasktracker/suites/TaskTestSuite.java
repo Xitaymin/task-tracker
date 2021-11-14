@@ -1,12 +1,14 @@
 package com.xitaymin.tasktracker.suites;
 
 import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.ResponseError;
 import com.xitaymin.tasktracker.dto.project.ProjectBuilder;
 import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.EditTaskTO;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.dto.team.TeamBuilder;
 import com.xitaymin.tasktracker.dto.user.UserBuilder;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 
 import static com.xitaymin.tasktracker.controller.TaskController.TASKS;
@@ -24,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -94,8 +98,7 @@ public class TaskTestSuite extends BaseTestSuite {
 
         MvcResult resultAfterSave =
                 mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk())
-                        .andReturn();
+                        .andExpect(status().isOk()).andReturn();
 
         TaskViewTO[] allSavedTasks = fromResponse(resultAfterSave, TaskViewTO[].class);
 
@@ -105,21 +108,28 @@ public class TaskTestSuite extends BaseTestSuite {
 
         Assertions.assertEquals(taskAfterSave, taskFromResponse);
 
-//    }
-//
-//    @Test
-//    public void editTask() throws Exception {
-//        createTask();
-//        Task taskFromRequest = new Task(1, "Updated title", "Updated description", 1, null);
-//        mockMvc.perform(put(TASKS).content(asJson(taskFromRequest)).accept(APPLICATION_JSON).contentType(APPLICATION_JSON)).andExpect(status().isOk());
-//        MvcResult resultAfterSave = mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        Task[] allSavedTasks = fromResponse(resultAfterSave, Task[].class);
-//        assertThat(allSavedTasks.length == 1);
-//        Task taskAfterUpdate = allSavedTasks[0];
-//
-//        assertThat(taskAfterUpdate).usingRecursiveComparison().isEqualTo(taskFromRequest);
+    }
+
+    @Test
+    void editTask() throws Exception {
+        createTask();
+        Collection<Task> tasks = taskDao.findAll();
+        Task savedTask = tasks.iterator().next();
+
+        EditTaskTO taskFromRequest = new EditTaskTO(savedTask.getId(), "Updated title", "Updated description");
+        mockMvc.perform(put(TASKS).content(asJson(taskFromRequest))
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)).andExpect(status().isOk());
+        MvcResult resultAfterSave =
+                mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
+        TaskViewTO[] allSavedTasks = fromResponse(resultAfterSave, TaskViewTO[].class);
+        assertThat(allSavedTasks.length == 1);
+        TaskViewTO taskAfterUpdate = allSavedTasks[0];
+
+        Assertions.assertEquals(taskFromRequest.getTitle(), taskAfterUpdate.getTitle());
+        Assertions.assertEquals(taskFromRequest.getDescription(), taskAfterUpdate.getDescription());
     }
 
 }

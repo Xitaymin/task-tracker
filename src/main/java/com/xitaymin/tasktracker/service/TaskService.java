@@ -1,9 +1,10 @@
 package com.xitaymin.tasktracker.service;
 
-import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.EditTaskTO;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 public interface TaskService {
@@ -14,5 +15,5 @@ public interface TaskService {
 
     Collection<TaskViewTO> getTasks();
 
-    void editTask(Task task);
+    void editTask(@Valid EditTaskTO task);
 }
