@@ -26,14 +26,21 @@ public class Team extends PersistentObject {
     public static final String FIND_ALL = "Team.findAll";
     public static final String FIND_ALL_WITH_MEMBERS = "Team.findAllWithMembers";
     public static final String FIND_TEAM_WITH_MEMBERS_BY_ID = "Team.findTeamWithMembersById";
+
     private String name;
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<User> members;
 
     @ManyToMany(mappedBy = "teams")
     private Set<Project> projects;
 
     public Team() {
+    }
+
+    public Team(String name, List<User> members, Set<Project> projects) {
+        this.name = name;
+        this.members = members;
+        this.projects = projects;
     }
 
     public Set<Project> getProjects() {

@@ -10,9 +10,9 @@ public interface TaskService {
 
     TaskViewTO saveTask(CreateTaskTO task);
 
-    Task getTask(long id);
+    TaskViewTO getTask(long id);
 
-    Collection<Task> getTasks();
+    Collection<TaskViewTO> getTasks();
 
     void editTask(Task task);
 }

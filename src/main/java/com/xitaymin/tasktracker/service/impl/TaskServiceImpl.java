@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.HashSet;
 
 //Создание задачи.
 //Задача может быть создана только в рамках существующего проекта
@@ -44,8 +45,6 @@ public class TaskServiceImpl implements TaskService {
         this.userDao = userDao;
     }
 
-    //todo remove model package
-
     @Override
     @Transactional
     public void editTask(Task task) {
@@ -54,18 +53,23 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getTask(long id) {
+    public TaskViewTO getTask(long id) {
         Task task = taskDAO.findOne(id);
         if (task == null) {
             throw new NotFoundResourceException(String.format(TaskValidatorImpl.TASK_NOT_FOUND, id));
         } else {
-            return task;
+            return convertToTO(task);
         }
     }
 
     @Override
-    public Collection<Task> getTasks() {
-        return taskDAO.findAll();
+    public Collection<TaskViewTO> getTasks() {
+        Collection<TaskViewTO> results = new HashSet<>();
+        for (Task task : taskDAO.findAll()) {
+            TaskViewTO to = convertToTO(task);
+            results.add(to);
+        }
+        return results;
     }
 
     @Override

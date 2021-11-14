@@ -1,25 +1,33 @@
 package com.xitaymin.tasktracker.suites;
 
+import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.TaskType;
+import com.xitaymin.tasktracker.dao.entity.Team;
+import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.ResponseError;
+import com.xitaymin.tasktracker.dto.project.ProjectBuilder;
+import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
+import com.xitaymin.tasktracker.dto.task.TaskViewTO;
+import com.xitaymin.tasktracker.dto.team.TeamBuilder;
+import com.xitaymin.tasktracker.dto.user.UserBuilder;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import static com.xitaymin.tasktracker.controller.TaskController.TASKS;
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TaskTestSuite extends BaseTestSuite {
-
-//    @BeforeEach
-//    public void setUp() throws Exception {
-//        mockMvc.perform(post(USERS).content(asJson(new User(0, "User Name", "admin@gmail.com", false))).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//    }
 
     @Test
     void taskListEmptyWhenNothingCreated() throws Exception {
@@ -39,27 +47,64 @@ public class TaskTestSuite extends BaseTestSuite {
 
 
     @Test
-    public void createTask() throws Exception {
-//        User reporter = new User();
+    void createTask() throws Exception {
+        taskListEmptyWhenNothingCreated();
 
-//        Task taskFromRequest = new Task(0, "Title", "Description", 1, null);
-//        mockMvc.perform(get(TASKS).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andExpect(content().json("[]"));
-//        MvcResult result = mockMvc.perform(post(TASKS).content(asJson(taskFromRequest))
-//                                                   .contentType(MediaType.APPLICATION_JSON)
-//                                                   .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
-//
-//        Task taskFromResponse = fromResponse(result, Task.class);
-//        assertEquals(taskFromResponse.getId(), 1);
-//        assertTrue(new ReflectionEquals(taskFromRequest, "id").matches(taskFromResponse));
-//
-//        MvcResult resultAfterSave = mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        Task[] allSavedTasks = fromResponse(resultAfterSave, Task[].class);
-//        assertThat(allSavedTasks.length == 1);
-//        Task taskAfterSave = allSavedTasks[0];
-//
-//        assertThat(taskAfterSave).usingRecursiveComparison().isEqualTo(taskFromResponse);
+        Project project =
+                ProjectBuilder.aProject().withName("The most important project").withTeams(new HashSet<>()).build();
+        Team team = TeamBuilder.aTeam()
+                .withName("Delta")
+                .withMembers(new ArrayList<>())
+                .withProjects(new HashSet<>())
+                .build();
+        User reporter = UserBuilder.anUser()
+                .withName("Reporter")
+                .withEmail("reporter@gmail.com")
+                .withDeleted(false)
+                .withTasks(new HashSet<>())
+                .build();
+        userDAO.save(reporter);
+        User assignee = UserBuilder.anUser()
+                .withName("Assignee")
+                .withEmail("assignee@gmail.com")
+                .withDeleted(false)
+                .withTasks(new HashSet<>())
+                .build();
+        assignee.setTeam(team);
+        team.getMembers().add(assignee);
+        project.getTeams().add(team);
+        team.getProjects().add(project);
+
+        projectDao.save(project);
+
+        CreateTaskTO taskFromRequest = new CreateTaskTO("Serious task",
+                "Task for true mans",
+                reporter.getId(),
+                assignee.getId(),
+                project.getId(),
+                TaskType.EPIC,
+                null);
+
+        MvcResult result = mockMvc.perform(post(TASKS).content(asJson(taskFromRequest))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+        TaskViewTO taskFromResponse = fromResponse(result, TaskViewTO.class);
+
+        Assertions.assertNotEquals(taskFromResponse.getId(), 0);
+
+        MvcResult resultAfterSave =
+                mockMvc.perform(get(TASKS).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk())
+                        .andReturn();
+
+        TaskViewTO[] allSavedTasks = fromResponse(resultAfterSave, TaskViewTO[].class);
+
+        assertThat(allSavedTasks.length == 1);
+
+        TaskViewTO taskAfterSave = allSavedTasks[0];
+
+        Assertions.assertEquals(taskAfterSave, taskFromResponse);
+
 //    }
 //
 //    @Test

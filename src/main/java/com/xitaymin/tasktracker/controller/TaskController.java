@@ -32,12 +32,12 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTask(@PathVariable long id) {
+    public TaskViewTO getTask(@PathVariable long id) {
         return taskService.getTask(id);
     }
 
     @GetMapping()
-    public Collection<Task> getTasks() {
+    public Collection<TaskViewTO> getTasks() {
         return taskService.getTasks();
     }
 

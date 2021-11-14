@@ -48,7 +48,16 @@ public class User extends PersistentObject {
     public User() {
     }
 
-//todo find way to use EnumSet
+    public User(String name, String email, boolean deleted, Set<Role> roles, Set<Task> tasks, Team team) {
+        this.name = name;
+        this.email = email;
+        this.deleted = deleted;
+        this.roles = roles;
+        this.tasks = tasks;
+        this.team = team;
+    }
+
+    //todo find way to use EnumSet
 
     //    todo UserViewTO
 

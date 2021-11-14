@@ -1,6 +1,10 @@
 package com.xitaymin.tasktracker.dto.task;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
+
+import java.util.Objects;
 
 public class TaskViewTO {
     private final long id;
@@ -11,9 +15,11 @@ public class TaskViewTO {
     private final long projectId;
     private final TaskType type;
 
-
-    public TaskViewTO(long id, String title, String description, long reporter, Long assignee, long projectId,
-                      TaskType type) {
+    @JsonCreator
+    public TaskViewTO(@JsonProperty("id") long id, @JsonProperty("title") String title,
+                      @JsonProperty("description") String description, @JsonProperty("reporter") long reporter,
+                      @JsonProperty("assignee") Long assignee, @JsonProperty("project") long projectId,
+                      @JsonProperty("type") TaskType type) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -50,4 +56,20 @@ public class TaskViewTO {
     public TaskType getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskViewTO that = (TaskViewTO) o;
+        return reporter == that.reporter && projectId == that.projectId && title.equals(that.title) && description.equals(
+                that.description) && Objects.equals(assignee, that.assignee) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, description, reporter, assignee, projectId, type);
+    }
 }
+
+

@@ -2,7 +2,9 @@ package com.xitaymin.tasktracker.suites;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.TaskDAO;
+import com.xitaymin.tasktracker.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +25,10 @@ public abstract class BaseTestSuite {
     protected MockMvc mockMvc;
     @Autowired
     protected TaskDAO taskDao;
+    @Autowired
+    protected ProjectDao projectDao;
+    @Autowired
+    protected UserDAO userDAO;
 
     public String asJson(Object object) throws Exception {
         return OBJECT_MAPPER.writer().withDefaultPrettyPrinter().writeValueAsString(object);
