@@ -5,7 +5,5 @@ import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
 
 public interface TaskValidator {
 
-    void validateForUpdate(Task task);
-
     Task getTaskValidForSave(CreateTaskTO task);
 }

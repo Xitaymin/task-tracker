@@ -11,7 +11,6 @@ import com.xitaymin.tasktracker.service.validators.UserValidator;
 import com.xitaymin.tasktracker.service.validators.UserWithTasksValidator;
 import org.springframework.stereotype.Service;
 
-import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_IN_TEAM;
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
@@ -42,9 +41,6 @@ public class UserWithTasksValidatorImpl implements UserWithTasksValidator {
 
     @Override
     public void validateToAssign(User assignee, Task task) {
-        if (userValidator.isUnavailable(assignee)) {
-            throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, assignee.getId()));
-        }
         Project project = task.getProject();
         boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
         if (!isAssigneeInTeam) {

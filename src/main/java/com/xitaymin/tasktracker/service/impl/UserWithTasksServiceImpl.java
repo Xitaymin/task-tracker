@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
+
 @Service
 public class UserWithTasksServiceImpl implements UserWithTasksService {
     private final UserWithTasksValidator userWithTasksValidator;
@@ -38,7 +40,10 @@ public class UserWithTasksServiceImpl implements UserWithTasksService {
         if (task == null) {
             throw new NotFoundResourceException(String.format(TaskValidatorImpl.TASK_NOT_FOUND, taskId));
         }
-        User assignee = userDAO.findOne(taskId);
+        User assignee = userDAO.findOne(userId);
+        if (userValidator.isUnavailable(assignee)) {
+            throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, userId));
+        }
         userWithTasksValidator.validateToAssign(assignee, task);
         task.setAssignee(assignee);
         assignee.getTasks().add(task);

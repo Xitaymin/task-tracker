@@ -47,30 +47,6 @@ public class TaskValidatorImpl implements TaskValidator {
     }
 
     @Override
-    public void validateForUpdate(Task task) {
-//        Task oldTask = taskDAO.findOne(task.getId());
-//        if (oldTask != null) {
-//            if (task.getReporter() != oldTask.getReporter()) {
-//                throw new InvalidRequestParameterException(String.format(REPORTER_SHOULDNT_CHANGE,
-//                        oldTask.getReporter()));
-//            }
-//            if (!isAssigneeValidForUpdate(task.getAssignee(), oldTask.getAssignee())) {
-//                throw new InvalidRequestParameterException(String.format(ASSIGNEE_SHOULDNT_CHANGE,
-//                        oldTask.getAssignee()));
-//            }
-//
-//            if (isTextFieldAbsent(task.getTitle())) {
-//                throw new InvalidRequestParameterException(REQUIRED_TITLE);
-//            }
-//            if (isTextFieldAbsent(task.getDescription())) {
-//                throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
-//            }
-//        } else {
-//            throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, task.getId()));
-//        }
-    }
-
-    @Override
     public Task getTaskValidForSave(CreateTaskTO taskTO) {
         taskBuilder.withTitle(taskTO.getTitle());
         taskBuilder.withDescription(taskTO.getDescription());
