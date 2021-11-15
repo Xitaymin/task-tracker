@@ -40,7 +40,7 @@ public class ProjectController {
         projectService.addTeam(project, team);
     }
 
-    @PutMapping("\"/{projectId}/po/{productOwnerId}\"")
+    @PutMapping("/{projectId}/po/{productOwnerId}")
     public void assignProductOwner(@PathVariable @Positive long projectId,@PathVariable @Positive long productOwnerId){
         projectService.assignProductOwner(projectId,productOwnerId);
     }

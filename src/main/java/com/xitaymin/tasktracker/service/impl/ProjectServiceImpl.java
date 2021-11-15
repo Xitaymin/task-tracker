@@ -43,14 +43,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project saveProject(@Valid CreateProjectTO createProjectTO) {
+    public Project saveProject(CreateProjectTO createProjectTO) {
         Project project = createProjectTO.convertToEntity();
         return projectDao.save(project);
     }
 
     @Transactional
     @Override
-    public void editProject(@Valid EditProjectTO editProjectTO) {
+    public void editProject( EditProjectTO editProjectTO) {
         Project project = projectValidator.validateForUpdate(editProjectTO);
         project.setName(editProjectTO.getName());
         projectDao.update(project);
@@ -92,6 +92,5 @@ public class ProjectServiceImpl implements ProjectService {
         }
         else throw new InvalidRequestParameterException(String.format(PRODUCT_OWNER_NOT_VALID,productOwnerId));
     }
-
 
 }

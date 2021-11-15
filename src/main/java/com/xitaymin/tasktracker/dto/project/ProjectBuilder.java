@@ -43,7 +43,7 @@ public final class ProjectBuilder {
         Project project = new Project();
         project.setName(name);
         project.setProductOwner(productOwner);
-        project.setTeams(teams);
+//        project.setTeams(teams);
         project.setId(id);
         return project;
     }

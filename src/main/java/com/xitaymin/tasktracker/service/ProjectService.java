@@ -9,9 +9,9 @@ import javax.validation.Valid;
 
 @Service
 public interface ProjectService {
-    Project saveProject(@Valid CreateProjectTO project);
+    Project saveProject( CreateProjectTO project);
 
-    void editProject(@Valid EditProjectTO project);
+    void editProject(EditProjectTO project);
 
     void addTeam(long project, long team);
 
