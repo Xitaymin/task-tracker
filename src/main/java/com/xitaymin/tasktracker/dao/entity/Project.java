@@ -1,15 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 //Добавить/удалить команду в проект.
@@ -22,15 +14,22 @@ import java.util.Set;
 public class Project extends PersistentObject {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
+
     @Column(nullable = false)
     private String name;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     private User productOwner;
-
-    //todo check it
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))
-    private Set<Team> teams;
+    private Set<Team> teams = new HashSet<>();
+
+    public Project() {
+    }
+
+    public Project(String name, User productOwner) {
+        this.name = name;
+        this.productOwner = productOwner;
+    }
 
     public User getProductOwner() {
         return productOwner;
@@ -44,16 +43,7 @@ public class Project extends PersistentObject {
         return teams;
     }
 
-    public void setTeams(Set<Team> teams) {
-        this.teams = teams;
-    }
-
-    public Project() {
-    }
-
-    public Project(String name, User productOwner, Set<Team> teams) {
-        this.name = name;
-        this.productOwner = productOwner;
+    private void setTeams(Set<Team> teams) {
         this.teams = teams;
     }
 
@@ -63,6 +53,16 @@ public class Project extends PersistentObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addTeam(Team team){
+        this.getTeams().add(team);
+        team.getProjects().add(this);
+    }
+
+    public void removeTeam(Team team){
+        this.getTeams().remove(team);
+        team.getProjects().remove(this);
     }
 
 }
