@@ -17,7 +17,7 @@ public class Project extends PersistentObject {
 
     @Column(nullable = false)
     private String name;
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User productOwner;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "project_team", joinColumns = @JoinColumn(name = "project_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "team_id", referencedColumnName = "id"))

@@ -26,10 +26,4 @@ public class EditProjectTO {
         return name;
     }
 
-    //    public Project convertToEntity(){
-//        Project project = new Project();
-//        project.setId(id);
-//        project.setName(name);
-//        return project;
-//    }
 }

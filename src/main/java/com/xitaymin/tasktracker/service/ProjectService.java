@@ -14,4 +14,6 @@ public interface ProjectService {
     void editProject(@Valid EditProjectTO project);
 
     void addTeam(long project, long team);
+
+    void assignProductOwner(long projectId, long productOwnerId);
 }
