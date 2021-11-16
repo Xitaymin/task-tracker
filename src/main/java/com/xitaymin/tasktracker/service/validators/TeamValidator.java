@@ -10,7 +10,7 @@ public interface TeamValidator {
     void validateForSave(CreateTeamTO createTeamTO,
                          @Value("${task-tracker.max.team.members.count}") int maxMembersCount);
 
-    void validateForDelete(long id);
+    void validateForDelete(Team team);
 
     Team validateForUpdate(EditTeamTO editTeamTO);
 

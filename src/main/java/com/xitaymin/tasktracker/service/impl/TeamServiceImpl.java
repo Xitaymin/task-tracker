@@ -70,7 +70,9 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     @Override
     public void deleteTeam(long id) {
-        teamValidator.validateForDelete(id);
+       Team team =  teamDao.findByIdWithMembersAndProjects(id);
+        teamValidator.validateForDelete(team);
+        teamDao.delete(team);
     }
 
 

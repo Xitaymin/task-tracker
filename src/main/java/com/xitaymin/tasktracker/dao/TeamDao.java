@@ -14,4 +14,9 @@ public interface TeamDao {
     Collection<Team> findAll();
 
     Collection<Team> findAllWithMembers();
+
+    Team findByIdWithMembersAndProjects(long id);
+
+    void delete(Team id);
+
 }

@@ -9,9 +9,8 @@ import javax.persistence.SequenceGenerator;
 @MappedSuperclass
 public abstract class PersistentObject {
     @Id
-    //todo generation types description and allocation size
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
-    @SequenceGenerator(name = "global_seq", sequenceName = "SEQ_GLOBAL", allocationSize = 10)
+    @SequenceGenerator(name = "global_seq", sequenceName = "SEQ_GLOBAL")
     protected long id;
 
     public long getId() {
