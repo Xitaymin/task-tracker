@@ -18,6 +18,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
+//CRUD для команды.
+//Команду можно создать сразу со списком пользователей. -
+//Редактировать можно только имя.
+//Удалить команду можно только если у неё нет проектов и участников
+//Добавление пользователя в команду, пользователь может быть только в одной команде. Максимальный размер команды определен в пропертях. Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
+//Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
 @RestController()
 @RequestMapping(TeamController.TEAMS)
 public class TeamController {

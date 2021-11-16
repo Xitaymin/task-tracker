@@ -10,7 +10,7 @@ import javax.persistence.SequenceGenerator;
 public abstract class PersistentObject {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
-    @SequenceGenerator(name = "global_seq", sequenceName = "SEQ_GLOBAL")
+    @SequenceGenerator(name = "global_seq", sequenceName = "SEQ_GLOBAL", allocationSize = 10)
     protected long id;
 
     public long getId() {

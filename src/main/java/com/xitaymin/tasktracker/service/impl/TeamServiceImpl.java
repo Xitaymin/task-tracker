@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.service.impl;
 
 import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.TeamViewTO;
@@ -94,11 +95,15 @@ public class TeamServiceImpl implements TeamService {
     }
 
     private TeamViewTO convertToTO(Team team) {
+        Set<Long> projects = new HashSet<>();
+        for (Project project : team.getProjects()) {
+            projects.add(project.getId());
+        }
         Set<EditUserTO> userTOSet = new HashSet<>();
         for (User user : team.getMembers()) {
             EditUserTO userTO = new EditUserTO(user.getId(), user.getName(), user.getEmail());
             userTOSet.add(userTO);
         }
-        return new TeamViewTO(team.getName(), userTOSet);
+        return new TeamViewTO(team.getName(), userTOSet, projects);
     }
 }

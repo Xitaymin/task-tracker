@@ -75,7 +75,7 @@ public class ProjectServiceImpl extends GenericService implements ProjectService
         User user = userDao.findOne(productOwnerId);
         throwExceptionIfAbsent(USER_NOT_FOUND, user, productOwnerId);
 
-        if (user.getRoles().contains(Role.MANAGER)) {
+        if (user.getRoles().contains(Role.MANAGER) && (!user.isDeleted())) {
             project.setProductOwner(user);
         } else {
             throw new InvalidRequestParameterException(String.format(PRODUCT_OWNER_NOT_VALID, productOwnerId));
