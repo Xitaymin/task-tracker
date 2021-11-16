@@ -54,8 +54,7 @@ public class TaskTestSuite extends BaseTestSuite {
     void createTask() throws Exception {
         taskListEmptyWhenNothingCreated();
 
-        Project project =
-                ProjectBuilder.aProject().withName("The most important project").withTeams(new HashSet<>()).build();
+        Project project = ProjectBuilder.aProject().withName("The most important project").build();
         Team team = TeamBuilder.aTeam()
                 .withName("Delta")
                 .withMembers(new ArrayList<>())

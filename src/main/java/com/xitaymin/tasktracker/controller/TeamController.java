@@ -31,7 +31,7 @@ public class TeamController {
     }
 
     @PostMapping()
-    public Team createTask(@Valid @RequestBody CreateTeamTO team) {
+    public Team createTeam(@Valid @RequestBody CreateTeamTO team) {
         return teamService.saveTeam(team);
     }
 

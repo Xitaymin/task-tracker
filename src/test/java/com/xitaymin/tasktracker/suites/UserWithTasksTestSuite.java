@@ -42,8 +42,7 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
 
     @Test
     void assignTask() throws Exception {
-        Project project =
-                ProjectBuilder.aProject().withName("The most important project").withTeams(new HashSet<>()).build();
+        Project project = ProjectBuilder.aProject().withName("The most important project").build();
         Team team = TeamBuilder.aTeam()
                 .withName("Delta")
                 .withMembers(new ArrayList<>())
@@ -93,8 +92,7 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
     }
 
     private Task getSavedTask() {
-        Project project =
-                ProjectBuilder.aProject().withName("The most important project").withTeams(new HashSet<>()).build();
+        Project project = ProjectBuilder.aProject().withName("The most important project").build();
         Team team = TeamBuilder.aTeam()
                 .withName("Delta")
                 .withMembers(new ArrayList<>())

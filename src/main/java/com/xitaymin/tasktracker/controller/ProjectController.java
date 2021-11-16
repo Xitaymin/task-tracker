@@ -4,6 +4,7 @@ import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.service.ProjectService;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+
+//Добавить/удалить команду в проект.
+//Назначить productOwner, он должен иметь роль MANAGER
 
 @RestController
 @RequestMapping(ProjectController.PROJECTS)
@@ -40,8 +44,14 @@ public class ProjectController {
         projectService.addTeam(project, team);
     }
 
-    @PutMapping("/{projectId}/po/{productOwnerId}")
-    public void assignProductOwner(@PathVariable @Positive long projectId,@PathVariable @Positive long productOwnerId){
-        projectService.assignProductOwner(projectId,productOwnerId);
+    @DeleteMapping("/{project}/team/{team}")
+    public void deleteTeam(@PathVariable @Positive long project, @PathVariable @Positive long team) {
+        projectService.deleteTeam(project, team);
+    }
+
+    @PutMapping("/{projectId}/owner/{productOwnerId}")
+    public void assignProductOwner(@PathVariable @Positive long projectId,
+                                   @PathVariable @Positive long productOwnerId) {
+        projectService.assignProductOwner(projectId, productOwnerId);
     }
 }

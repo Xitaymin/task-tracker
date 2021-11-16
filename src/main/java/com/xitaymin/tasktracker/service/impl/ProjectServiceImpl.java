@@ -18,7 +18,6 @@ import com.xitaymin.tasktracker.service.validators.impl.TeamValidatorImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.validation.Valid;
 
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
@@ -70,6 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         project.addTeam(team);
+//        projectDao.update(project);
 
 //        team.getProjects().add(project);
 //        project.getTeams().add(team);
@@ -87,10 +87,26 @@ public class ProjectServiceImpl implements ProjectService {
         if (user == null) {
             throw new NotFoundResourceException(String.format(USER_NOT_FOUND, productOwnerId));
         }
-        if(user.getRoles().contains(Role.MANAGER)){
+        if (user.getRoles().contains(Role.MANAGER)) {
             project.setProductOwner(user);
+        } else throw new InvalidRequestParameterException(String.format(PRODUCT_OWNER_NOT_VALID, productOwnerId));
+    }
+
+    //todo get rid of duplication
+    @Transactional
+    @Override
+    public void deleteTeam(long projectId, long teamId) {
+        Project project = projectDao.findByIdWithTeams(projectId);
+        if (project == null) {
+            throw new NotFoundResourceException(String.format(ProjectValidatorImpl.PROJECT_NOT_FOUND, projectId));
         }
-        else throw new InvalidRequestParameterException(String.format(PRODUCT_OWNER_NOT_VALID,productOwnerId));
+
+        Team team = teamDao.findById(teamId);
+        if (team == null) {
+            throw new NotFoundResourceException(String.format(TeamValidatorImpl.TEAM_NOT_FOUND, teamId));
+        }
+
+        project.removeTeam(team);
     }
 
 }
