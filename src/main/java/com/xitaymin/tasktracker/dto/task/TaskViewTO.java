@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class TaskViewTO {
     private final long id;
@@ -14,12 +15,14 @@ public class TaskViewTO {
     private final Long assignee;
     private final long projectId;
     private final TaskType type;
+    private final Set<Long> subtasksId;
+    private final Long parentId;
 
     @JsonCreator
     public TaskViewTO(@JsonProperty("id") long id, @JsonProperty("title") String title,
                       @JsonProperty("description") String description, @JsonProperty("reporter") long reporter,
                       @JsonProperty("assignee") Long assignee, @JsonProperty("project") long projectId,
-                      @JsonProperty("type") TaskType type) {
+                      @JsonProperty("type") TaskType type, Set<Long> subtasksId, Long parentId) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -27,6 +30,8 @@ public class TaskViewTO {
         this.assignee = assignee;
         this.projectId = projectId;
         this.type = type;
+        this.subtasksId = subtasksId;
+        this.parentId = parentId;
     }
 
     public long getId() {
@@ -55,6 +60,14 @@ public class TaskViewTO {
 
     public TaskType getType() {
         return type;
+    }
+
+    public Set<Long> getSubtasksId() {
+        return subtasksId;
+    }
+
+    public Long getParentId() {
+        return parentId;
     }
 
     @Override

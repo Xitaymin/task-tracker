@@ -1,15 +1,20 @@
 package com.xitaymin.tasktracker.dao.entity;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id"),
-        @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects WHERE t.id=:id"),
-        @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects ORDER BY t.id"),
-        @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members  ORDER BY t.id")
-})
+               @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects WHERE t.id=:id"),
+               @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects ORDER BY t.id"),
+               @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t" + ".members WHERE t.id=:id")})
 public class Team extends PersistentObject {
 
     public static final String FIND_ALL = "Team.findAll";

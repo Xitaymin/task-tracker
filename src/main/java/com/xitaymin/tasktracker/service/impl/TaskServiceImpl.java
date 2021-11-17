@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 
@@ -62,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskViewTO getTask(long id) {
-        Task task = taskDAO.findOne(id);
+        Task task = taskDAO.findFullTask(id);
         if (task == null) {
             throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, id));
         } else {
@@ -97,12 +98,27 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private TaskViewTO convertToTO(Task savedTask) {
+        Set<Long> subtasksId = new HashSet<>();
+
+        Set<Task> subtasks = savedTask.getChildTasks();
+        if (!subtasks.isEmpty()) {
+            for (Task task : subtasks) {
+                subtasksId.add(task.getId());
+            }
+        }
+        Long parentId = null;
+        Task parent = savedTask.getParent();
+        if (parent != null) {
+            parentId = parent.getId();
+        }
         return new TaskViewTO(savedTask.getId(),
                 savedTask.getTitle(),
                 savedTask.getDescription(),
                 savedTask.getReporter().getId(),
                 savedTask.getAssignee().getId(),
                 savedTask.getProject().getId(),
-                savedTask.getType());
+                savedTask.getType(),
+                subtasksId,
+                parentId);
     }
 }

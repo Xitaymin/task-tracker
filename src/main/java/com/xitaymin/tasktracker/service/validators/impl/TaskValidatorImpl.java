@@ -103,9 +103,9 @@ public class TaskValidatorImpl implements TaskValidator {
                         childType.name(),
                         parentType.name()));
             }
-            taskBuilder.withType(childType);
             taskBuilder.withParent(parentTask);
         }
+        taskBuilder.withType(childType);
     }
 
     public boolean isUserUnavailable(User user) {

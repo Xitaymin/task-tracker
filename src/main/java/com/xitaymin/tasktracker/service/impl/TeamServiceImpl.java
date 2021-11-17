@@ -119,6 +119,6 @@ public class TeamServiceImpl extends GenericService implements TeamService {
             Long memberId = user.getId();
             membersId.add(memberId);
         }
-        return new TeamViewTO(team.getName(), membersId, projectsId);
+        return new TeamViewTO(team.getId(), team.getName(), membersId, projectsId);
     }
 }
