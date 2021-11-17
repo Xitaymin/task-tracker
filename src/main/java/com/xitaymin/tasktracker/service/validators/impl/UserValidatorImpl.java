@@ -25,11 +25,10 @@ public class UserValidatorImpl implements UserValidator {
         if (userDAO.findByEmail(user.getEmail()) != null) {
             throw new InvalidRequestParameterException(String.format(EMAIL_IN_USE, user.getEmail()));
         }
-        //todo role validation
     }
 
     @Override
-    public User validateForUpdate(EditUserTO user) {
+    public User getUserValidForUpdate(EditUserTO user) {
         long id = user.getId();
         User oldUser = userDAO.findOne(id);
         String email = user.getEmail();

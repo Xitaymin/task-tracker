@@ -8,7 +8,7 @@ public interface UserValidator {
 
     void validateForSave(CreateUserTO user);
 
-    User validateForUpdate(EditUserTO user);
+    User getUserValidForUpdate(EditUserTO user);
 
     boolean isUnavailable(User user);
 }
