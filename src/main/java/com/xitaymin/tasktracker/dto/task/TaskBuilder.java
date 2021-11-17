@@ -5,7 +5,7 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.User;
 
-import java.util.List;
+import java.util.Set;
 
 public final class TaskBuilder {
     protected long id;
@@ -15,7 +15,8 @@ public final class TaskBuilder {
     private User assignee;
     private Project project;
     private TaskType type;
-    private List<Task> childTasks;
+    private Set<Task> childTasks;
+    private Task parent;
 
     private TaskBuilder() {
     }
@@ -59,14 +60,17 @@ public final class TaskBuilder {
         return this;
     }
 
-    public TaskBuilder withChildTasks(List<Task> childTasks) {
+    public TaskBuilder withChildTasks(Set<Task> childTasks) {
         this.childTasks = childTasks;
         return this;
     }
 
+    public TaskBuilder withParent(Task parent) {
+        this.parent = parent;
+        return this;
+    }
+
     public Task build() {
-        Task task = new Task(title, description, reporter, assignee, project, type, childTasks);
-        task.setId(id);
-        return task;
+        return new Task(title, description, reporter, assignee, project, type, childTasks, parent);
     }
 }

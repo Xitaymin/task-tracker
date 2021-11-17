@@ -10,7 +10,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -37,16 +38,17 @@ public class Task extends PersistentObject {
     @JoinColumn(name = "project_id")
     private Project project;
     private TaskType type;
-    //todo check cascade type, join column name, list or set
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Task parent;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
     @JoinColumn(name = "parent_id")
-    private List<Task> childTasks;
+    private Set<Task> childTasks = new HashSet<>();
 
     public Task() {
     }
 
     public Task(String title, String description, User reporter, User assignee, Project project, TaskType type,
-                List<Task> childTasks) {
+                Set<Task> childTasks, Task parent) {
         this.title = title;
         this.description = description;
         this.reporter = reporter;
@@ -54,6 +56,7 @@ public class Task extends PersistentObject {
         this.project = project;
         this.type = type;
         this.childTasks = childTasks;
+        this.parent = parent;
     }
 
     public String getTitle() {
@@ -104,4 +107,29 @@ public class Task extends PersistentObject {
         this.type = type;
     }
 
+    public Task getParent() {
+        return parent;
+    }
+
+    public void setParent(Task parent) {
+        this.parent = parent;
+    }
+
+    public Set<Task> getChildTasks() {
+        return childTasks;
+    }
+
+    private void setChildTasks(Set<Task> childTasks) {
+        this.childTasks = childTasks;
+    }
+
+    public void addChildTask(Task task) {
+        this.getChildTasks().add(task);
+        task.setParent(this);
+    }
+
+    public void linkAssignee(User assignee) {
+        this.setAssignee(assignee);
+        assignee.getTasks().add(this);
+    }
 }

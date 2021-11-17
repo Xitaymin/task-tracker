@@ -86,6 +86,10 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskValidator.getTaskValidForSave(taskTO);
         User assignee = task.getAssignee();
         assignee.getTasks().add(task);
+
+        Task parentTask = task.getParent();
+        parentTask.getChildTasks().add(task);
+
         Task savedTask = taskDAO.save(task);
         return convertToTO(savedTask);
     }

@@ -95,6 +95,7 @@ public class TeamServiceImpl extends GenericService implements TeamService {
 
     }
 
+    @Transactional
     @Override
     public void setLead(long teamId, long userId) {
         Team team = teamDao.findByIdWithMembers(teamId);

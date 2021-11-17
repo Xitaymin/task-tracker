@@ -34,13 +34,11 @@ public class TaskValidatorImpl implements TaskValidator {
     public static final String SUBTASK_WITHOUT_PARENT = "Task with type SUBTASK can't be created without parent;";
     public static final String INCOMPATIBLE_PARENT_TYPE =
             "Task with type %s can't have parent with type %s. Types hierarchies are: EPIC -> STORY -> ISSUE -> " + "SUBTASK and EPIC -> BUG. Every of the task type can have only next level type parent.";
-    private final TaskBuilder taskBuilder;
     private final TaskDAO taskDAO;
     private final UserDAO userDAO;
     private final ProjectDao projectDao;
 
     public TaskValidatorImpl(TaskDAO taskDAO, UserDAO userDAO, ProjectDao projectDao) {
-        this.taskBuilder = TaskBuilder.aTask();
         this.taskDAO = taskDAO;
         this.userDAO = userDAO;
         this.projectDao = projectDao;
@@ -48,11 +46,9 @@ public class TaskValidatorImpl implements TaskValidator {
 
     @Override
     public Task getTaskValidForSave(CreateTaskTO taskTO) {
+        TaskBuilder taskBuilder = TaskBuilder.aTask();
         taskBuilder.withTitle(taskTO.getTitle());
         taskBuilder.withDescription(taskTO.getDescription());
-
-        Long assigneeId = taskTO.getAssignee();
-        long reporterId = taskTO.getReporter();
 
         Optional<Project> optionalProject = Optional.ofNullable(projectDao.findByIdWithTeams(taskTO.getProjectId()));
         Project project = optionalProject.orElseThrow(() -> new NotFoundResourceException(String.format(
@@ -60,12 +56,14 @@ public class TaskValidatorImpl implements TaskValidator {
                 taskTO.getProjectId())));
         taskBuilder.withProject(project);
 
+        long reporterId = taskTO.getReporter();
         User reporter = userDAO.findOne(reporterId);
         if (isUserUnavailable(reporter)) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
         taskBuilder.withReporter(reporter);
 
+        Long assigneeId = taskTO.getAssignee();
         User assignee = null;
         if (assigneeId != null) {
             assignee = userDAO.findOne(assigneeId);
@@ -82,23 +80,13 @@ public class TaskValidatorImpl implements TaskValidator {
         taskBuilder.withAssignee(assignee);
 
         TaskType type = taskTO.getType();
-        validateTaskType(type, taskTO.getParentId());
-        taskBuilder.withType(type);
-
-//        //not necessary
-//        if (isTextFieldAbsent(taskTO.getTitle())) {
-//            throw new InvalidRequestParameterException(REQUIRED_TITLE);
-//        }
-//        if (isTextFieldAbsent(taskTO.getDescription())) {
-//            throw new InvalidRequestParameterException(REQUIRED_DESCRIPTION);
-//        }
+        setValidTaskType(type, taskTO.getParentId(), taskBuilder);
 
         return taskBuilder.build();
 
-
     }
 
-    private void validateTaskType(TaskType childType, Long parentId) {
+    private void setValidTaskType(TaskType childType, Long parentId, TaskBuilder taskBuilder) {
         if (parentId == null) {
             if (childType.equals(TaskType.SUBTASK)) {
                 throw new InvalidRequestParameterException(SUBTASK_WITHOUT_PARENT);
@@ -115,12 +103,10 @@ public class TaskValidatorImpl implements TaskValidator {
                         childType.name(),
                         parentType.name()));
             }
+            taskBuilder.withType(childType);
+            taskBuilder.withParent(parentTask);
         }
     }
-
-//    private boolean isTextFieldAbsent(String text) {
-//        return (text == null || text.isBlank());
-//    }
 
     public boolean isUserUnavailable(User user) {
         return (user == null || user.isDeleted());
