@@ -3,16 +3,16 @@ package com.xitaymin.tasktracker.service.impl;
 import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.TeamViewTO;
 import com.xitaymin.tasktracker.dto.team.CreateTeamTO;
 import com.xitaymin.tasktracker.dto.team.EditTeamTO;
-import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.service.GenericService;
 import com.xitaymin.tasktracker.service.TeamService;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.TeamValidator;
-import com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,8 +21,10 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+
 @Service
-public class TeamServiceImpl implements TeamService {
+public class TeamServiceImpl extends GenericService implements TeamService {
     public static final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
     private final TeamDao teamDao;
     private final TeamValidator teamValidator;
@@ -35,36 +37,37 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public Team saveTeam(CreateTeamTO createTeamTO) {
+    public TeamViewTO saveTeam(CreateTeamTO createTeamTO) {
         Team team = new Team();
         team.setName(createTeamTO.getName());
-        return teamDao.save(team);
+        return convertToTO(teamDao.save(team));
     }
 
     @Transactional
     @Override
     public void editTeam(EditTeamTO editTeamTO) {
-        Team team = teamValidator.validateForUpdate(editTeamTO);
+        long id = editTeamTO.getId();
+        Team team = teamDao.findById(id);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,id);
         team.setName(editTeamTO.getName());
-        teamDao.update(team);
     }
 
     @Override
     public TeamViewTO getTeam(long id) {
-        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findById(id));
+        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findByIdWithMembersAndProjects(id));
         Team team = optionalTeam.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, id)));
         return convertToTO(team);
     }
 
     @Override
     public Collection<TeamViewTO> getAllTeams() {
-//        return teamDao.findAll();
-        Collection<Team> teams = teamDao.findAllWithMembers();
+        Collection<Team> teams = teamDao.findAllWithMembersAndProjects();
 
         Collection<TeamViewTO> teamViewTOS = new HashSet<>();
         for (Team team : teams) {
             teamViewTOS.add(convertToTO(team));
         }
+
         return teamViewTOS;
     }
 
@@ -80,30 +83,41 @@ public class TeamServiceImpl implements TeamService {
     @Transactional
     @Override
     public void addMember(long teamId, long userId) {
-        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findById(teamId));
-        Team team =
-                optionalTeam.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, teamId)));
-        Optional<User> optionalUser = Optional.ofNullable(userDao.findOne(userId));
-        User user =
-                optionalUser.orElseThrow(() -> new NotFoundResourceException(String.format(UserValidatorImpl.USER_NOT_FOUND,
-                        userId)));
+        Team team = teamDao.findByIdWithMembers(teamId);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,teamId);
+
+        User user = userDao.findOne(userId);
+        throwExceptionIfAbsent(USER_NOT_FOUND,user,userId);
 
         teamValidator.validateForAddMember(team, user);
-        user.setTeam(team);
-        team.getMembers().add(user);
-        teamDao.update(team);
+
+        team.addMember(user);
+
+    }
+
+    @Override
+    public void setLead(long teamId, long userId) {
+        Team team = teamDao.findByIdWithMembers(teamId);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,teamId);
+
+        teamValidator.validateIfLeadAlreadyPresent(team.getMembers());
+
+        User user = userDao.findOne(userId);
+        throwExceptionIfAbsent(USER_NOT_FOUND,user,userId);
+
+        user.getRoles().add(Role.LEAD);
     }
 
     private TeamViewTO convertToTO(Team team) {
-        Set<Long> projects = new HashSet<>();
+        Set<Long> projectsId = new HashSet<>();
         for (Project project : team.getProjects()) {
-            projects.add(project.getId());
+            projectsId.add(project.getId());
         }
-        Set<EditUserTO> userTOSet = new HashSet<>();
+        Set<Long> membersId = new HashSet<>();
         for (User user : team.getMembers()) {
-            EditUserTO userTO = new EditUserTO(user.getId(), user.getName(), user.getEmail());
-            userTOSet.add(userTO);
+            Long memberId = user.getId();
+            membersId.add(memberId);
         }
-        return new TeamViewTO(team.getName(), userTOSet, projects);
+        return new TeamViewTO(team.getName(), membersId, projectsId);
     }
 }

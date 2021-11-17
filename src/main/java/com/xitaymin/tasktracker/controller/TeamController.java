@@ -18,12 +18,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import java.util.Collection;
 
-//CRUD для команды.
+//CRUD для команды. +
 //Команду можно создать сразу со списком пользователей. -
-//Редактировать можно только имя.
-//Удалить команду можно только если у неё нет проектов и участников
-//Добавление пользователя в команду, пользователь может быть только в одной команде. Максимальный размер команды определен в пропертях. Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
-//Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
+//Редактировать можно только имя. +
+//Удалить команду можно только если у неё нет проектов и участников +
+//Добавление пользователя в команду, пользователь может быть только в одной команде. Максимальный размер команды определен в пропертях. Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.+
+//Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.+
 @RestController()
 @RequestMapping(TeamController.TEAMS)
 public class TeamController {
@@ -37,7 +37,7 @@ public class TeamController {
     }
 
     @PostMapping()
-    public Team createTeam(@Valid @RequestBody CreateTeamTO team) {
+    public TeamViewTO createTeam(@Valid @RequestBody CreateTeamTO team) {
         return teamService.saveTeam(team);
     }
 
@@ -64,5 +64,10 @@ public class TeamController {
     @PutMapping("/{team}/member/{user}")
     public void addMember(@PathVariable @Positive long team, @PathVariable @Positive long user) {
         teamService.addMember(team, user);
+    }
+
+    @PutMapping("/{team}/lead/{lead}")
+    public void setLead(@PathVariable @Positive long team, @PathVariable @Positive long lead){
+        teamService.setLead(team,lead);
     }
 }

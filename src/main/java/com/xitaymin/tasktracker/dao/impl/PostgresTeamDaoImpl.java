@@ -12,6 +12,18 @@ import java.util.Collection;
 
 @Repository
 public class PostgresTeamDaoImpl implements TeamDao {
+    @Override
+    public Team findByIdWithMembers(long teamId) {
+        Team team = null;
+        try {
+            team = entityManager.createNamedQuery(Team.FIND_TEAM_WITH_MEMBERS_BY_ID, Team.class)
+                    .setParameter("id", teamId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+        return team;
+    }
 
     @PersistenceContext
     EntityManager entityManager;
@@ -39,8 +51,8 @@ public class PostgresTeamDaoImpl implements TeamDao {
     }
 
     @Override
-    public Collection<Team> findAllWithMembers() {
-        return entityManager.createNamedQuery(Team.FIND_ALL_WITH_MEMBERS, Team.class).getResultList();
+    public Collection<Team> findAllWithMembersAndProjects() {
+        return entityManager.createNamedQuery(Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, Team.class).getResultList();
     }
 
     @Override

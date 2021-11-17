@@ -1,6 +1,5 @@
 package com.xitaymin.tasktracker.service;
 
-import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dto.TeamViewTO;
 import com.xitaymin.tasktracker.dto.team.CreateTeamTO;
 import com.xitaymin.tasktracker.dto.team.EditTeamTO;
@@ -8,7 +7,7 @@ import com.xitaymin.tasktracker.dto.team.EditTeamTO;
 import java.util.Collection;
 
 public interface TeamService {
-    Team saveTeam(CreateTeamTO team);
+    TeamViewTO saveTeam(CreateTeamTO team);
 
     void editTeam(EditTeamTO editTeamTO);
 
@@ -19,4 +18,6 @@ public interface TeamService {
     void deleteTeam(long id);
 
     void addMember(long team, long user);
+
+    void setLead(long team, long lead);
 }

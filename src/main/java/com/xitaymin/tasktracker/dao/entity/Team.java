@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,37 +14,37 @@ import java.util.Set;
 @Entity
 @NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id"),
         @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects WHERE t.id=:id"),
-        @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t" + ".members")
-//               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id")
+//        @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects ORDER BY t.id")
+        @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects ORDER BY t.id"),
+        @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members  ORDER BY t.id")
 })
 public class Team extends PersistentObject {
 
     public static final String FIND_ALL = "Team.findAll";
-    public static final String FIND_ALL_WITH_MEMBERS = "Team.findAllWithMembers";
+    public static final String FIND_ALL_WITH_MEMBERS_AND_PROJECTS = "Team.findAllWithMembersAndProjects";
     public static final String FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID = "Team.findTeamWithMembersAndProjectsById";
+    public static final String FIND_TEAM_WITH_MEMBERS_BY_ID = "Team.findTeamWithMembersById";
 
     @Column(nullable = false)
     private String name;
     @OneToMany(mappedBy = "team", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<User> members;
+    private Set<User> members = new HashSet<>();
 
     @ManyToMany(mappedBy = "teams")
-    private Set<Project> projects;
+    private Set<Project> projects = new HashSet<>();
 
     public Team() {
     }
 
-    public Team(String name, List<User> members, Set<Project> projects) {
+    public Team(String name) {
         this.name = name;
-        this.members = members;
-        this.projects = projects;
     }
 
     public Set<Project> getProjects() {
         return projects;
     }
 
-    public void setProjects(Set<Project> projects) {
+    private void setProjects(Set<Project> projects) {
         this.projects = projects;
     }
 
@@ -55,12 +56,18 @@ public class Team extends PersistentObject {
         this.name = name;
     }
 
-    public List<User> getMembers() {
+    public Set<User> getMembers() {
         return members;
     }
 
-    public void setMembers(List<User> members) {
+    private void setMembers(Set<User> members) {
         this.members = members;
     }
+
+    public void addMember(User member){
+        this.getMembers().add(member);
+        member.setTeam(this);
+    }
+
 
 }

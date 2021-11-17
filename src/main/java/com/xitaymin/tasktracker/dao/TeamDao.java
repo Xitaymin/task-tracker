@@ -13,10 +13,11 @@ public interface TeamDao {
 
     Collection<Team> findAll();
 
-    Collection<Team> findAllWithMembers();
+    Collection<Team> findAllWithMembersAndProjects();
 
     Team findByIdWithMembersAndProjects(long id);
 
     void delete(Team id);
 
+    Team findByIdWithMembers(long teamId);
 }

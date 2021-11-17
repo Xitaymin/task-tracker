@@ -4,8 +4,6 @@ import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
-import com.xitaymin.tasktracker.dto.team.CreateTeamTO;
-import com.xitaymin.tasktracker.dto.team.EditTeamTO;
 import com.xitaymin.tasktracker.service.exceptions.BaseApplicationException;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
@@ -28,6 +26,7 @@ public class TeamValidatorImpl implements TeamValidator {
     public static final String USER_HAS_ANOTHER_TEAM = "User with id = %d already consists in another team.";
     public static final String TEAM_IN_PROJECT = "Can't delete team which is in project.";
     public static final String TEAM_HAS_MEMBERS = "Can't delete team with members.";
+    public static final String TEAM_ALREADY_HAS_LEAD = "User has role LEAD and can't be added to team, because it already has one.";
     private final TeamDao teamDao;
     @Value("${task-tracker.max.team.members.count}")
     private int maxMembersNumber;
@@ -37,43 +36,22 @@ public class TeamValidatorImpl implements TeamValidator {
     }
 
     @Override
-    public void validateForSave(CreateTeamTO createTeamTO,
-                                @Value("${task-tracker.max.team.members.count}") int maxMembersNumber) {
-//        int membersNumber = createTeamTO.getMembers().size();
-//        if (membersNumber > maxMembersNumber) {
-//            throw new TeamMembersNumberExceedException(String.format(TOO_MANY_MEMBERS,
-//                    membersNumber,
-//                    maxMembersNumber));
-//        }
-
-    }
-
-    @Override
     public void validateForDelete(Team team) {
         boolean inProject = team.getProjects().isEmpty();
-        if(inProject){
+        if (inProject) {
             throw new InvalidRequestParameterException(TEAM_IN_PROJECT);
         }
         boolean hasMembers = team.getMembers().isEmpty();
-        if(hasMembers){
+        if (hasMembers) {
             throw new InvalidRequestParameterException(TEAM_HAS_MEMBERS);
         }
 
     }
 
     @Override
-    public Team validateForUpdate(EditTeamTO editTeamTO) {
-        Team team = teamDao.findById(editTeamTO.getId());
-        if (team == null) {
-            throw new NotFoundResourceException(String.format(TEAM_NOT_FOUND, editTeamTO.getId()));
-        }
-        return team;
-    }
-
-    //Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
-    @Override
     public void validateForAddMember(Team team, User user) {
-        if (team.getMembers().size() == maxMembersNumber) {
+        Set<User> members = team.getMembers();
+        if (members.size() == maxMembersNumber) {
             throw new BaseApplicationException(String.format(TOO_MANY_MEMBERS, maxMembersNumber));
         } else if (user.isDeleted()) {
             throw new NotFoundResourceException(String.format(UserValidatorImpl.USER_NOT_FOUND, user.getId()));
@@ -82,8 +60,19 @@ public class TeamValidatorImpl implements TeamValidator {
         } else if (isUserRoleInvalid(user)) {
             throw new BaseApplicationException(INVALID_ROLE);
         }
+            validateIfLeadAlreadyPresent(members);
 
-        //todo check if the team already has lead
+    }
+
+    @Override
+    public void validateIfLeadAlreadyPresent(Set<User> members) {
+        if (!members.isEmpty()) {
+            for (User user:members){
+                if(user.getRoles().contains(Role.LEAD)){
+                    throw new InvalidRequestParameterException(TEAM_ALREADY_HAS_LEAD);
+                }
+            }
+        }
     }
 
     private boolean isUserRoleInvalid(User user) {
