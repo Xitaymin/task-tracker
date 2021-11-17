@@ -4,13 +4,12 @@ import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 
-import java.util.List;
 import java.util.Set;
 
 public final class TeamBuilder {
     protected long id;
     private String name;
-    private List<User> members;
+    private Set<User> members;
     private Set<Project> projects;
 
     private TeamBuilder() {
@@ -25,7 +24,7 @@ public final class TeamBuilder {
         return this;
     }
 
-    public TeamBuilder withMembers(List<User> members) {
+    public TeamBuilder withMembers(Set<User> members) {
         this.members = members;
         return this;
     }
@@ -43,8 +42,6 @@ public final class TeamBuilder {
     public Team build() {
         Team team = new Team();
         team.setName(name);
-        team.setMembers(members);
-        team.setProjects(projects);
         team.setId(id);
         return team;
     }

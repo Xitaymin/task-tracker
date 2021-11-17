@@ -88,7 +88,9 @@ public class TaskServiceImpl implements TaskService {
         assignee.getTasks().add(task);
 
         Task parentTask = task.getParent();
-        parentTask.getChildTasks().add(task);
+        if (parentTask != null) {
+            parentTask.getChildTasks().add(task);
+        }
 
         Task savedTask = taskDAO.save(task);
         return convertToTO(savedTask);

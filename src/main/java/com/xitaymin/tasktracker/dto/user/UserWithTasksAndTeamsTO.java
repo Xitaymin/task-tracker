@@ -51,5 +51,6 @@ public class UserWithTasksAndTeamsTO {
     public Long getTeamId() {
         return teamId;
     }
+
 }
 

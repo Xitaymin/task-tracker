@@ -64,9 +64,7 @@ public final class UserBuilder {
         user.setEmail(email);
         user.setDeleted(deleted);
         user.setRoles(roles);
-        user.setTasks(tasks);
         user.setTeam(team);
-        user.setId(id);
         return user;
     }
 }

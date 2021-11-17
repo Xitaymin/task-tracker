@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.suites;
 
 
 import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.Team;
@@ -11,11 +12,12 @@ import com.xitaymin.tasktracker.dto.task.TaskBuilder;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.dto.team.TeamBuilder;
 import com.xitaymin.tasktracker.dto.user.UserBuilder;
+import com.xitaymin.tasktracker.dto.user.UserWithTasksAndTeamsTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import static com.xitaymin.tasktracker.controller.TaskController.TASKS;
 import static com.xitaymin.tasktracker.controller.UserController.USERS;
@@ -27,39 +29,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserWithTasksTestSuite extends BaseTestSuite {
 
-
-//    @BeforeEach
-//    public void setUp() throws Exception {
-//        mockMvc.perform(post(USERS).content(asJson(new User(0, "First user", "first@gmail.com", false))).contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        mockMvc.perform(post(TASKS).content(asJson(new Task(0, "First task", "Description", 1, null)))
-//                                .contentType(MediaType.APPLICATION_JSON)
-//                                .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//    }
-
     @Test
     void assignTask() throws Exception {
         Project project = ProjectBuilder.aProject().withName("The most important project").build();
         Team team = TeamBuilder.aTeam()
                 .withName("Delta")
-                .withMembers(new ArrayList<>())
-                .withProjects(new HashSet<>())
                 .build();
         User reporter = UserBuilder.anUser()
                 .withName("Reporter")
                 .withEmail("reporter@gmail.com")
                 .withDeleted(false)
-                .withTasks(new HashSet<>())
                 .build();
         userDAO.save(reporter);
         User assignee = UserBuilder.anUser()
                 .withName("Assignee")
                 .withEmail("assignee@gmail.com")
                 .withDeleted(false)
-                .withTasks(new HashSet<>())
                 .build();
         assignee.setTeam(team);
         team.getMembers().add(assignee);
@@ -77,7 +62,7 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
                 .withProject(project)
                 .build();
 
-        Task savedTask = taskDao.save(task);
+        taskDao.save(task);
 
         mockMvc.perform(put(USERS + "/" + assignee.getId() + "/task/" + task.getId())).andExpect(status().isOk());
 
@@ -91,13 +76,9 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
         assertEquals(firstSavedTask.getAssignee(), assignee.getId());
     }
 
-    private Task getSavedTask() {
+    private User prepareUserWithTasks() {
         Project project = ProjectBuilder.aProject().withName("The most important project").build();
-        Team team = TeamBuilder.aTeam()
-                .withName("Delta")
-                .withMembers(new ArrayList<>())
-                .withProjects(new HashSet<>())
-                .build();
+        Team team = TeamBuilder.aTeam().withName("Delta").build();
         User reporter = UserBuilder.anUser()
                 .withName("Reporter")
                 .withEmail("reporter@gmail.com")
@@ -105,11 +86,15 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
                 .withTasks(new HashSet<>())
                 .build();
         userDAO.save(reporter);
+        Set<Role> assigneeRoles = new HashSet<>();
+        assigneeRoles.add(Role.DEVELOPER);
+        assigneeRoles.add(Role.LEAD);
         User assignee = UserBuilder.anUser()
                 .withName("Assignee")
                 .withEmail("assignee@gmail.com")
                 .withDeleted(false)
                 .withTasks(new HashSet<>())
+                .withRoles(assigneeRoles)
                 .build();
         assignee.setTeam(team);
         team.getMembers().add(assignee);
@@ -121,27 +106,41 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
         Task task = TaskBuilder.aTask()
                 .withTitle("Title")
                 .withDescription("Description")
-                .withAssignee(null)
+                .withAssignee(assignee)
                 .withReporter(reporter)
-                .withType(TaskType.BUG)
+                .withType(TaskType.EPIC)
                 .withProject(project)
                 .build();
 
-        return taskDao.save(task);
+        Task firstTask = taskDao.save(task);
+        assignee.getTasks().add(firstTask);
+
+        Task secondTask = TaskBuilder.aTask()
+                .withTitle("Second task")
+                .withDescription("Description")
+                .withAssignee(assignee)
+                .withReporter(reporter)
+                .withType(TaskType.BUG)
+                .withParent(firstTask)
+                .withProject(project)
+                .build();
+
+        secondTask.getParent().getChildTasks().add(secondTask);
+        assignee.getTasks().add(secondTask);
+
+        taskDao.save(secondTask);
+        return assignee;
     }
 
     @Test
     void getUserWithTasks() throws Exception {
-//        assignTask();
-//        Task task = taskDao.findAll().iterator().next();
-//        User user = task.getAssignee();
-//
-//        MvcResult result = mockMvc.perform((get(USERS + user.getId()).contentType(APPLICATION_JSON).accept(APPLICATION_JSON)))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//        UserWithTasksAndTeamsTO userWithTasks = fromResponse(result, UserWithTasksAndTeamsTO.class);
-//        Set<TaskViewTO> tasks = userWithTasks.getTasksId();
-//        assertThat(tasks).hasSize(1);
-//        assertEquals(tasks.get(0).getId(), 1);
+        User savedUser = prepareUserWithTasks();
+
+        MvcResult result = mockMvc.perform((get(USERS + "/" + savedUser.getId()).contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON))).andExpect(status().isOk()).andReturn();
+        UserWithTasksAndTeamsTO userWithTasks = fromResponse(result, UserWithTasksAndTeamsTO.class);
+        Set<Long> tasks = userWithTasks.getTasksId();
+        assertEquals(tasks.size(), savedUser.getTasks().size());
+        assertEquals(savedUser.getTeam().getId(), userWithTasks.getTeamId());
     }
 }

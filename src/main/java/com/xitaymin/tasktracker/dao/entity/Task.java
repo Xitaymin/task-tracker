@@ -41,7 +41,6 @@ public class Task extends PersistentObject {
     @ManyToOne(fetch = FetchType.LAZY)
     private Task parent;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent")
-    @JoinColumn(name = "parent_id")
     private Set<Task> childTasks = new HashSet<>();
 
     public Task() {

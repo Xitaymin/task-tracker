@@ -12,7 +12,6 @@ import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterExcept
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.UserValidator;
 import com.xitaymin.tasktracker.service.validators.UserWithTasksValidator;
-import com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -51,7 +50,6 @@ public class UserWithTasksServiceImpl extends GenericService implements UserWith
         userWithTasksValidator.validateToAssign(assignee, task);
         task.setAssignee(assignee);
         assignee.getTasks().add(task);
-//        userDAO.update(assignee);
     }
 
 

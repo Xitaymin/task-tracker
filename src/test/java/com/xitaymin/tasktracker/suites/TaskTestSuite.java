@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -57,8 +56,6 @@ public class TaskTestSuite extends BaseTestSuite {
         Project project = ProjectBuilder.aProject().withName("The most important project").build();
         Team team = TeamBuilder.aTeam()
                 .withName("Delta")
-                .withMembers(new ArrayList<>())
-                .withProjects(new HashSet<>())
                 .build();
         User reporter = UserBuilder.anUser()
                 .withName("Reporter")

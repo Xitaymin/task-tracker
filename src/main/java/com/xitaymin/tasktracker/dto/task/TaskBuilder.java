@@ -5,6 +5,7 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.User;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public final class TaskBuilder {
@@ -15,7 +16,7 @@ public final class TaskBuilder {
     private User assignee;
     private Project project;
     private TaskType type;
-    private Set<Task> childTasks;
+    private Set<Task> childTasks = new HashSet<>();
     private Task parent;
 
     private TaskBuilder() {

@@ -14,9 +14,9 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Set;
 
-//todo difference beetween left join and left join fetch
 @Entity
 @Table(name = "users")
 @NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u"),
@@ -38,13 +38,12 @@ public class User extends PersistentObject {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.MERGE)
-    private Set<Task> tasks;
+    @OneToMany(mappedBy = "assignee", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Task> tasks = new HashSet<>();
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "team_id")
     private Team team;
 
-    //todo don't show emails on view
     public User() {
     }
 
@@ -57,16 +56,11 @@ public class User extends PersistentObject {
         this.team = team;
     }
 
-    //todo find way to use EnumSet
-
-    //    todo UserViewTO
-
-
     public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<Task> tasks) {
+    private void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
