@@ -18,18 +18,13 @@ import java.util.Optional;
 
 @Service
 public class TaskValidatorImpl implements TaskValidator {
-    public static final String REQUIRED_TITLE = "Title is required and shouldn't be empty.";
     public static final String TASK_NOT_FOUND = "Task with id = %s doesn't exist.";
-    public static final String REPORTER_SHOULDNT_CHANGE = "Reporter shouldn't be changed. Old value = %s.";
-    public static final String ASSIGNEE_SHOULDNT_CHANGE =
-            "Assignee shouldn't be changed in this request. Old value = %s.";
-    public static final String REQUIRED_DESCRIPTION = "Description is required and shouldn't be empty.";
+
     public static final String REPORTER_NOT_FOUND = "Not found reporter with id = %s.";
     public static final String ASSIGNEE_NOT_FOUND = "Not found assignee with id = %s.";
     public static final String PROJECT_DOESNT_EXIST = "Project with id = %d doesn't exist.";
     public static final String ASSIGNEE_NOT_IN_TEAM =
             "Assignee with id = %d should consist in team related to the project with id = %d";
-    public static final String NO_NEED_PARENT_FOR_EPIC = "Task with type EPIC don't need parent.";
     public static final String NOT_FOUND_PARENT_TASK = "Parent task with id = %d doesn't exist.";
     public static final String SUBTASK_WITHOUT_PARENT = "Task with type SUBTASK can't be created without parent;";
     public static final String INCOMPATIBLE_PARENT_TYPE =

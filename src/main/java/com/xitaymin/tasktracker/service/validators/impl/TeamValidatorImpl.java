@@ -22,7 +22,6 @@ public class TeamValidatorImpl implements TeamValidator {
     public static final String TOO_MANY_MEMBERS =
             "Number of team's members can't be greater than max members number which is %d.";
     public static final String INVALID_ROLE = "Users with roles MANAGER or ADMIN can't be added to the team.";
-    public static final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
     public static final String USER_HAS_ANOTHER_TEAM = "User with id = %d already consists in another team.";
     public static final String TEAM_IN_PROJECT = "Can't delete team which is in project.";
     public static final String TEAM_HAS_MEMBERS = "Can't delete team with members.";

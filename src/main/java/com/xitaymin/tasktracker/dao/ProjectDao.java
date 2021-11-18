@@ -6,8 +6,6 @@ public interface ProjectDao {
 
     Project save(Project project);
 
-    void update(Project project);
-
     Project findById(long id);
 
     Project findByIdWithTeams(long projectId);

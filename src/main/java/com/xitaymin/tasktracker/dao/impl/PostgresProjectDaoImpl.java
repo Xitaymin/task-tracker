@@ -20,12 +20,6 @@ public class PostgresProjectDaoImpl implements ProjectDao {
         return project;
     }
 
-    @Transactional
-    @Override
-    public void update(Project project) {
-        entityManager.merge(project);
-    }
-
     @Override
     public Project findById(long id) {
         return entityManager.find(Project.class, id);

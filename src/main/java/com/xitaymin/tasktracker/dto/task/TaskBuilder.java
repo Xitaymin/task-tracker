@@ -26,10 +26,7 @@ public final class TaskBuilder {
         return new TaskBuilder();
     }
 
-    public TaskBuilder withId(long id) {
-        this.id = id;
-        return this;
-    }
+
 
     public TaskBuilder withTitle(String title) {
         this.title = title;
@@ -58,11 +55,6 @@ public final class TaskBuilder {
 
     public TaskBuilder withType(TaskType type) {
         this.type = type;
-        return this;
-    }
-
-    public TaskBuilder withChildTasks(Set<Task> childTasks) {
-        this.childTasks = childTasks;
         return this;
     }
 
