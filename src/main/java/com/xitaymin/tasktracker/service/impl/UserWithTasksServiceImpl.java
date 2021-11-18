@@ -4,6 +4,7 @@ import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.PersistentObject;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.user.UserWithTasksAndTeamsTO;
 import com.xitaymin.tasktracker.service.GenericService;
@@ -66,6 +67,11 @@ public class UserWithTasksServiceImpl extends GenericService implements UserWith
     }
 
     private UserWithTasksAndTeamsTO toTO(User user) {
+        Long teamId = null;
+        Team team = user.getTeam();
+        if(team!=null){
+            teamId = team.getId();
+        }
         Set<Long> tasksId = user.getTasks().stream().map(PersistentObject::getId).collect(Collectors.toSet());
         return new UserWithTasksAndTeamsTO(
                 user.getId(),
@@ -74,6 +80,6 @@ public class UserWithTasksServiceImpl extends GenericService implements UserWith
                 user.isDeleted(),
                 user.getRoles(),
                 tasksId,
-                user.getTeam().getId());
+                teamId);
     }
 }

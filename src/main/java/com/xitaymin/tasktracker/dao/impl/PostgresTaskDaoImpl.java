@@ -36,13 +36,11 @@ public class PostgresTaskDaoImpl implements TaskDAO {
         return entityManager.merge(task);
     }
 
-    //todo change all id types to int
     @Override
     public Task findOne(long id) {
         return entityManager.find(Task.class, id);
     }
 
-    //todo catch no result exception
     @Override
     public Collection<Task> findAll() {
         return entityManager.createNamedQuery(Task.FIND_ALL, Task.class).getResultList();
@@ -50,8 +48,13 @@ public class PostgresTaskDaoImpl implements TaskDAO {
 
     @Override
     public Task findFullTask(long taskId) {
-        return entityManager.createNamedQuery(Task.FIND_FULL_TASK_BY_ID, Task.class)
-                .setParameter("id", taskId)
-                .getSingleResult();
+        try {
+            return entityManager.createNamedQuery(Task.FIND_FULL_TASK_BY_ID, Task.class)
+                    .setParameter("id", taskId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

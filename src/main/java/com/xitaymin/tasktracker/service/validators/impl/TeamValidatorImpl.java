@@ -60,8 +60,7 @@ public class TeamValidatorImpl implements TeamValidator {
         } else if (isUserRoleInvalid(user)) {
             throw new BaseApplicationException(INVALID_ROLE);
         }
-            validateIfLeadAlreadyPresent(members);
-
+            if(user.getRoles().contains(Role.LEAD)){validateIfLeadAlreadyPresent(members);}
     }
 
     @Override

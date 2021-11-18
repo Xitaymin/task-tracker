@@ -57,12 +57,12 @@ public class UserController {
     }
 
     @PutMapping("/role")
-    public void addRole(@Valid UserRoleTO roleTO) {
+    public void addRole(@Valid @RequestBody UserRoleTO roleTO) {
         userService.addRole(roleTO);
     }
 
-    @DeleteMapping("role")
-    public void removeRole(@Valid UserRoleTO roleTO) {
+    @DeleteMapping("/role")
+    public void removeRole(@Valid @RequestBody UserRoleTO roleTO) {
         userService.deleteRole(roleTO);
     }
 

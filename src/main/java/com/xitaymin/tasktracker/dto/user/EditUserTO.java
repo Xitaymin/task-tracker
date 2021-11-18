@@ -37,5 +37,4 @@ public class EditUserTO {
         return email;
     }
 
-
 }
