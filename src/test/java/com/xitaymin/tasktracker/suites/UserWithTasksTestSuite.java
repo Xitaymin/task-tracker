@@ -11,8 +11,8 @@ import com.xitaymin.tasktracker.dto.project.ProjectBuilder;
 import com.xitaymin.tasktracker.dto.task.TaskBuilder;
 import com.xitaymin.tasktracker.dto.task.TaskViewTO;
 import com.xitaymin.tasktracker.dto.team.TeamBuilder;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserBuilder;
-import com.xitaymin.tasktracker.dto.user.UserWithTasksAndTeamsTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -138,7 +138,7 @@ public class UserWithTasksTestSuite extends BaseTestSuite {
 
         MvcResult result = mockMvc.perform((get(USERS + "/" + savedUser.getId()).contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON))).andExpect(status().isOk()).andReturn();
-        UserWithTasksAndTeamsTO userWithTasks = fromResponse(result, UserWithTasksAndTeamsTO.class);
+        FullUserTO userWithTasks = fromResponse(result, FullUserTO.class);
         Set<Long> tasks = userWithTasks.getTasksId();
         assertEquals(tasks.size(), savedUser.getTasks().size());
         assertEquals(savedUser.getTeam().getId(), userWithTasks.getTeamId());

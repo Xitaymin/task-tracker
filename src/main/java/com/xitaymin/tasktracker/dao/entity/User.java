@@ -24,7 +24,7 @@ import java.util.Set;
                @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
                @NamedQuery(name = User.FIND_BY_ID_WITH_ALL, query = "SELECT u FROM User u LEFT JOIN FETCH u.tasks  LEFT JOIN FETCH u.team WHERE u.id=:id")})
 
-public class User extends PersistentObject {
+public class User extends BaseEntity {
     public static final String FIND_ALL = "User.getAll";
     public static final String DELETE = "User.delete";
     public static final String FIND_BY_EMAIL = "User.findByEmail";

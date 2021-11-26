@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 
 @MappedSuperclass
-public abstract class PersistentObject {
+public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     @SequenceGenerator(name = "global_seq", sequenceName = "SEQ_GLOBAL", allocationSize = 10)

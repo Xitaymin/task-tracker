@@ -15,7 +15,7 @@ import java.util.Set;
                @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects WHERE t.id=:id"),
                @NamedQuery(name = Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects ORDER BY t.id"),
                @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID, query = "SELECT  t FROM Team t LEFT JOIN FETCH t" + ".members WHERE t.id=:id")})
-public class Team extends PersistentObject {
+public class Team extends BaseEntity {
 
     public static final String FIND_ALL = "Team.findAll";
     public static final String FIND_ALL_WITH_MEMBERS_AND_PROJECTS = "Team.findAllWithMembersAndProjects";

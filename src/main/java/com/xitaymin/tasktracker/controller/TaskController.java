@@ -15,14 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.Collection;
 
-//Создание задачи.
-//Задача может быть создана только в рамках проекта
-//Assignee - может быть не указан при создании задачи, но если указан - должен быть в проекте, которому принадлежит эта задача
-//Название и описание обязательны
-//reporter - любой пользователь, обязателен
-//Задачи удалять нельзя
-//Редактирование. Редактировать можно только title, description и assignee.
-//Привязка задачи к пользователю - устанавливаем assignee. Assignee должен быть в проекте, которому принадлежит эта задача.
 @RestController
 @RequestMapping(TaskController.TASKS)
 public class TaskController {

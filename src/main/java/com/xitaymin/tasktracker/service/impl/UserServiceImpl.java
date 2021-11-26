@@ -1,11 +1,15 @@
 package com.xitaymin.tasktracker.service.impl;
 
+import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.BaseEntity;
 import com.xitaymin.tasktracker.dao.entity.Role;
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserRoleTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.GenericService;
@@ -13,19 +17,17 @@ import com.xitaymin.tasktracker.service.UserService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.UserValidator;
-import com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
+import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
-
-//Добавление/удаление ролей. При удалении роли убедиться, что не нарушаются инварианты других сущностей.
-// Все операции с участием юзера в других сущностях доступны только для deleted=false.
-//Получение пользователя по ID вместе с его тасками и командами.
 
 @Service
 public class UserServiceImpl extends GenericService implements UserService {
@@ -34,10 +36,12 @@ public class UserServiceImpl extends GenericService implements UserService {
     public static final String SECOND_LEAD_IN_TEAM = "Team can't have two members with role LEAD.";
     private final UserDAO userDAO;
     private final UserValidator userValidator;
+    private final TaskDAO taskDAO;
 
-    public UserServiceImpl(UserDAO userDAO, UserValidator userValidator) {
+    public UserServiceImpl(UserDAO userDAO, UserValidator userValidator, TaskDAO taskDAO) {
         this.userDAO = userDAO;
         this.userValidator = userValidator;
+        this.taskDAO = taskDAO;
     }
 
     @Override
@@ -118,6 +122,51 @@ public class UserServiceImpl extends GenericService implements UserService {
 
     private UserViewTO convertToTO(User user) {
         return new UserViewTO(user.getId(), user.getName(), user.getEmail(), user.isDeleted(), user.getRoles());
+    }
+
+    @Transactional
+    @Override
+    public void assignTask(long userId, long taskId) {
+        Task task = taskDAO.findFullTask(taskId);
+        throwExceptionIfAbsent(TASK_NOT_FOUND, task, taskId);
+
+        User assignee = userDAO.findOne(userId);
+        if (userValidator.isUnavailable(assignee)) {
+            throw new NotFoundResourceException(String.format(ASSIGNEE_NOT_FOUND, userId));
+        }
+
+        userValidator.validateToAssign(assignee, task);
+        task.setAssignee(assignee);
+        assignee.getTasks().add(task);
+    }
+
+
+    @Override
+    public FullUserTO getById(long id) {
+        FullUserTO userTO;
+        User user = userDAO.findByIdWithTasksAndTeams(id);
+        if (userValidator.isUnavailable(user)) {
+            throw new InvalidRequestParameterException(String.format("User with id = %s not found", id));
+        } else {
+            userTO = toTO(user);
+        }
+        return userTO;
+    }
+
+    private FullUserTO toTO(User user) {
+        Long teamId = null;
+        Team team = user.getTeam();
+        if (team != null) {
+            teamId = team.getId();
+        }
+        Set<Long> tasksId = user.getTasks().stream().map(BaseEntity::getId).collect(Collectors.toSet());
+        return new FullUserTO(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.isDeleted(),
+                user.getRoles(),
+                tasksId,
+                teamId);
     }
 
 }

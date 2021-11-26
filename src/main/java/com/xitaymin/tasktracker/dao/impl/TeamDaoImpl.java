@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 
 @Repository
-public class PostgresTeamDaoImpl implements TeamDao {
+public class TeamDaoImpl implements TeamDao {
     @Override
     public Team findByIdWithMembers(long teamId) {
         Team team = null;

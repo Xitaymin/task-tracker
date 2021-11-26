@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 @Repository
-public class PostgresProjectDaoImpl implements ProjectDao {
+public class ProjectDaoImpl implements ProjectDao {
     @PersistenceContext
     EntityManager entityManager;
 

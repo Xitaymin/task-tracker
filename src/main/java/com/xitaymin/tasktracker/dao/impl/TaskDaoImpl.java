@@ -11,7 +11,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public class PostgresTaskDaoImpl implements TaskDAO {
+public class TaskDaoImpl implements TaskDAO {
 
     @PersistenceContext
     EntityManager entityManager;

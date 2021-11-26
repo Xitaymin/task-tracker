@@ -1,5 +1,6 @@
 package com.xitaymin.tasktracker.service.validators;
 
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
@@ -11,4 +12,6 @@ public interface UserValidator {
     User getUserValidForUpdate(EditUserTO user);
 
     boolean isUnavailable(User user);
+
+    void validateToAssign(User assignee, Task task);
 }

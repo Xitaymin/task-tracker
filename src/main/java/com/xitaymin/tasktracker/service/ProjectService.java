@@ -3,9 +3,7 @@ package com.xitaymin.tasktracker.service;
 import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
-import org.springframework.stereotype.Service;
 
-@Service
 public interface ProjectService {
     Project saveProject(CreateProjectTO project);
 

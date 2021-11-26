@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserRoleTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
@@ -18,13 +19,6 @@ import javax.validation.Valid;
 import java.util.Collection;
 
 import static com.xitaymin.tasktracker.controller.UserController.USERS;
-
-//CRUD для пользователя. Email пользователя должен быть уникальным. +
-//Добавление/удаление ролей. При удалении роли убедиться, что не нарушаются инварианты других сущностей. +
-//Редактирование пользователя. Редактировать можно всё кроме ID. Редактирование не затрагивает список команд +
-//Удаление пользователя. При удалении пользователя, он фактически остается, но помечается как deleted=true. Все операции с участием юзера в других сущностях доступны только для deleted=false.+
-//Получение пользователя по ID вместе с его тасками и командой. +
-//Получение всех пользователей. +
 
 @RestController
 @RequestMapping(USERS)
@@ -64,6 +58,17 @@ public class UserController {
     @DeleteMapping("/role")
     public void removeRole(@Valid @RequestBody UserRoleTO roleTO) {
         userService.deleteRole(roleTO);
+    }
+
+
+    @PutMapping("/{user}/task/{task}")
+    public void assignTask(@PathVariable long task, @PathVariable long user) {
+        userService.assignTask(user, task);
+    }
+
+    @GetMapping("/{id}")
+    public FullUserTO getUserWithTasksById(@PathVariable long id) {
+        return userService.getById(id);
     }
 
 }

@@ -1,6 +1,9 @@
 package com.xitaymin.tasktracker.service.validators.impl;
 
+import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
+import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
@@ -9,15 +12,19 @@ import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
+import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_IN_TEAM;
+
 @Service
 public class UserValidatorImpl implements UserValidator {
     public static final String EMAIL_IN_USE = "Email %s is already in use.";
     public static final String USER_NOT_FOUND = "User with id = %s doesn't exist.";
     public static final String EMAIL_REQUIRED = "Email shouldn't be null.";
     private final UserDAO userDAO;
+    private final TaskDAO taskDAO;
 
-    public UserValidatorImpl(UserDAO userDAO) {
+    public UserValidatorImpl(UserDAO userDAO, TaskDAO taskDAO) {
         this.userDAO = userDAO;
+        this.taskDAO = taskDAO;
     }
 
     @Override
@@ -50,6 +57,17 @@ public class UserValidatorImpl implements UserValidator {
             return (userDAO.findByEmail(email) == null || email.equals(oldUser.getEmail()));
         } else {
             throw new InvalidRequestParameterException(EMAIL_REQUIRED);
+        }
+    }
+
+    @Override
+    public void validateToAssign(User assignee, Task task) {
+        Project project = task.getProject();
+        boolean isAssigneeInTeam = project.getTeams().contains(assignee.getTeam());
+        if (!isAssigneeInTeam) {
+            throw new InvalidRequestParameterException(String.format(ASSIGNEE_NOT_IN_TEAM,
+                    assignee.getId(),
+                    project.getId()));
         }
     }
 }

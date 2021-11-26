@@ -15,12 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
-//Создание проекта. +
-//Редактировать можно только имя +
-//Удалять проект нельзя. +
-//Добавить/удалить команду в проект. +
-//Назначить productOwner, он должен иметь роль MANAGER +
-
 @RestController
 @RequestMapping(ProjectController.PROJECTS)
 public class ProjectController {

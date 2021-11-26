@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.service;
 
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserRoleTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 
@@ -19,4 +20,8 @@ public interface UserService {
     void addRole(UserRoleTO roleTO);
 
     void deleteRole(UserRoleTO roleTO);
+
+    void assignTask(long userId, long taskId);
+
+    FullUserTO getById(long id);
 }

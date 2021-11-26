@@ -4,7 +4,7 @@ import com.xitaymin.tasktracker.dao.entity.Role;
 
 import java.util.Set;
 
-public class UserWithTasksAndTeamsTO {
+public class FullUserTO {
     private final long id;
     private final String name;
     private final String email;
@@ -13,8 +13,8 @@ public class UserWithTasksAndTeamsTO {
     private final Set<Long> tasksId;
     private final Long teamId;
 
-    public UserWithTasksAndTeamsTO(long id, String name, String email, boolean deleted, Set<Role> roles,
-                                   Set<Long> tasksId, Long teamId) {
+    public FullUserTO(long id, String name, String email, boolean deleted, Set<Role> roles, Set<Long> tasksId,
+                      Long teamId) {
         this.id = id;
         this.name = name;
         this.email = email;
