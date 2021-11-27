@@ -39,16 +39,6 @@ public class TeamDaoImpl implements TeamDao {
     }
 
     @Override
-    public void update(Team team) {
-        entityManager.merge(team);
-    }
-
-    @Override
-    public Collection<Team> findAll() {
-        return entityManager.createNamedQuery(Team.FIND_ALL, Team.class).getResultList();
-    }
-
-    @Override
     public Collection<Team> findAllFullTeams() {
         return entityManager.createNamedQuery(Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, Team.class).getResultList();
     }

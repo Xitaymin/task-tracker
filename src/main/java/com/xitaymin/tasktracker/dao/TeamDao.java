@@ -9,10 +9,6 @@ public interface TeamDao {
 
     Team findById(long id);
 
-    void update(Team team);
-
-    Collection<Team> findAll();
-
     Collection<Team> findAllFullTeams();
 
     Team findFullTeamById(long id);
