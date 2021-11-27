@@ -15,7 +15,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "projects")
-@NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS, query = "SELECT p FROM Project p LEFT JOIN FETCH p.teams" + " " + "WHERE p.id=:id")})
+@NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS,
+        query = "SELECT p FROM Project p LEFT JOIN FETCH p.teams WHERE p.id=:id")})
 public class Project extends BaseEntity {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
@@ -60,12 +61,12 @@ public class Project extends BaseEntity {
         this.name = name;
     }
 
-    public void addTeam(Team team){
+    public void addTeam(Team team) {
         this.getTeams().add(team);
         team.getProjects().add(this);
     }
 
-    public void removeTeam(Team team){
+    public void removeTeam(Team team) {
         this.getTeams().remove(team);
         team.getProjects().remove(this);
     }

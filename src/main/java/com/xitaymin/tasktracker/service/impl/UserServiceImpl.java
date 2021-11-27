@@ -34,7 +34,6 @@ import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl
 public class UserServiceImpl implements UserService {
     public static final String INVALID_ROLE_FOR_TEAM =
             "Role %s can't be set for user with id = %d because it consist in team.";
-    public static final String SECOND_LEAD_IN_TEAM = "Team can't have two members with role LEAD.";
     private final UserDAO userDAO;
     private final UserValidator userValidator;
     private final TaskDAO taskDAO;

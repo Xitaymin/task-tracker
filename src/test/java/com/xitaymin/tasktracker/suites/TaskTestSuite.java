@@ -109,7 +109,7 @@ public class TaskTestSuite extends BaseTestSuite {
     @Test
     void editTask() throws Exception {
         createTask();
-        Collection<Task> tasks = taskDao.findAll();
+        Collection<Task> tasks = taskDao.findAllFullTasks();
         Task savedTask = tasks.iterator().next();
 
         EditTaskTO taskFromRequest = new EditTaskTO(savedTask.getId(), "Updated title", "Updated description");

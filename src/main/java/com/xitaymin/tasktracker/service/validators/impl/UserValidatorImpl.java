@@ -1,6 +1,5 @@
 package com.xitaymin.tasktracker.service.validators.impl;
 
-import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Task;
@@ -20,11 +19,9 @@ public class UserValidatorImpl implements UserValidator {
     public static final String USER_NOT_FOUND = "User with id = %s doesn't exist.";
     public static final String EMAIL_REQUIRED = "Email shouldn't be null.";
     private final UserDAO userDAO;
-    private final TaskDAO taskDAO;
 
-    public UserValidatorImpl(UserDAO userDAO, TaskDAO taskDAO) {
+    public UserValidatorImpl(UserDAO userDAO) {
         this.userDAO = userDAO;
-        this.taskDAO = taskDAO;
     }
 
     @Override

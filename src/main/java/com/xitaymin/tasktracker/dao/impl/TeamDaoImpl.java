@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.dao.impl;
 
 import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.entity.Team;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +24,6 @@ public class TeamDaoImpl implements TeamDao {
                 .setParameter("id", teamId)
                 .getResultList();
         return DataAccessUtils.singleResult(teams);
-
     }
 
     @Override
@@ -40,7 +40,15 @@ public class TeamDaoImpl implements TeamDao {
 
     @Override
     public Collection<Team> findAllFullTeams() {
-        return entityManager.createNamedQuery(Team.FIND_ALL_WITH_MEMBERS_AND_PROJECTS, Team.class).getResultList();
+        List<Team> teams = entityManager.createNamedQuery(Team.FIND_ALL_TEAMS_WITH_MEMBERS, Team.class)
+                .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+                .getResultList();
+
+        return entityManager.createQuery("SELECT DISTINCT t FROM Team t LEFT JOIN FETCH t.projects WHERE t IN :teams",
+                Team.class)
+                .setParameter("teams", teams)
+                .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+                .getResultList();
     }
 
     @Override

@@ -16,13 +16,15 @@ import java.util.Set;
 @Entity
 @Table(name = "tasks")
 @NamedQueries({@NamedQuery(name = Task.FIND_ALL, query = "SELECT t FROM Task t"),
-               @NamedQuery(name = Task.FIND_BY_ASSIGNEE, query = "SELECT t FROM Task t WHERE t.assignee=:assignee"),
-               @NamedQuery(name = Task.FIND_FULL_TASK_BY_ID, query = "SELECT t FROM Task t LEFT JOIN FETCH t.project " + " LEFT JOIN FETCH t.childTasks WHERE t.id=:id")})
+               @NamedQuery(name = Task.FIND_FULL_TASK_BY_ID,
+                       query = "SELECT t FROM Task t LEFT JOIN FETCH t.project LEFT JOIN FETCH t.childTasks WHERE t.id=:id"),
+               @NamedQuery(name = Task.FIND_ALL_FULL_TASKS,
+                       query = "SELECT DISTINCT t FROM Task t LEFT join fetch t.childTasks")})
 
 public class Task extends BaseEntity {
     public static final String FIND_ALL = "Task.findAll";
-    public static final String FIND_BY_ASSIGNEE = "Task.findByAssignee";
     public static final String FIND_FULL_TASK_BY_ID = "Task.findByIdWithAll";
+    public static final String FIND_ALL_FULL_TASKS = "Task.findAllWithSubtasks";
 
     @Column(nullable = false)
     private String title;

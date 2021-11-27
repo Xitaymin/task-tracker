@@ -50,7 +50,7 @@ public class UserDaoImpl implements UserDAO {
 
     @Override
     public User findFullUserById(long id) {
-        List<User> users = entityManager.createNamedQuery(User.FIND_BY_ID_WITH_ALL, User.class)
+        List<User> users = entityManager.createNamedQuery(User.FIND_FULL_USER_BY_ID, User.class)
                 .setParameter("id", id)
                 .getResultList();
         return DataAccessUtils.singleResult(users);

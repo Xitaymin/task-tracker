@@ -62,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Collection<TaskViewTO> getTasks() {
         Collection<TaskViewTO> results = new HashSet<>();
-        for (Task task : taskDAO.findAll()) {
+        for (Task task : taskDAO.findAllFullTasks()) {
             TaskViewTO to = convertToTO(task);
             results.add(to);
         }

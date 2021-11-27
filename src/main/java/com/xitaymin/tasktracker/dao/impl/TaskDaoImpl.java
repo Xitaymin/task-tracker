@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.dao.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import org.hibernate.annotations.QueryHints;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,15 @@ import java.util.List;
 
 @Repository
 public class TaskDaoImpl implements TaskDAO {
-
     @PersistenceContext
     EntityManager entityManager;
+
+    @Override
+    public List<Task> findAllFullTasks() {
+        return entityManager.createNamedQuery(Task.FIND_ALL_FULL_TASKS, Task.class)
+                .setHint(QueryHints.PASS_DISTINCT_THROUGH, false)
+                .getResultList();
+    }
 
     @Override
     @Transactional
