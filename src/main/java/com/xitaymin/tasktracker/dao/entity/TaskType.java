@@ -1,21 +1,15 @@
 package com.xitaymin.tasktracker.dao.entity;
 
 public enum TaskType {
-    EPIC(1, true), STORY(2, true), ISSUE(3, true), SUBTASK(4, false), BUG(2, false);
+    EPIC(null), STORY(EPIC), ISSUE(STORY), SUBTASK(ISSUE), BUG(EPIC);
 
-    private final int hierarchyLevel;
-    private final boolean childable;
+    private final TaskType parent;
 
-    TaskType(int hierarchyLevel, boolean childable) {
-        this.hierarchyLevel = hierarchyLevel;
-        this.childable = childable;
+    TaskType(TaskType parent) {
+        this.parent = parent;
     }
 
-    public int getHierarchyLevel() {
-        return hierarchyLevel;
-    }
-
-    public boolean isChildable() {
-        return childable;
+    public TaskType getParent() {
+        return parent;
     }
 }
