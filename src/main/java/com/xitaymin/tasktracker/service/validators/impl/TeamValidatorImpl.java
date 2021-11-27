@@ -1,6 +1,5 @@
 package com.xitaymin.tasktracker.service.validators.impl;
 
-import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
@@ -13,10 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-//Удалить команду можно только если у неё нет проектов и участников
-//Добавление пользователя в команду, пользователь может быть только в одной команде.
-// Юзеров с ролями MANAGER и ADMIN нельзя добавлять в команды.
-//Назначить лида команды. Он должен быть частью команды на момент назначения и иметь роль LEAD.
 @Service
 public class TeamValidatorImpl implements TeamValidator {
     public static final String TOO_MANY_MEMBERS =
@@ -26,21 +21,19 @@ public class TeamValidatorImpl implements TeamValidator {
     public static final String TEAM_IN_PROJECT = "Can't delete team which is in project.";
     public static final String TEAM_HAS_MEMBERS = "Can't delete team with members.";
     public static final String TEAM_ALREADY_HAS_LEAD = "User has role LEAD and can't be added to team, because it already has one.";
-    private final TeamDao teamDao;
     @Value("${task-tracker.max.team.members.count}")
     private int maxMembersNumber;
 
-    public TeamValidatorImpl(TeamDao teamDao) {
-        this.teamDao = teamDao;
+    public TeamValidatorImpl() {
     }
 
     @Override
     public void validateForDelete(Team team) {
-        boolean inProject = team.getProjects().isEmpty();
+        boolean inProject = !team.getProjects().isEmpty();
         if (inProject) {
             throw new InvalidRequestParameterException(TEAM_IN_PROJECT);
         }
-        boolean hasMembers = team.getMembers().isEmpty();
+        boolean hasMembers = !team.getMembers().isEmpty();
         if (hasMembers) {
             throw new InvalidRequestParameterException(TEAM_HAS_MEMBERS);
         }
