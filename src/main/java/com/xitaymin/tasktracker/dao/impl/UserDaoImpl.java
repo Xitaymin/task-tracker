@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.dao.impl;
 
 import com.xitaymin.tasktracker.dao.UserDAO;
 import com.xitaymin.tasktracker.dao.entity.User;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -9,6 +10,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDAO {
@@ -18,15 +20,10 @@ public class UserDaoImpl implements UserDAO {
 
     @Override
     public User findByEmail(String email) {
-        User user = null;
-        try {
-            user = entityManager.createNamedQuery(User.FIND_BY_EMAIL, User.class)
-                    .setParameter("email", email)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-        }
-        return user;
+        List<User> users = entityManager.createNamedQuery(User.FIND_BY_EMAIL, User.class)
+                .setParameter("email", email)
+                .getResultList();
+        return DataAccessUtils.singleResult(users);
     }
 
     @Override

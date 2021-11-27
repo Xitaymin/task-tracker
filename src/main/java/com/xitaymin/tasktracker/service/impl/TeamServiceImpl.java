@@ -54,14 +54,14 @@ public class TeamServiceImpl extends GenericService implements TeamService {
 
     @Override
     public TeamViewTO getTeam(long id) {
-        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findByIdWithMembersAndProjects(id));
+        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findFullTeamById(id));
         Team team = optionalTeam.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, id)));
         return convertToTO(team);
     }
 
     @Override
     public Collection<TeamViewTO> getAllTeams() {
-        Collection<Team> teams = teamDao.findAllWithMembersAndProjects();
+        Collection<Team> teams = teamDao.findAllFullTeams();
 
         Collection<TeamViewTO> teamViewTOS = new HashSet<>();
         for (Team team : teams) {
@@ -74,7 +74,7 @@ public class TeamServiceImpl extends GenericService implements TeamService {
     @Transactional
     @Override
     public void deleteTeam(long id) {
-       Team team =  teamDao.findByIdWithMembersAndProjects(id);
+        Team team = teamDao.findFullTeamById(id);
         teamValidator.validateForDelete(team);
         teamDao.delete(team);
     }
