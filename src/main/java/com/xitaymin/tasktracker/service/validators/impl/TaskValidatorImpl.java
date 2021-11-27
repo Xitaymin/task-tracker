@@ -13,7 +13,7 @@ import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
-import static com.xitaymin.tasktracker.service.EntityAbsentUtils.throwExceptionIfAbsent;
+import static com.xitaymin.tasktracker.service.utils.EntityAbsentUtils.throwExceptionIfAbsent;
 
 @Service
 public class TaskValidatorImpl implements TaskValidator {

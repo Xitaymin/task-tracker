@@ -1,4 +1,4 @@
-package com.xitaymin.tasktracker.service;
+package com.xitaymin.tasktracker.service.utils;
 
 import com.xitaymin.tasktracker.dao.entity.BaseEntity;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
