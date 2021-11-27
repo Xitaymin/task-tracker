@@ -6,7 +6,6 @@ import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -50,15 +49,10 @@ public class UserDaoImpl implements UserDAO {
     }
 
     @Override
-    public User findByIdWithTasksAndTeams(long id) {
-        User user = null;
-        try {
-            user = entityManager.createNamedQuery(User.FIND_BY_ID_WITH_ALL, User.class)
-                    .setParameter("id", id)
-                    .getSingleResult();
-        } catch (NoResultException e) {
-            e.printStackTrace();
-        }
-        return user;
+    public User findFullUserById(long id) {
+        List<User> users = entityManager.createNamedQuery(User.FIND_BY_ID_WITH_ALL, User.class)
+                .setParameter("id", id)
+                .getResultList();
+        return DataAccessUtils.singleResult(users);
     }
 }

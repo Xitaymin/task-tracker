@@ -84,7 +84,7 @@ public class UserServiceImpl extends GenericService implements UserService {
     @Transactional
     @Override
     public void addRole(UserRoleTO roleTO) {
-        User user = userDAO.findByIdWithTasksAndTeams(roleTO.getId());
+        User user = userDAO.findFullUserById(roleTO.getId());
         throwExceptionIfAbsent(USER_NOT_FOUND,user,roleTO.getId());
 
         Role role = roleTO.getRole();
@@ -127,7 +127,7 @@ public class UserServiceImpl extends GenericService implements UserService {
     @Transactional
     @Override
     public void assignTask(long userId, long taskId) {
-        Task task = taskDAO.findFullTask(taskId);
+        Task task = taskDAO.findFullTaskById(taskId);
         throwExceptionIfAbsent(TASK_NOT_FOUND, task, taskId);
 
         User assignee = userDAO.findOne(userId);
@@ -144,7 +144,7 @@ public class UserServiceImpl extends GenericService implements UserService {
     @Override
     public FullUserTO getById(long id) {
         FullUserTO userTO;
-        User user = userDAO.findByIdWithTasksAndTeams(id);
+        User user = userDAO.findFullUserById(id);
         if (userValidator.isUnavailable(user)) {
             throw new InvalidRequestParameterException(String.format("User with id = %s not found", id));
         } else {

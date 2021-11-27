@@ -2,6 +2,7 @@ package com.xitaymin.tasktracker.dao.impl;
 
 import com.xitaymin.tasktracker.dao.TaskDAO;
 import com.xitaymin.tasktracker.dao.entity.Task;
+import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -15,13 +16,6 @@ public class TaskDaoImpl implements TaskDAO {
 
     @PersistenceContext
     EntityManager entityManager;
-
-    @Override
-    public List<Task> findByAssignee(long id) {
-        return entityManager.createNamedQuery(Task.FIND_BY_ASSIGNEE, Task.class)
-                .setParameter("assignee", id)
-                .getResultList();
-    }
 
     @Override
     @Transactional
@@ -47,14 +41,10 @@ public class TaskDaoImpl implements TaskDAO {
     }
 
     @Override
-    public Task findFullTask(long taskId) {
-        try {
-            return entityManager.createNamedQuery(Task.FIND_FULL_TASK_BY_ID, Task.class)
-                    .setParameter("id", taskId)
-                    .getSingleResult();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+    public Task findFullTaskById(long taskId) {
+        List<Task> tasks = entityManager.createNamedQuery(Task.FIND_FULL_TASK_BY_ID, Task.class)
+                .setParameter("id", taskId)
+                .getResultList();
+        return DataAccessUtils.singleResult(tasks);
     }
 }

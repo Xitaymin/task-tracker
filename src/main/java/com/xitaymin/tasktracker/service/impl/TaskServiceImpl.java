@@ -51,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskViewTO getTask(long id) {
-        Task task = taskDAO.findFullTask(id);
+        Task task = taskDAO.findFullTaskById(id);
         if (task == null) {
             throw new NotFoundResourceException(String.format(TASK_NOT_FOUND, id));
         } else {
