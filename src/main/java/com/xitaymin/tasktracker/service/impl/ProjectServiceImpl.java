@@ -9,18 +9,18 @@ import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
-import com.xitaymin.tasktracker.service.GenericService;
 import com.xitaymin.tasktracker.service.ProjectService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import static com.xitaymin.tasktracker.service.EntityAbsentUtils.throwExceptionIfAbsent;
 import static com.xitaymin.tasktracker.service.impl.TeamServiceImpl.TEAM_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 @Service
-public class ProjectServiceImpl extends GenericService implements ProjectService {
+public class ProjectServiceImpl implements ProjectService {
 
     public static final String PRODUCT_OWNER_NOT_VALID =
             "User with id = %d doesn't have role MANAGER, and can't be assign as product owner.";

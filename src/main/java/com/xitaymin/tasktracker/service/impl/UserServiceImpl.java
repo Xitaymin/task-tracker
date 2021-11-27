@@ -12,7 +12,6 @@ import com.xitaymin.tasktracker.dto.user.EditUserTO;
 import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserRoleTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
-import com.xitaymin.tasktracker.service.GenericService;
 import com.xitaymin.tasktracker.service.UserService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
@@ -25,12 +24,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.xitaymin.tasktracker.service.EntityAbsentUtils.throwExceptionIfAbsent;
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.ASSIGNEE_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.TaskValidatorImpl.TASK_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 @Service
-public class UserServiceImpl extends GenericService implements UserService {
+public class UserServiceImpl implements UserService {
     public static final String INVALID_ROLE_FOR_TEAM =
             "Role %s can't be set for user with id = %d because it consist in team.";
     public static final String SECOND_LEAD_IN_TEAM = "Team can't have two members with role LEAD.";
@@ -90,10 +90,10 @@ public class UserServiceImpl extends GenericService implements UserService {
         Role role = roleTO.getRole();
 
         boolean inTeam = user.getTeam() != null;
-        if ((role.equals(Role.ADMIN) || role.equals(Role.MANAGER) && inTeam)) {
+        if ((inTeam) && (role.equals(Role.ADMIN) || role.equals(Role.MANAGER))) {
             throw new InvalidRequestParameterException(String.format(INVALID_ROLE_FOR_TEAM, role, user.getId()));
         }
-        if(role.equals(Role.LEAD)) {
+        if (role.equals(Role.LEAD)) {
             Team team = user.getTeam();
             if (team != null) {
                 Set<User> members = team.getMembers();

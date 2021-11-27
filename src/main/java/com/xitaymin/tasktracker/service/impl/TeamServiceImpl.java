@@ -9,22 +9,20 @@ import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.TeamViewTO;
 import com.xitaymin.tasktracker.dto.team.CreateTeamTO;
 import com.xitaymin.tasktracker.dto.team.EditTeamTO;
-import com.xitaymin.tasktracker.service.GenericService;
 import com.xitaymin.tasktracker.service.TeamService;
-import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.TeamValidator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+import static com.xitaymin.tasktracker.service.EntityAbsentUtils.throwExceptionIfAbsent;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
 
 @Service
-public class TeamServiceImpl extends GenericService implements TeamService {
+public class TeamServiceImpl implements TeamService {
     public static final String TEAM_NOT_FOUND = "Team with id = %d doesn't exist.";
     private final TeamDao teamDao;
     private final TeamValidator teamValidator;
@@ -54,8 +52,8 @@ public class TeamServiceImpl extends GenericService implements TeamService {
 
     @Override
     public TeamViewTO getTeam(long id) {
-        Optional<Team> optionalTeam = Optional.ofNullable(teamDao.findFullTeamById(id));
-        Team team = optionalTeam.orElseThrow(() -> new NotFoundResourceException(String.format(TEAM_NOT_FOUND, id)));
+        Team team = teamDao.findFullTeamById(id);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND, team, id);
         return convertToTO(team);
     }
 
