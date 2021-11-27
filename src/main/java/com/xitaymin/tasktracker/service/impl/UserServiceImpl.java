@@ -15,6 +15,7 @@ import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
+import com.xitaymin.tasktracker.service.validators.TeamValidator;
 import com.xitaymin.tasktracker.service.validators.UserValidator;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +38,13 @@ public class UserServiceImpl implements UserService {
     private final UserDAO userDAO;
     private final UserValidator userValidator;
     private final TaskDAO taskDAO;
+    private final TeamValidator teamValidator;
 
-    public UserServiceImpl(UserDAO userDAO, UserValidator userValidator, TaskDAO taskDAO) {
+    public UserServiceImpl(UserDAO userDAO, UserValidator userValidator, TaskDAO taskDAO, TeamValidator teamValidator) {
         this.userDAO = userDAO;
         this.userValidator = userValidator;
         this.taskDAO = taskDAO;
+        this.teamValidator = teamValidator;
     }
 
     @Override
@@ -97,11 +100,7 @@ public class UserServiceImpl implements UserService {
             Team team = user.getTeam();
             if (team != null) {
                 Set<User> members = team.getMembers();
-                for (User member : members) {
-                    if (member.getRoles().contains(Role.LEAD)) {
-                        throw new InvalidRequestParameterException(SECOND_LEAD_IN_TEAM);
-                    }
-                }
+                teamValidator.validateIfLeadAlreadyPresent(members);
             }
         }
         user.getRoles().add(roleTO.getRole());
