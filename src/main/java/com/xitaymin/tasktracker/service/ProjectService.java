@@ -1,11 +1,11 @@
 package com.xitaymin.tasktracker.service;
 
-import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
+import com.xitaymin.tasktracker.dto.project.ProjectViewTO;
 
 public interface ProjectService {
-    Project saveProject(CreateProjectTO project);
+    ProjectViewTO saveProject(CreateProjectTO project);
 
     void editProject(EditProjectTO project);
 

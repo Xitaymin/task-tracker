@@ -1,8 +1,8 @@
 package com.xitaymin.tasktracker.controller;
 
-import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
+import com.xitaymin.tasktracker.dto.project.ProjectViewTO;
 import com.xitaymin.tasktracker.service.ProjectService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +27,7 @@ public class ProjectController {
     }
 
     @PostMapping()
-    public Project createProject(@Valid @RequestBody CreateProjectTO project) {
+    public ProjectViewTO createProject(@Valid @RequestBody CreateProjectTO project) {
         return projectService.saveProject(project);
     }
 

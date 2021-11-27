@@ -9,6 +9,7 @@ import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
+import com.xitaymin.tasktracker.dto.project.ProjectViewTO;
 import com.xitaymin.tasktracker.service.ProjectService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import org.springframework.stereotype.Service;
@@ -35,11 +36,21 @@ public class ProjectServiceImpl implements ProjectService {
         this.userDao = userDao;
     }
 
+    @Transactional
     @Override
-    public Project saveProject(CreateProjectTO createProjectTO) {
+    public ProjectViewTO saveProject(CreateProjectTO createProjectTO) {
         Project project = createProjectTO.convertToEntity();
+        Project savedProject = projectDao.save(project);
+        return convertToTO(savedProject);
+    }
 
-        return projectDao.save(project);
+    private ProjectViewTO convertToTO(Project savedProject) {
+        Long productOwnerId = null;
+        User productOwner = savedProject.getProductOwner();
+        if (productOwner != null) {
+            productOwnerId = productOwner.getId();
+        }
+        return new ProjectViewTO(savedProject.getId(), savedProject.getName(), productOwnerId);
     }
 
     @Transactional
