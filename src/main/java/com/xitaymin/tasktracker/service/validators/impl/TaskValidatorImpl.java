@@ -8,13 +8,12 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dao.entity.User;
 import com.xitaymin.tasktracker.dto.task.CreateTaskTO;
-import com.xitaymin.tasktracker.dto.task.TaskBuilder;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
 import com.xitaymin.tasktracker.service.exceptions.NotFoundResourceException;
 import com.xitaymin.tasktracker.service.validators.TaskValidator;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import static com.xitaymin.tasktracker.service.EntityAbsentUtils.throwExceptionIfAbsent;
 
 @Service
 public class TaskValidatorImpl implements TaskValidator {
@@ -41,22 +40,23 @@ public class TaskValidatorImpl implements TaskValidator {
 
     @Override
     public Task getTaskValidForSave(CreateTaskTO taskTO) {
-        TaskBuilder taskBuilder = TaskBuilder.aTask();
-        taskBuilder.withTitle(taskTO.getTitle());
-        taskBuilder.withDescription(taskTO.getDescription());
+        Task task = new Task();
+        task.setTitle(taskTO.getTitle());
+        task.setDescription(taskTO.getDescription());
 
-        Optional<Project> optionalProject = Optional.ofNullable(projectDao.findByIdWithTeams(taskTO.getProjectId()));
-        Project project = optionalProject.orElseThrow(() -> new NotFoundResourceException(String.format(
-                PROJECT_DOESNT_EXIST,
-                taskTO.getProjectId())));
-        taskBuilder.withProject(project);
+        long projectId = taskTO.getProjectId();
+        Project project = projectDao.findByIdWithTeams(projectId);
+        throwExceptionIfAbsent(PROJECT_DOESNT_EXIST, project, projectId);
+
+        task.setProject(project);
 
         long reporterId = taskTO.getReporter();
         User reporter = userDAO.findOne(reporterId);
         if (isUserUnavailable(reporter)) {
             throw new NotFoundResourceException(String.format(REPORTER_NOT_FOUND, reporterId));
         }
-        taskBuilder.withReporter(reporter);
+
+        task.setReporter(reporter);
 
         Long assigneeId = taskTO.getAssignee();
         User assignee = null;
@@ -72,50 +72,37 @@ public class TaskValidatorImpl implements TaskValidator {
                         project.getId()));
             }
         }
-        taskBuilder.withAssignee(assignee);
+        task.setAssignee(assignee);
 
         TaskType type = taskTO.getType();
-        setValidTaskType(type, taskTO.getParentId(), taskBuilder);
+        setValidTaskType(type, taskTO.getParentId(), task);
 
-        return taskBuilder.build();
-
+        return task;
     }
 
-    private void setValidTaskType(TaskType childType, Long parentId, TaskBuilder taskBuilder) {
+    private void setValidTaskType(TaskType childType, Long parentId, Task task) {
         if (parentId == null) {
             if (childType.equals(TaskType.SUBTASK)) {
                 throw new InvalidRequestParameterException(SUBTASK_WITHOUT_PARENT);
             }
         } else {
-            Optional<Task> optionalTask = Optional.ofNullable(taskDAO.findOne(parentId));
-            Task parentTask = optionalTask.orElseThrow(() -> new InvalidRequestParameterException(String.format(
-                    NOT_FOUND_PARENT_TASK,
-                    parentId)));
+            Task parentTask = taskDAO.findOne(parentId);
+            throwExceptionIfAbsent(NOT_FOUND_PARENT_TASK, parentTask, parentId);
+
             TaskType parentType = parentTask.getType();
 
-            if ((childType.getHierarchyLevel() - parentType.getHierarchyLevel() != 1) || (!parentType.isChildable())) {
+            if (childType.getParent() != parentType) {
                 throw new InvalidRequestParameterException(String.format(INCOMPATIBLE_PARENT_TYPE,
                         childType.name(),
                         parentType.name()));
             }
-            taskBuilder.withParent(parentTask);
+            task.setParent(parentTask);
         }
-        taskBuilder.withType(childType);
+        task.setType(childType);
     }
 
     public boolean isUserUnavailable(User user) {
         return (user == null || user.isDeleted());
-    }
-
-
-    private boolean isAssigneeValidForUpdate(Long assignee, Long oldAssignee) {
-        if (oldAssignee == null && assignee == null) {
-            return true;
-        } else if ((oldAssignee == null) ^ (assignee == null)) {
-            return false;
-        } else {
-            return assignee.equals(oldAssignee);
-        }
     }
 
 }
