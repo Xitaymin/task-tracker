@@ -9,11 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@RequestMapping("/admin")
 @Controller
 public class WebController {
 
@@ -23,16 +25,15 @@ public class WebController {
         this.userService = userService;
     }
 
-    @GetMapping("/hello")
-    public String toHello(Model model) {
-        model.addAttribute("message", "This is message from controller.");
-        return "addUser";
+    @GetMapping()
+    public String root() {
+        return "redirect:/admin/new-user";
     }
 
-    @PostMapping("/admin/users")
+    @PostMapping("/save")
     public String save(@RequestBody UserAdminView userView, Model model) {
         userService.save(userView.toCreateTO());
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
     @GetMapping("/new-user")
@@ -46,12 +47,11 @@ public class WebController {
         return "addUser";
     }
 
-    @GetMapping()
+    @GetMapping("/users")
     public String users(Model model) {
         Collection<UserViewTO> users = userService.getAllUsers();
         List<UserAdminView> views = users.stream().map(UserAdminView::of).collect(Collectors.toList());
         model.addAttribute("users", views);
         return "users";
     }
-
 }

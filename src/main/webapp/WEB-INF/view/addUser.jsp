@@ -16,7 +16,7 @@
     <div class="jumbotron pt-4">
         <div class="container">
             <%--            <h3>${create ? 'Создание' : 'Редактирование'} пользователя ${type}</h3>--%>
-            <h3>${create ? 'Создание' : 'Редактирование'} пользователя}</h3>
+            <h3>${create ? 'Создание' : 'Редактирование'} пользователя</h3>
         </div>
     </div>
 </header>
@@ -26,7 +26,8 @@
             <div class="row">
                 <div class="col-5 offset-3">
                     <form:form class="form-group" modelAttribute="user" method="post"
-                               action="/admin/users" charset="utf-8" accept-charset="UTF-8">
+                               action="${pageContext.servletContext.contextPath}/admin/save" charset="utf-8"
+                               accept-charset="UTF-8">
                         <input name="id" value="${user.id}" type="hidden">
                         <%--                        <input name="type" value="${type}" type="hidden">--%>
                         <%--                        <input name="banned" value="${user.banned}" type="hidden">--%>
