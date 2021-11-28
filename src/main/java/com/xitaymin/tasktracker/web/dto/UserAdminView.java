@@ -57,7 +57,7 @@ public class UserAdminView {
         userView.setName(userViewTO.getName());
         userView.setEmail(userViewTO.getEmail());
         userView.setRoles(userViewTO.getRoles());
-        return new UserAdminView();
+        return userView;
 
     }
 }

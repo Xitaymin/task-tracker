@@ -7,8 +7,8 @@ import com.xitaymin.tasktracker.web.dto.UserAdminView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Collection;
@@ -31,7 +31,7 @@ public class WebController {
     }
 
     @PostMapping("/save")
-    public String save(@RequestBody UserAdminView userView, Model model) {
+    public String save(@ModelAttribute UserAdminView userView) {
         userService.save(userView.toCreateTO());
         return "redirect:/admin/users";
     }
