@@ -1,0 +1,311 @@
+@font-face {
+    font-family: 'Muller';
+    src: url('../fonts/MullerRegular.woff2') format('woff2'),
+    url('../fonts/MullerRegular.woff') format('woff');
+    font-display: swap;
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Muller';
+    src: url('../fonts/MullerBold.woff2') format('woff2'),
+    url('../fonts/MullerBold.woff') format('woff');
+    font-display: swap;
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Muller';
+    src: url('../fonts/MullerMedium.woff2') format('woff2'),
+    url('../fonts/MullerMedium.woff') format('woff');
+    font-display: swap;
+    font-weight: 500;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(217, 231, 238);
+    font-family: 'Muller', sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+input, textarea {
+    border: none;
+}
+
+.icon-box {
+    background-color: rgb(241, 244, 249);
+    background-image: none;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+.container {
+    max-width: 1200px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.section-heading {
+    margin-left: 42px;
+    margin-bottom: 25px;
+    font-size: 40px;
+    font-weight: normal;
+    color: #333;
+}
+
+.btn {
+    cursor: pointer;
+    border: none;
+}
+
+.section {
+    padding-bottom: 20px;
+}
+
+/* header */
+.header {
+    padding-bottom: 20px;
+}
+
+.blue-back {
+    background-color: rgb(0, 66, 130);
+}
+
+.header-intro-wrapper {
+    padding-bottom: 8px;
+}
+
+.header-intro {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.header-logo {
+    margin-right: auto;
+}
+
+.header-phone {
+    padding: 4px;
+    border: #fff 1px solid;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: auto;
+    color: #fff;
+}
+
+.header-login {
+    color: #fff;
+}
+
+.header-login__arrow {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url("../img/arrow-circle-right.svg") center center no-repeat transparent;
+    background-size: contain;
+    transform: translateY(1px);
+
+}
+
+.nav {
+    background-color: white;
+    border-radius: 12px;
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 11px 20px;
+}
+
+.nav-list {
+    display: flex;
+    align-items: center;
+}
+
+.nav-item:not(:last-child) {
+    margin-right: 45px;
+}
+
+.nav-item:last-child {
+    margin-right: 0;
+}
+
+.nav-search {
+    height: 48px;
+    width: 355px;
+    border-radius: 15px;
+    background-color: #f1f1f1;
+    color: #c5c5c5;
+    font-size: 14px;
+    padding: 0 50px 0 20px;
+    background-image: url("../img/magnifier.svg");
+    background-position: right 20px center;
+    background-size: 22px;
+    background-repeat: no-repeat;
+}
+
+/* achievements */
+.achievements-list {
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+}
+
+.achievements_item:not(:first-child) {
+    margin-left: 16px;
+}
+
+.achievement {
+    display: flex;
+}
+
+.achievement-icon {
+    height: 42px;
+    width: 42px;
+}
+
+.achievement-text {
+    margin-left: 8px;
+}
+
+.achievement-text__primary {
+    color: rgb(78, 212, 1);
+    font-size: 24px;
+}
+
+.achievement-text__secondary {
+    font-size: 14px;
+}
+
+.courses-list {
+    background-color: white;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.courses-item {
+    padding: 8px;
+}
+
+.courses-item:not(:last-child) {
+    margin-bottom: 16px;
+    border-color: rgb(99, 99, 99);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.course__head {
+    display: flex;
+}
+
+.course__details {
+    margin-top: 12px;
+}
+
+.course__level {
+    margin-left: 8px;
+    margin-right: auto;
+    text-transform: capitalize;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 4px 2px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.entry {
+    background-color: green;
+}
+
+.basic {
+    background-color: darkgoldenrod;
+}
+
+.advanced {
+    background-color: darkred;
+}
+
+.course__title {
+    color: rgb(52, 98, 171);
+    font-size: 18px;
+    font-weight: bolder;
+}
+
+.course__start-date {
+    color: rgb(99, 99, 99);
+}
+
+.course__teacher {
+    padding: 8px;
+}
+
+/* teachers */
+.teachers-list {
+    margin-top: 24px;
+    font-size: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.teachers-item {
+    width: 273px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+}
+
+.teachers-item:nth-child(4n) {
+    margin-right: 0;
+}
+
+.teacher {
+    font-size: 16px;
+    position: relative;
+    background-color: white;
+    border-radius: 12px;
+    padding: 292px 30px 16px;
+    overflow: hidden;
+}
+
+.teacher__img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 273px;
+    width: 100%;
+}
+
+.teacher__name {
+    font-size: 22px;
+}
+
+.teacher__title {
+    margin-top: 8px;
+}
+
+.teacher__courses-heading {
+    padding-top: 16px;
+}
+
+.teacher__courses {
+    padding: 8px;
+}
