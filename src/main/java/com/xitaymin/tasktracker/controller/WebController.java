@@ -1,7 +1,7 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Role;
-import com.xitaymin.tasktracker.dto.user.CreateUserTO;
+import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
 import com.xitaymin.tasktracker.web.dto.UserAdminView;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import javax.validation.Valid;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class WebController {
@@ -28,10 +30,9 @@ public class WebController {
     }
 
     @PostMapping("/admin/users")
-    public String save(@Valid @RequestBody CreateUserTO userTO, Model model) {
-
-        userService.save(userTO);
-        return "addUser";
+    public String save(@RequestBody UserAdminView userView, Model model) {
+        userService.save(userView.toCreateTO());
+        return "redirect:/users";
     }
 
     @GetMapping("/new-user")
@@ -43,6 +44,14 @@ public class WebController {
         model.addAttribute("availableRoles", availableRoles);
         model.addAttribute("create", true);
         return "addUser";
+    }
+
+    @GetMapping()
+    public String users(Model model) {
+        Collection<UserViewTO> users = userService.getAllUsers();
+        List<UserAdminView> views = users.stream().map(UserAdminView::of).collect(Collectors.toList());
+        model.addAttribute("users", views);
+        return "users";
     }
 
 }
