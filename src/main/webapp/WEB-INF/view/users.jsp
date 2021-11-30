@@ -33,10 +33,11 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th scope="col">Имя</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Email</th>
-                    <%--                    <th scope="col">Тип</th>--%>
-                    <%--                    <th scope="col">Бан</th>--%>
+<%--                    <th scope="col">Deleted</th>--%>
+<%--                    <th scope="col">Team</th>--%>
+                    <th scope="col">Roles</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -45,9 +46,13 @@
                     <tr>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-                            <%--                        <td>${user.type}</td>--%>
-                            <%--                        <td>${user.banned}</td>--%>
+<%--                        <td>${user.deleted}</td>--%>
+<%--                        <td>${user.team}</td>--%>
+                        <td><c:forEach var="role" items="${user.roles}">
+                            <c:out value="${role}"/>
+                        </c:forEach> </td>
                         <td>
+
                                 <%--                            <c:if test="!${user.type.equals('ADMIN')}">--%>
                                 <%--                                <c:choose>--%>
                                 <%--                                    <c:when test="${user.banned}">--%>
