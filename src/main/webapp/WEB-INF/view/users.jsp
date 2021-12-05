@@ -3,6 +3,7 @@
 <!doctype html>
 <html>
 <head>
+    <%--    Список всех пользователей с возможностью редактировать и удалять их--%>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Пользователи</title>
@@ -35,8 +36,8 @@
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
-<%--                    <th scope="col">Deleted</th>--%>
-<%--                    <th scope="col">Team</th>--%>
+                    <th scope="col">Deleted</th>
+                    <%--                    <th scope="col">Team</th>--%>
                     <th scope="col">Roles</th>
                     <th></th>
                 </tr>
@@ -46,33 +47,34 @@
                     <tr>
                         <td>${user.name}</td>
                         <td>${user.email}</td>
-<%--                        <td>${user.deleted}</td>--%>
-<%--                        <td>${user.team}</td>--%>
+                        <td>${user.deleted}</td>
+                            <%--                        <td>${user.team}</td>--%>
                         <td><c:forEach var="role" items="${user.roles}">
                             <c:out value="${role}"/>
-                        </c:forEach> </td>
+                        </c:forEach></td>
                         <td>
-
-                                <%--                            <c:if test="!${user.type.equals('ADMIN')}">--%>
-                                <%--                                <c:choose>--%>
-                                <%--                                    <c:when test="${user.banned}">--%>
-                                <%--                                        <a class="btn btn-danger" href="admin/users/ban/${user.id}">--%>
-                                <%--                                            <span class="fas fa-user-times"></span>--%>
-                                <%--                                        </a>--%>
-                                <%--                                    </c:when>--%>
-                                <%--                                    <c:otherwise>--%>
-                                <%--                                        <a class="btn btn-danger" href="admin/users/unban/${user.id}">--%>
-                                <%--                                            <span class="fas fa-user-plus"></span>--%>
-                                <%--                                        </a>--%>
-                                <%--                                    </c:otherwise>--%>
-                                <%--                                </c:choose>--%>
+                                <%--                                                            <c:if test="${user.deleted.equals('false')}">--%>
+                            <c:choose>
+                                <c:when test="${user.deleted}">
+                                    <a class="btn btn-danger"
+                                       href="admin/users/recover/${user.id}">
+                                        <span class="fas fa-user-plus"></span>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a class="btn btn-danger"
+                                       href="admin/users/delete/${user.id}">
+                                        <span class="fas fa-user-times"></span>
+                                    </a>
+                                </c:otherwise>
+                            </c:choose>
                                 <%--                                <a class="btn btn-warn" href="admin/users/resetPassword/${user.id}">--%>
                                 <%--                                    <span class="fas fa-key"></span>--%>
                                 <%--                                </a>--%>
-                                <%--                                <a class="btn btn-warn" href="admin/users/edit/${user.id}">--%>
-                                <%--                                    <span class="fas fa-edit"></span>--%>
-                                <%--                                </a>--%>
-                                <%--                            </c:if>--%>
+                            <a class="btn btn-warn" href="admin/users/edit/${user.id}">
+                                <span class="fas fa-edit"></span>
+                            </a>
+                                <%--                                                            </c:if>--%>
                         </td>
                     </tr>
                 </c:forEach>

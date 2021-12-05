@@ -18,10 +18,25 @@ public class UserAdminView {
     @NotNull
     @Email
     private String email;
+    private boolean deleted;
     @NotNull
     private Set<Role> roles;
 
     public UserAdminView() {
+    }
+
+    public static UserAdminView of(UserViewTO userViewTO) {
+        UserAdminView userView = new UserAdminView();
+        userView.setId(userViewTO.getId());
+        userView.setName(userViewTO.getName());
+        userView.setEmail(userViewTO.getEmail());
+        userView.setRoles(userViewTO.getRoles());
+        userView.setDeleted(userViewTO.isDeleted());
+        return userView;
+    }
+
+    public boolean getDeleted() {
+        return deleted;
     }
 
     public String getName() {
@@ -60,13 +75,7 @@ public class UserAdminView {
         return new CreateUserTO(this.name, this.email, this.roles);
     }
 
-    public static UserAdminView of(UserViewTO userViewTO) {
-        UserAdminView userView = new UserAdminView();
-        userView.setId(userViewTO.getId());
-        userView.setName(userViewTO.getName());
-        userView.setEmail(userViewTO.getEmail());
-        userView.setRoles(userViewTO.getRoles());
-        return userView;
-
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }
