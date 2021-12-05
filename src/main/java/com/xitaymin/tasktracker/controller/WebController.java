@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,7 @@ public class WebController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute UserAdminView userView) {
+    public String save(@Valid @ModelAttribute UserAdminView userView) {
         userService.save(userView.toCreateTO());
         return "redirect:/admin/users";
     }

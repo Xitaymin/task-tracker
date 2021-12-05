@@ -4,12 +4,21 @@ import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 
 public class UserAdminView {
+    @Positive
     private Long id;
+    @NotBlank
     private String name;
+    @NotNull
+    @Email
     private String email;
+    @NotNull
     private Set<Role> roles;
 
     public UserAdminView() {
