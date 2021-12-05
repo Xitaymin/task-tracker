@@ -2,6 +2,8 @@ package com.xitaymin.tasktracker.web.dto;
 
 import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dto.user.CreateUserTO;
+import com.xitaymin.tasktracker.dto.user.EditUserTO;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 
 import javax.validation.constraints.Email;
@@ -33,6 +35,16 @@ public class UserAdminView {
         userView.setRoles(userViewTO.getRoles());
         userView.setDeleted(userViewTO.isDeleted());
         return userView;
+    }
+
+    public static UserAdminView of(FullUserTO fullUserTO) {
+        UserAdminView userAdminView = new UserAdminView();
+        userAdminView.setId(fullUserTO.getId());
+        userAdminView.setName(fullUserTO.getName());
+        userAdminView.setEmail(fullUserTO.getEmail());
+        userAdminView.setRoles(fullUserTO.getRoles());
+        userAdminView.setDeleted(fullUserTO.isDeleted());
+        return userAdminView;
     }
 
     public boolean getDeleted() {
@@ -77,5 +89,9 @@ public class UserAdminView {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public EditUserTO toEditTO() {
+        return new EditUserTO(id, name, email);
     }
 }

@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.entity.Role;
+import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
 import com.xitaymin.tasktracker.web.dto.UserAdminView;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,11 +20,11 @@ import java.util.stream.Collectors;
 
 @RequestMapping("/admin")
 @Controller
-public class WebController {
+public class AdminController {
 
     private final UserService userService;
 
-    public WebController(UserService userService) {
+    public AdminController(UserService userService) {
         this.userService = userService;
     }
 
@@ -33,7 +35,11 @@ public class WebController {
 
     @PostMapping("/save")
     public String save(@Valid @ModelAttribute UserAdminView userView) {
-        userService.save(userView.toCreateTO());
+        if (userView.getId() == null) {
+            userService.save(userView.toCreateTO());
+        } else {
+            userService.editUser(userView.toEditTO());
+        }
         return "redirect:/admin/users";
     }
 
@@ -55,4 +61,25 @@ public class WebController {
         model.addAttribute("users", views);
         return "users";
     }
+
+    @GetMapping("users/delete/{id}")
+    public String deleteUser(@PathVariable long id) {
+        userService.deleteUser(id);
+        return "redirect:/admin/users";
+    }
+
+    @GetMapping("users/edit/{id}")
+    public String editUser(@PathVariable long id, Model model) {
+        FullUserTO fullUserTO = userService.getById(id);
+        UserAdminView userAdminView = UserAdminView.of(fullUserTO);
+        model.addAttribute("user", userAdminView);
+        model.addAttribute("create", false);
+
+        Role[] availableRoles = Role.values();
+        model.addAttribute("availableRoles", availableRoles);
+
+        return "addUser";
+    }
+
+
 }

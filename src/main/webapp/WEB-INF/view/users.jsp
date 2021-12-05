@@ -23,14 +23,6 @@
 <main>
     <div class="jumbotron pt-4">
         <div class="container">
-            <%--            <a class="btn btn-primary" href="/admin/users/new-user?type=ADMIN">--%>
-            <%--                <span class="fa fa-plus"></span>--%>
-            <%--                Добавить админа--%>
-            <%--            </a>--%>
-            <%--            <a class="btn btn-primary" href="/admin/users/new-user?type=TEACHER">--%>
-            <%--                <span class="fa fa-plus"></span>--%>
-            <%--                Добавить учителя--%>
-            <%--            </a>--%>
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -63,7 +55,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <a class="btn btn-danger"
-                                       href="admin/users/delete/${user.id}">
+                                       href="${pageContext.servletContext.contextPath}/admin/users/delete/${user.id}">
                                         <span class="fas fa-user-times"></span>
                                     </a>
                                 </c:otherwise>
@@ -71,7 +63,8 @@
                                 <%--                                <a class="btn btn-warn" href="admin/users/resetPassword/${user.id}">--%>
                                 <%--                                    <span class="fas fa-key"></span>--%>
                                 <%--                                </a>--%>
-                            <a class="btn btn-warn" href="admin/users/edit/${user.id}">
+                            <a class="btn btn-warn"
+                               href="${pageContext.servletContext.contextPath}/admin/users/edit/${user.id}">
                                 <span class="fas fa-edit"></span>
                             </a>
                                 <%--                                                            </c:if>--%>
