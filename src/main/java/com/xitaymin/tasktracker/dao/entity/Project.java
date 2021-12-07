@@ -16,10 +16,12 @@ import java.util.Set;
 @Entity
 @Table(name = "projects")
 @NamedQueries({@NamedQuery(name = Project.FIND_BY_ID_WITH_TEAMS,
-        query = "SELECT p FROM Project p LEFT JOIN FETCH p.teams WHERE p.id=:id")})
+        query = "SELECT p FROM Project p LEFT JOIN FETCH p.teams WHERE p.id=:id"),
+               @NamedQuery(name = Project.FIND_ALL, query = "SELECT p FROM Project p ")})
 public class Project extends BaseEntity {
 
     public static final String FIND_BY_ID_WITH_TEAMS = "Project.findByIdWithTeams";
+    public static final String FIND_ALL = "Project.findAll";
 
     @Column(nullable = false)
     private String name;

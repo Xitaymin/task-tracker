@@ -1,9 +1,13 @@
 package com.xitaymin.tasktracker.controller;
 
+import com.xitaymin.tasktracker.dao.ProjectDao;
+import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Role;
+import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dto.user.FullUserTO;
 import com.xitaymin.tasktracker.dto.user.UserViewTO;
 import com.xitaymin.tasktracker.service.UserService;
+import com.xitaymin.tasktracker.web.dto.AdminTaskView;
 import com.xitaymin.tasktracker.web.dto.UserAdminView;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +27,11 @@ import java.util.stream.Collectors;
 public class AdminController {
 
     private final UserService userService;
+    private final ProjectDao projectDao;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, ProjectDao projectDao) {
         this.userService = userService;
+        this.projectDao = projectDao;
     }
 
     @GetMapping()
@@ -79,6 +85,17 @@ public class AdminController {
         model.addAttribute("availableRoles", availableRoles);
 
         return "addUser";
+    }
+
+    @GetMapping("/new-task")
+    public String fillTask(Model model) {
+        model.addAttribute("create", true);
+        model.addAttribute("task", new AdminTaskView());
+        TaskType[] taskTypes = TaskType.values();
+        model.addAttribute("taskTypes", taskTypes);
+        List<Project> projects = projectDao.findAll();
+        model.addAttribute(projects);
+        return "task.jsp";
     }
 
 

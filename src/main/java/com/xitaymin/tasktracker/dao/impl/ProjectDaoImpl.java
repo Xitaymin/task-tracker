@@ -35,4 +35,9 @@ public class ProjectDaoImpl implements ProjectDao {
                 .getResultList();
         return DataAccessUtils.singleResult(projects);
     }
+
+    @Override
+    public List<Project> findAll() {
+        return entityManager.createNamedQuery(Project.FIND_ALL, Project.class).getResultList();
+    }
 }
