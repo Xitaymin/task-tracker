@@ -94,7 +94,7 @@ public class AdminController {
         model.addAttribute("taskTypes", taskTypes);
 //        List<Project> projects = projectDao.findAll();
 //        model.addAttribute(projects);
-        return "task.jsp";
+        return "task";
     }
 
 }

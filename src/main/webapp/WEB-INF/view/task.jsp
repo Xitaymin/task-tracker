@@ -39,16 +39,24 @@
         <%--            </form:select>--%>
         <%--        </div>--%>
 
+        <div class="form-group">
+            <select id="project">
+                <option>Select Country</option>
+            </select>
+        </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <script type="text/javascript">
             $(document).ready(function () {
                 $.ajax({
                     // url: "GetCountryStateservlet",
-                    url: "task-tracker/projects", //get projects list in json
+                    url: "/projects", //get projects list in json
+                    //todo how to redirect request to tracker/projects instead of tracker/admin/projects
                     method: "GET",
-                    data: {operation: 'project'},
+                    data: {operation: 'project'}, //data which should be sent to server
                     // data: {operation: 'country'},
+                    //todo how to remove request variables
                     success: function (data, textStatus, jqXHR) {
                         console.log(data);
                         let obj = $.parseJSON(data);

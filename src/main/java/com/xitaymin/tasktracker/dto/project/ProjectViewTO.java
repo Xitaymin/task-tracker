@@ -1,6 +1,7 @@
 package com.xitaymin.tasktracker.dto.project;
 
 import com.xitaymin.tasktracker.dao.entity.Project;
+import com.xitaymin.tasktracker.dao.entity.User;
 
 public class ProjectViewTO {
     private final long id;
@@ -14,6 +15,23 @@ public class ProjectViewTO {
     }
 
     public static ProjectViewTO of(Project project) {
-        return new ProjectViewTO(project.getId(), project.getName(), project.getProductOwner().getId());
+        Long ownerId = null;
+        User owner = project.getProductOwner();
+        if (project.getProductOwner() != null) {
+            ownerId = owner.getId();
+        }
+        return new ProjectViewTO(project.getId(), project.getName(), ownerId);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getProductOwner() {
+        return productOwner;
     }
 }
