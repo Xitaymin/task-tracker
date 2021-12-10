@@ -1,7 +1,6 @@
 package com.xitaymin.tasktracker.controller;
 
 import com.xitaymin.tasktracker.dao.ProjectDao;
-import com.xitaymin.tasktracker.dao.entity.Project;
 import com.xitaymin.tasktracker.dao.entity.Role;
 import com.xitaymin.tasktracker.dao.entity.TaskType;
 import com.xitaymin.tasktracker.dto.user.FullUserTO;
@@ -93,10 +92,9 @@ public class AdminController {
         model.addAttribute("task", new AdminTaskView());
         TaskType[] taskTypes = TaskType.values();
         model.addAttribute("taskTypes", taskTypes);
-        List<Project> projects = projectDao.findAll();
-        model.addAttribute(projects);
+//        List<Project> projects = projectDao.findAll();
+//        model.addAttribute(projects);
         return "task.jsp";
     }
-
 
 }

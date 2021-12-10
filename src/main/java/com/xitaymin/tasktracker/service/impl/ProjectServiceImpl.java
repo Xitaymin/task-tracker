@@ -15,6 +15,8 @@ import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterExcept
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.xitaymin.tasktracker.service.impl.TeamServiceImpl.TEAM_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.utils.EntityAbsentUtils.throwExceptionIfAbsent;
@@ -103,6 +105,12 @@ public class ProjectServiceImpl implements ProjectService {
         throwExceptionIfAbsent(TEAM_NOT_FOUND, team, teamId);
 
         project.removeTeam(team);
+    }
+
+    @Override
+    public List<ProjectViewTO> getAll() {
+        List<Project> projects = projectDao.findAll();
+        return projects.stream().map(ProjectViewTO::of).collect(Collectors.toList());
     }
 
 }

@@ -4,6 +4,8 @@ import com.xitaymin.tasktracker.dto.project.CreateProjectTO;
 import com.xitaymin.tasktracker.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.dto.project.ProjectViewTO;
 
+import java.util.List;
+
 public interface ProjectService {
     ProjectViewTO saveProject(CreateProjectTO project);
 
@@ -14,4 +16,6 @@ public interface ProjectService {
     void assignProductOwner(long projectId, long productOwnerId);
 
     void deleteTeam(long project, long team);
+
+    List<ProjectViewTO> getAll();
 }
