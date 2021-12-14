@@ -34,6 +34,7 @@ public class User extends BaseEntity {
     private String name;
     private String email;
     private boolean deleted;
+    //    private String password;
     @ElementCollection(targetClass = Role.class)
     @JoinTable(name = "roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
