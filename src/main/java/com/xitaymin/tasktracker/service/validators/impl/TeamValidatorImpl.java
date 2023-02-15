@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
+import static com.xitaymin.tasktracker.dao.entity.Role.LEAD;
+import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static java.lang.String.format;
+
 @Service
 public class TeamValidatorImpl implements TeamValidator {
     public static final String TOO_MANY_MEMBERS =
@@ -21,10 +25,11 @@ public class TeamValidatorImpl implements TeamValidator {
     public static final String TEAM_IN_PROJECT = "Can't delete team which is in project.";
     public static final String TEAM_HAS_MEMBERS = "Can't delete team with members.";
     public static final String TEAM_ALREADY_HAS_LEAD = "User has role LEAD and can't be added to team, because it already has one.";
-    @Value("${task-tracker.max.team.members.count}")
-    private int maxMembersNumber;
 
-    public TeamValidatorImpl() {
+    private final int maxMembersNumber;
+
+    public TeamValidatorImpl(@Value("${task-tracker.max.team.members.count}") int maxMembersNumber) {
+        this.maxMembersNumber = maxMembersNumber;
     }
 
     @Override
@@ -37,33 +42,35 @@ public class TeamValidatorImpl implements TeamValidator {
         if (hasMembers) {
             throw new InvalidRequestParameterException(TEAM_HAS_MEMBERS);
         }
-
     }
 
     @Override
     public void validateForAddMember(Team team, User user) {
         Set<User> members = team.getMembers();
         if (members.size() == maxMembersNumber) {
-            throw new BaseApplicationException(String.format(TOO_MANY_MEMBERS, maxMembersNumber));
-        } else if (user.isDeleted()) {
-            throw new NotFoundResourceException(String.format(UserValidatorImpl.USER_NOT_FOUND, user.getId()));
-        } else if (user.getTeam() != null) {
-            throw new BaseApplicationException(String.format(USER_HAS_ANOTHER_TEAM, user.getId()));
-        } else if (isUserRoleInvalid(user)) {
+            throw new BaseApplicationException(format(TOO_MANY_MEMBERS, maxMembersNumber));
+        }
+        if (user.isDeleted()) {
+            throw new NotFoundResourceException(format(USER_NOT_FOUND, user.getId()));
+        }
+        if (user.getTeam() != null) {
+            throw new BaseApplicationException(format(USER_HAS_ANOTHER_TEAM, user.getId()));
+        }
+        if (isUserRoleInvalid(user)) {
             throw new BaseApplicationException(INVALID_ROLE);
         }
-            if(user.getRoles().contains(Role.LEAD)){validateIfLeadAlreadyPresent(members);}
+        if (user.getRoles().contains(LEAD)) {
+            validateIfLeadAlreadyPresent(members);
+        }
     }
 
     @Override
     public void validateIfLeadAlreadyPresent(Set<User> members) {
-        if (!members.isEmpty()) {
-            for (User user:members){
-                if(user.getRoles().contains(Role.LEAD)){
-                    throw new InvalidRequestParameterException(TEAM_ALREADY_HAS_LEAD);
-                }
-            }
-        }
+        boolean foundLead = members.stream()
+                .flatMap(member -> member.getRoles().stream())
+                .anyMatch(LEAD::equals);
+
+        if (foundLead) throw new InvalidRequestParameterException(TEAM_ALREADY_HAS_LEAD);
     }
 
     private boolean isUserRoleInvalid(User user) {
