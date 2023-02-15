@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import com.xitaymin.tasktracker.dao.ProjectDao;
 import com.xitaymin.tasktracker.dao.TaskDAO;
+import com.xitaymin.tasktracker.dao.TeamDao;
 import com.xitaymin.tasktracker.dao.UserDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +30,9 @@ public abstract class BaseTestSuite {
     protected ProjectDao projectDao;
     @Autowired
     protected UserDAO userDAO;
+
+    @Autowired
+    protected TeamDao teamDao;
 
     public String asJson(Object object) throws Exception {
         return OBJECT_MAPPER.writer().withDefaultPrettyPrinter().writeValueAsString(object);

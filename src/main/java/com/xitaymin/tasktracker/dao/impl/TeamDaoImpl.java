@@ -27,6 +27,12 @@ public class TeamDaoImpl implements TeamDao {
     }
 
     @Override
+    public void flushAndClear() {
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    @Override
     @Transactional
     public Team save(Team team) {
         entityManager.persist(team);

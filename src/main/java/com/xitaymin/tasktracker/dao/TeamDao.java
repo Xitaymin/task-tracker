@@ -16,4 +16,7 @@ public interface TeamDao {
     void delete(Team id);
 
     Team findByIdWithMembers(long teamId);
+
+    void flushAndClear();
+
 }
