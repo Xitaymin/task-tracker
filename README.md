@@ -1,9 +1,9 @@
-TASK TRACKER
+### TASK TRACKER
 
 Application for managing tasks between users that consists in teams and relates to projects.
 Based on Spring Boot and Hibernate.
 
-To run:
+#### To run:
 
 1. Start Postgresql container from root folder using `docker-compose up`<p>
    (Note: you can use Postgresql server installed on your machine but in this case
@@ -11,7 +11,7 @@ To run:
    also Postgresql version should be below 15, (tested on 13.4))
 2. Start the application using main method from TaskTrackerApplication.java
 
-Implemented business operations on entities:
+#### Implemented business operations on entities:
 <ol>
 <li>User</li>
 <ol>
@@ -61,7 +61,7 @@ Implemented business operations on entities:
 </ol>
 </ol>
 
-Road map (next steps in development):
+#### Road map (next steps in development):
 <ol>
 <li> Implement admin pages</li>
 <ol>
