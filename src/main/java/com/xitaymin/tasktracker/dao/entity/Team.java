@@ -19,7 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor
 @Getter
 @Entity
-@NamedQueries({@NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id"),
+@NamedQueries({
+        @NamedQuery(name = Team.FIND_ALL, query = "SELECT t FROM Team t order by t.id"),
         @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_AND_PROJECTS_BY_ID,
                 query = "SELECT  t FROM Team t LEFT JOIN FETCH t.members LEFT JOIN FETCH t.projects WHERE t.id=:id"),
         @NamedQuery(name = Team.FIND_TEAM_WITH_MEMBERS_BY_ID,
