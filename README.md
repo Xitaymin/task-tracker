@@ -9,7 +9,8 @@ Based on Spring Boot and Hibernate.
    (Note: you can use Postgresql server installed on your machine but in this case
    user credentials should be the same as in application.properties, and access to DB should be provided,
    also Postgresql version should be below 15, (tested on 13.4))
-2. Start the application using main method from TaskTrackerApplication.java
+2. Start the application using main method from TaskTrackerApplication.java from IDE or use maven
+   command `mvn spring-boot:run`
 
 #### Implemented business operations on entities:
 <ol>
