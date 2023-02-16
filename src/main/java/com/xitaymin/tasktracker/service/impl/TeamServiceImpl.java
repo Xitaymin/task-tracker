@@ -42,7 +42,7 @@ public class TeamServiceImpl implements TeamService {
     public void editTeam(EditTeamTO editTeamTO) {
         long id = editTeamTO.getId();
         Team team = teamDao.findById(id);
-        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,id);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND, team, id);
         team.setName(editTeamTO.getName());
     }
 
@@ -74,10 +74,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void addMember(long teamId, long userId) {
         Team team = teamDao.findByIdWithMembers(teamId);
-        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,teamId);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND, team, teamId);
 
         User user = userDao.findOne(userId);
-        throwExceptionIfAbsent(USER_NOT_FOUND,user,userId);
+        throwExceptionIfAbsent(USER_NOT_FOUND, user, userId);
 
         teamValidator.validateForAddMember(team, user);
 
@@ -88,12 +88,12 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void setLead(long teamId, long userId) {
         Team team = teamDao.findByIdWithMembers(teamId);
-        throwExceptionIfAbsent(TEAM_NOT_FOUND,team,teamId);
+        throwExceptionIfAbsent(TEAM_NOT_FOUND, team, teamId);
 
         teamValidator.validateIfLeadAlreadyPresent(team.getMembers());
 
         User user = userDao.findOne(userId);
-        throwExceptionIfAbsent(USER_NOT_FOUND,user,userId);
+        throwExceptionIfAbsent(USER_NOT_FOUND, user, userId);
 
         user.getRoles().add(Role.LEAD);
     }
