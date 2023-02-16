@@ -1,5 +1,7 @@
 package com.xitaymin.tasktracker.dao.entity;
 
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -18,12 +20,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@EqualsAndHashCode(of = "email", callSuper = false)
 @Table(name = "users")
 @NamedQueries({@NamedQuery(name = User.FIND_ALL, query = "SELECT u FROM User u"),
-               @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
-               @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
-               @NamedQuery(name = User.FIND_FULL_USER_BY_ID,
-                       query = "SELECT u FROM User u LEFT JOIN FETCH u.tasks  LEFT JOIN FETCH u.team WHERE u.id=:id")})
+        @NamedQuery(name = User.FIND_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email=:email"),
+        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
+        @NamedQuery(name = User.FIND_FULL_USER_BY_ID,
+                query = "SELECT u FROM User u LEFT JOIN FETCH u.tasks  LEFT JOIN FETCH u.team WHERE u.id=:id")})
 
 public class User extends BaseEntity {
     public static final String FIND_ALL = "User.getAll";
@@ -32,6 +35,8 @@ public class User extends BaseEntity {
     public static final String FIND_FULL_USER_BY_ID = "User.findByIdWithTasksAndTeams";
 
     private String name;
+
+    @Column(unique = true, nullable = false)
     private String email;
     private boolean deleted;
     @ElementCollection(targetClass = Role.class)
@@ -46,15 +51,7 @@ public class User extends BaseEntity {
     private Team team;
 
     public User() {
-    }
-
-    public User(String name, String email, boolean deleted, Set<Role> roles, Set<Task> tasks, Team team) {
-        this.name = name;
-        this.email = email;
-        this.deleted = deleted;
-        this.roles = roles;
-        this.tasks = tasks;
-        this.team = team;
+        roles = new HashSet<>();
     }
 
     public Set<Task> getTasks() {
@@ -69,7 +66,7 @@ public class User extends BaseEntity {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    private void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

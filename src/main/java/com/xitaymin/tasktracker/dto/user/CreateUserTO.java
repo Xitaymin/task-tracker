@@ -43,7 +43,7 @@ public class CreateUserTO {
         user.setName(name);
         user.setEmail(email);
         user.setDeleted(false);
-        user.setRoles(roles);
+        user.getRoles().addAll(roles);
         return user;
     }
 }

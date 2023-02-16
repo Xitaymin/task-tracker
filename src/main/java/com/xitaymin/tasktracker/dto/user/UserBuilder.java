@@ -5,6 +5,7 @@ import com.xitaymin.tasktracker.dao.entity.Task;
 import com.xitaymin.tasktracker.dao.entity.Team;
 import com.xitaymin.tasktracker.dao.entity.User;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public final class UserBuilder {
@@ -12,7 +13,7 @@ public final class UserBuilder {
     private String name;
     private String email;
     private boolean deleted;
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
     private Set<Task> tasks;
     private Team team;
 
@@ -39,7 +40,7 @@ public final class UserBuilder {
     }
 
     public UserBuilder withRoles(Set<Role> roles) {
-        this.roles = roles;
+        this.roles.addAll(roles);
         return this;
     }
 
@@ -63,7 +64,7 @@ public final class UserBuilder {
         user.setName(name);
         user.setEmail(email);
         user.setDeleted(deleted);
-        user.setRoles(roles);
+        user.getRoles().addAll(roles);
         user.setTeam(team);
         return user;
     }
