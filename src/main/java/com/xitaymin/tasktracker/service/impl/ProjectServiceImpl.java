@@ -12,17 +12,20 @@ import com.xitaymin.tasktracker.dto.project.EditProjectTO;
 import com.xitaymin.tasktracker.dto.project.ProjectViewTO;
 import com.xitaymin.tasktracker.service.ProjectService;
 import com.xitaymin.tasktracker.service.exceptions.InvalidRequestParameterException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.xitaymin.tasktracker.service.impl.TeamServiceImpl.TEAM_NOT_FOUND;
 import static com.xitaymin.tasktracker.service.utils.EntityAbsentUtils.throwExceptionIfAbsent;
 import static com.xitaymin.tasktracker.service.validators.impl.UserValidatorImpl.USER_NOT_FOUND;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 
 @Service
+@RequiredArgsConstructor
 public class ProjectServiceImpl implements ProjectService {
 
     public static final String PRODUCT_OWNER_NOT_VALID =
@@ -31,12 +34,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectDao projectDao;
     private final TeamDao teamDao;
     private final UserDAO userDao;
-
-    public ProjectServiceImpl(ProjectDao projectDao, TeamDao teamDao, UserDAO userDao) {
-        this.projectDao = projectDao;
-        this.teamDao = teamDao;
-        this.userDao = userDao;
-    }
 
     @Transactional
     @Override
@@ -91,7 +88,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (user.getRoles().contains(Role.MANAGER) && (!user.isDeleted())) {
             project.setProductOwner(user);
         } else {
-            throw new InvalidRequestParameterException(String.format(PRODUCT_OWNER_NOT_VALID, productOwnerId));
+            throw new InvalidRequestParameterException(format(PRODUCT_OWNER_NOT_VALID, productOwnerId));
         }
     }
 
@@ -110,7 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public List<ProjectViewTO> getAll() {
         List<Project> projects = projectDao.findAll();
-        return projects.stream().map(ProjectViewTO::of).collect(Collectors.toList());
+        return projects.stream().map(ProjectViewTO::of).collect(toList());
     }
 
 }
