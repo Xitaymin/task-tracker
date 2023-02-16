@@ -69,6 +69,5 @@ public class TeamDaoImpl implements TeamDao {
     public void delete(Team team) {
         entityManager.remove(team);
     }
-
 }
 
