@@ -25,24 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TeamSuiteTest extends BaseTestSuite {
-    private static Team mockTeam() {
-        return new Team("Initial name");
-    }
-
-    private static User mockUser() {
-        User user = new User();
-        user.setName("John");
-        user.setEmail("smith@gmail.com");
-        user.getRoles().add(DEVELOPER);
-        return user;
-    }
-
-    private static Project mockProject() {
-        Project project = new Project();
-        project.setName("Very important project");
-        return project;
-    }
-
     @DisplayName("Should return team with projects and members ids by teams id")
     @Test
     void getTeam() throws Exception {
@@ -206,4 +188,23 @@ public class TeamSuiteTest extends BaseTestSuite {
 
         assertNull(deletedTeam);
     }
+
+    private static Team mockTeam() {
+        return new Team("Initial name");
+    }
+
+    private static User mockUser() {
+        User user = new User();
+        user.setName("John");
+        user.setEmail("smith@gmail.com");
+        user.getRoles().add(DEVELOPER);
+        return user;
+    }
+
+    private static Project mockProject() {
+        Project project = new Project();
+        project.setName("Very important project");
+        return project;
+    }
+
 }
