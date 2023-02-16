@@ -15,8 +15,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.HashSet;
-
 import static com.xitaymin.tasktracker.dao.entity.Role.LEAD;
 import static com.xitaymin.tasktracker.service.validators.impl.TeamValidatorImpl.INVALID_ROLE;
 import static com.xitaymin.tasktracker.service.validators.impl.TeamValidatorImpl.TEAM_ALREADY_HAS_LEAD;
@@ -35,14 +33,6 @@ class TeamValidatorImplTest {
     private final EasyRandom easyRandom = new EasyRandom();
 
     private Team team;
-
-    private static void checkExceptionTypeAndMessage(Executable action,
-                                                     Class<? extends BaseApplicationException> expectedType,
-                                                     String expectedMessage) {
-        var actualException = assertThrows(expectedType, action);
-        assertEquals(expectedType, actualException.getClass());
-        assertEquals(expectedMessage, actualException.getMessage());
-    }
 
     @BeforeEach
     void setUp() {
@@ -74,7 +64,6 @@ class TeamValidatorImplTest {
     @Test
     @DisplayName("Validation for addition to team should fail if team already contains max number of members")
     void validateAdditionWithMaxMembersCount() {
-
         team.getMembers().add(mockEmptyUser());
         team.getMembers().add(mockEmptyUser());
 
@@ -99,7 +88,6 @@ class TeamValidatorImplTest {
     @Test
     @DisplayName("Validation for addition to team should fail for user from another team")
     void validateAdditionForUserFromOtherTeam() {
-
         User user = mockEmptyUser();
 
         Team otherTeam = mockEmptyTeam();
@@ -141,11 +129,18 @@ class TeamValidatorImplTest {
         User user = easyRandom.nextObject(User.class);
         user.setDeleted(false);
         user.setTeam(null);
-        user.setRoles(new HashSet<>());
         return user;
     }
 
     private Team mockEmptyTeam() {
         return easyRandom.nextObject(Team.class);
+    }
+
+    private static void checkExceptionTypeAndMessage(Executable action,
+                                                     Class<? extends BaseApplicationException> expectedType,
+                                                     String expectedMessage) {
+        var actualException = assertThrows(expectedType, action);
+        assertEquals(expectedType, actualException.getClass());
+        assertEquals(expectedMessage, actualException.getMessage());
     }
 }
